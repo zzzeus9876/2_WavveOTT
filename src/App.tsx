@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import { Notice } from "./components/Notice";
 import Home from "./pages/Home";
 import Common from "./pages/scss/Common";
+import Login from "./pages/login";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/common" element={<Common />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <Notice />
       <Footer />
