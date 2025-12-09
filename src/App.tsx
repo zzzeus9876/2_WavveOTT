@@ -6,7 +6,7 @@ import { Notice } from "./components/Notice";
 import Home from "./pages/Home";
 import Common from "./pages/scss/Common";
 import Login from "./pages/Login";
-import Signup from "./pages/signup";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
