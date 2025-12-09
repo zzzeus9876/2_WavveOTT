@@ -2,24 +2,44 @@ import "./scss/Login.scss";
 import "../style/common-button.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../stores/useAuthStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Login = () => {
   const { onLogin } = useAuthStore();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberId, setRememberId] = useState(false); // 아이디 저장 체크 여부
+
+  // 처음 렌더링 될 때 localStorage에 저장된 이메일이 있으면 가져오기
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("savedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberId(true);
+    }
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await onLogin(email, password);
-      setEmail(""); //로그인 후 데이터 지우기
-      setPassword(""); // 로그인 후 데이터 지우기
+
+      // 체크박스 상태에 따라 아이디 저장/삭제
+      if (rememberId) {
+        localStorage.setItem("savedEmail", email);
+      } else {
+        localStorage.removeItem("savedEmail");
+      }
+
+      setPassword(""); // 비밀번호만 비우기 (아이디는 저장할 수 있으니까 남겨도 됨)
       navigate("/"); // 로그인 후 첫 화면으로 이동
     } catch (err) {
       console.log("로그인 안됨....");
     }
   };
-  const navigate = useNavigate();
+
   return (
     <main>
       <div className="login">
@@ -46,7 +66,13 @@ const Login = () => {
           </label>
           <div className="save-id">
             <label>
-              <input type="checkbox" name="" /> 아이디저장
+              {/* 체크박스 상태 연결 */}
+              <input
+                type="checkbox"
+                checked={rememberId}
+                onChange={(e) => setRememberId(e.target.checked)}
+              />{" "}
+              아이디저장
             </label>
             <p>
               입력하신 정보에 해당하는 계정을 찾을 수 없습니다. ID, PW를 확인해
