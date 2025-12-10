@@ -3,3 +3,15 @@
 .main {
     overflow-x: hidden;
 }
+
+.banner-event {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    border-radius: 12px;
+    background: g.$color-bg-dark;
+
+   
+}
