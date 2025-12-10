@@ -33,11 +33,11 @@ const Footer = () => {
         </div>
         <div className="footer-bottom">
           <div className="footer-logo">
-            <img src="../../public/images/badge/badge-wavve-logo-gray.svg" alt="" />
+            <img src="../../public/images/badge/badge-wavve-logo-gray.svg" alt="footer logo" />
           </div>
           <div className="app-icon-box">
-            <p><img src="" alt="" /></p>
-            <p><img src=" " alt="" /></p>
+            <p><img src="../../public/images/icons/icon-insta.svg" alt="Insta Icon" /></p>
+            <p><img src="../../public/images/icons/icon-youtube.svg" alt="Youtube Icon" /></p>
           </div>
         </div>
       </div>
