@@ -15,9 +15,12 @@ export interface Movie extends MediaBase {
     release_data: string;
 }
 
-export interface MovieState {
-    popularMovies: Movie[];
+export interface MovieWithLogo extends MediaBase {
+    logo: string | null;
+}
 
+export interface MovieState {
+    popularMovies: MovieWithLogo[];
     onFetchPopular: () => Promise<void>;
 }
 
