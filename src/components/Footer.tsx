@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./scss/Footer.scss";
 const Footer = () => {
   return (
@@ -34,8 +35,12 @@ const Footer = () => {
             <img src="/images/badge/badge-wavve-logo-gray.svg" alt="footer logo" />
           </div>
           <div className="app-icon-box">
-            <p><img src="/images/icons/icon-youtube.svg" alt="Youtube Icon" /></p>
-            <p><img src="/images/icons/icon-insta.svg" alt="Insta Icon" /></p>
+            <Link to={`https://www.youtube.com/@wavve`}>
+              <p><img src="/images/icons/icon-youtube.svg" alt="Youtube Icon" /></p>
+            </Link>
+            <Link to={`https://www.instagram.com/accounts/login/?next=%2Fwavve.official%2F&source=omni_redirect`}>
+              <p><img src="/images/icons/icon-insta.svg" alt="Insta Icon" /></p>
+            </Link>
           </div>
         </div>
       </div>
