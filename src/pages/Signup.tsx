@@ -26,7 +26,7 @@ const Signup = () => {
       await onMember(email, password);
       setEmail("");
       setPassword("");
-      navigate("/choice-char");
+      navigate("/welcome");
     } catch (error: any) {
       console.log("경로이탈");
     }

@@ -19,6 +19,7 @@ import CurrentAffairs from "./pages/CurrentAffairs";
 import Animation from "./pages/Animation";
 import Kids from "./pages/Kids";
 import ChoiceChar from "./pages/ChoiceChar";
+import Welcome from "./pages/Welcome";
 
 function App() {
   return (
@@ -38,9 +39,10 @@ function App() {
 
         <Route path="/common" element={<Common />} />
 
-        <Route path="/choice-char" element={<ChoiceChar />} />
+        <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/choice-char" element={<ChoiceChar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/playlist" element={<PlayList />} />

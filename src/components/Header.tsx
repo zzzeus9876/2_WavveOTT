@@ -132,7 +132,7 @@ const Header = () => {
                     <Link to={"/choice-char"}>프로필변경</Link>
                   </li>
                   <li>
-                    <button onClick={handleLogout} className="btn sm primary">
+                    <button onClick={handleLogout} className="btn xsmall primary">
                       로그아웃
                     </button>
                   </li>
