@@ -2,7 +2,7 @@ import React from 'react'
 
 const SearchClick = () => {
   return (
-    <div>
+    <div className='pull-fit'>
       <div className="search-inner-wrap">
         <div className="search-inner">
           <div className="keyboard-box">
