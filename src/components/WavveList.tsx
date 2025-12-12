@@ -28,12 +28,6 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
     const handleSwiperBtns = (swiper: SwiperClass) => {
         const isFirst = swiper.activeIndex === 0;
         const isLast = swiper.activeIndex === 13;
-        console.log(
-            '슬라이더길이',
-            swiper.slides.length,
-            swiper.slides.length - 1,
-            swiper.activeIndex
-        );
 
         if (prevBtn.current) {
             if (isFirst) prevBtn.current.classList.add('hidden');
