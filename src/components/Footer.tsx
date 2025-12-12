@@ -18,7 +18,9 @@ const Footer = () => {
               <p className="font-russo">이용약관</p>
               <p className="font-russo">개인정보처리방침</p>
               <p className="font-russo">서비스 소개</p>
-              <p className="font-russo">이벤트</p>
+              <p className="font-russo">
+                <Link to="/event">이벤트</Link>
+              </p>
             </div>
             <div className="left-bottom">
               <p>콘텐츠웨이브 주식회사 | 대표이사 서장호</p>

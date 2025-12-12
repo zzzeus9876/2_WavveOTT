@@ -17,7 +17,7 @@ const mainMenu: MenuItem[] = [
   { id: 5, title: "시사교양", path: "/currentAffairs" },
   { id: 6, title: "애니메이션", path: "/animation" },
   { id: 7, title: "키즈", path: "/kids" },
-  { id: 8, title: "Common", path: "/Common" },
+  { id: 8, title: "COMMON", path: "/Common" },
 ];
 
 const Header = () => {
@@ -112,7 +112,7 @@ const Header = () => {
             {!user ? (
               <p className="login">
                 <Link className="font-wave" to={"/login"}>
-                  웨이브시작하기
+                  웨이브 시작하기
                 </Link>
               </p>
             ) : (
@@ -129,10 +129,19 @@ const Header = () => {
                     <Link to={"/playlist"}>시청리스트</Link>
                   </li>
                   <li>
+                    <Link to={"/ticket"}>이용권</Link>
+                  </li>
+                  <li>
+                    <Link to={"/ticket"}>고객센터</Link>
+                  </li>
+                  <li>
                     <Link to={"/choice-char"}>프로필변경</Link>
                   </li>
                   <li>
-                    <button onClick={handleLogout} className="btn xsmall primary">
+                    <button
+                      onClick={handleLogout}
+                      className="btn xsmall primary"
+                    >
                       로그아웃
                     </button>
                   </li>
