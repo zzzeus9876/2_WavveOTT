@@ -2,8 +2,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./scss/Header.scss";
 import { useAuthStore } from "../stores/useAuthStore";
-import SearchOverlay from "./SearchOverlay";
-import { useState } from "react";
 
 interface MenuItem {
   id: number;
@@ -24,26 +22,18 @@ const mainMenu: MenuItem[] = [
 
 const Header = () => {
   // 스토어에서 필요한 모든 상태 가져오기
-  const { user, onLogout, selectedCharId, selectedCharNickname } =
-    useAuthStore();
+  const { user, onLogout, selectedCharId, selectedCharNickname } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // 조건부 렌더링 (경로 확인)
-  const isChoiceCharPage = location.pathname
-    .toLowerCase()
-    .includes("/choice-char");
+  const isChoiceCharPage = location.pathname.toLowerCase().includes("/choice-char");
 
   // 키즈 캐릭터(ID: 4)가 선택되었는지 확인
   const isKidsMode = selectedCharId === 4;
 
   // 닉네임의 첫 글자 계산
-  const userInitial = selectedCharNickname
-    ? selectedCharNickname.charAt(0)
-    : user
-    ? "U"
-    : "W";
+  const userInitial = selectedCharNickname ? selectedCharNickname.charAt(0) : user ? "U" : "W";
 
   // ID에 따른 동적 클래스 이름 계산
   const charClass = selectedCharId ? `char-${selectedCharId}` : "char-1";
@@ -54,37 +44,33 @@ const Header = () => {
   };
 
   return (
-    <>
-      <header>
-        <div className="inner">
-          <div className="header-left">
-            <h1 className="logo">
-              {/* 키즈 모드나 ChoiceChar 페이지에서는 로고 링크 비활성화 */}
-              {!isChoiceCharPage && !isKidsMode ? (
-                <Link to={"/"}>
-                  <img
-                    src="/images/badge/badge-wavve-logo-white.svg"
-                    alt="홈으로 이동"
-                  />
-                </Link>
-              ) : (
-                <img
-                  src={
-                    isChoiceCharPage
-                      ? "/images/badge/badge-wavve-logo-blue.svg"
-                      : "/images/badge/badge-wavve-logo-white.svg"
-                  }
-                  alt="로고"
-                />
-              )}
-            </h1>
+    <header>
+      <div className="inner">
+        <div className="header-left">
+          <h1 className="logo">
+            {/* 키즈 모드나 ChoiceChar 페이지에서는 로고 링크 비활성화 */}
+            {!isChoiceCharPage && !isKidsMode ? (
+              <Link to={"/"}>
+                <img src="/images/badge/badge-wavve-logo-white.svg" alt="홈으로 이동" />
+              </Link>
+            ) : (
+              <img
+                src={
+                  isChoiceCharPage
+                    ? "/images/badge/badge-wavve-logo-blue.svg"
+                    : "/images/badge/badge-wavve-logo-white.svg"
+                }
+                alt="로고"
+              />
+            )}
+          </h1>
 
-            {/* ChoiceChar 페이지에서는 메뉴 전체 숨김 */}
-            {!isChoiceCharPage && (
-              <ul className="main-menu">
-                {/* 키즈 모드에서는 키즈 메뉴만, 다른 모드에서는 모든 메뉴 표시 */}
-                {isKidsMode
-                  ? mainMenu
+          {/* ChoiceChar 페이지에서는 메뉴 전체 숨김 */}
+          {!isChoiceCharPage && (
+            <ul className="main-menu">
+              {/* 키즈 모드에서는 키즈 메뉴만, 다른 모드에서는 모든 메뉴 표시 */}
+              {isKidsMode
+                ? mainMenu
                     .filter((menu) => menu.path === "/kids")
                     .map((menu) => (
                       <li key={menu.id}>
@@ -93,60 +79,16 @@ const Header = () => {
                         </Link>
                       </li>
                     ))
-                  : mainMenu.map((menu) => (
+                : mainMenu.map((menu) => (
                     <li key={menu.id}>
                       <Link className="font-wave" to={menu.path}>
                         {menu.title}
                       </Link>
                     </li>
                   ))}
-              </ul>
-            )}
-          </div>
-
-          {/* ChoiceChar 페이지에서만 header-right 전체 숨김 */}
-          {!isChoiceCharPage && (
-            <div className="header-right">
-              {/* 키즈 모드에서는 검색 버튼만 숨김 */}
-              {!isKidsMode && (
-                <p className="search" onClick={() => setIsSearchOpen(true)}>
-                  <span>검색</span>
-                </p>
-              )}
-              {!user ? (
-                <p className="login">
-                  <Link className="font-wave" to={"/login"}>
-                    웨이브시작하기
-                  </Link>
-                </p>
-              ) : (
-                <div className="user-info">
-                  <p className={`user ${charClass}`}>{userInitial}</p>
-                  <ul className="user-list">
-                    <li>
-                      <Link to={"/profile"}>회원정보</Link>
-                    </li>
-                    <li>
-                      <Link to={"/favorite"}>찜리스트</Link>
-                    </li>
-                    <li>
-                      <Link to={"/playlist"}>시청리스트</Link>
-                    </li>
-                    <li>
-                      <Link to={"/choice-char"}>프로필변경</Link>
-                    </li>
-                    <li>
-                      <button onClick={handleLogout} className="btn xsmall primary">
-                        로그아웃
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
+            </ul>
           )}
         </div>
-      </header>
 
         {/* ChoiceChar 페이지에서만 header-right 전체 숨김 */}
         {!isChoiceCharPage && (
@@ -186,10 +128,7 @@ const Header = () => {
                     <Link to={"/choice-char"}>프로필변경</Link>
                   </li>
                   <li>
-                    <button
-                      onClick={handleLogout}
-                      className="btn xsmall primary"
-                    >
+                    <button onClick={handleLogout} className="btn xsmall primary">
                       로그아웃
                     </button>
                   </li>
