@@ -2,7 +2,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./scss/Header.scss";
 import { useAuthStore } from "../stores/useAuthStore";
-import SearchOverlay from "./SearchOverlay";
 interface MenuItem {
   id: number;
   title: string;
@@ -144,8 +143,6 @@ const Header = () => {
           )}
         </div>
       </header>
-
-      <SearchOverlay />
     </>
   );
 };
