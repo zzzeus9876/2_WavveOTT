@@ -29,7 +29,6 @@ const Home = () => {
     <main className="main-home">
       <div className="" style={{ minHeight: "200px" }}>
         <MainSlider />
-        메인 탑 비주얼 공간
       </div>
       <div className="inner">
         <BroadcastList />
