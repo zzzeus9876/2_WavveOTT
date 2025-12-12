@@ -13,7 +13,7 @@ main {
       left: -55%;
       width: 300%;
       height: 300%;
-      background-image: url("/images/bg-login.png"); // 이미지 경로 지정
+      background-image: url("/images/bg-login.png"); 
       background-repeat: repeat;
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 0;
@@ -77,11 +77,9 @@ main {
     }
 
     .save-id {
+      @include g.myFlex($gap: 20px, $jc: flex-start);
       label {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 8px;
+        @include g.myFlex($gap: 8px, $jc: flex-start);
         color: g.$color-font-grey3;
       }
     }
