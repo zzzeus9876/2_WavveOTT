@@ -3,8 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./scss/Header.scss";
 import { useAuthStore } from "../stores/useAuthStore";
 import SearchOverlay from "./SearchOverlay";
-import { useState } from "react";
-
 interface MenuItem {
   id: number;
   title: string;
@@ -28,7 +26,6 @@ const Header = () => {
     useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // 조건부 렌더링 (경로 확인)
   const isChoiceCharPage = location.pathname
@@ -109,7 +106,7 @@ const Header = () => {
             <div className="header-right">
               {/* 키즈 모드에서는 검색 버튼만 숨김 */}
               {!isKidsMode && (
-                <p className="search" onClick={() => setIsSearchOpen(true)}>
+                <p className="search">
                   <span>검색</span>
                 </p>
               )}
@@ -148,7 +145,7 @@ const Header = () => {
         </div>
       </header>
 
-      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <SearchOverlay />
     </>
   );
 };
