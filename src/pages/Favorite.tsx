@@ -1,10 +1,7 @@
+import "./scss/Favorite.scss";
 const Favorite = () => {
   return (
-    <main className="entertainment">
-      <div>
-        <img src="/images/visual/visual-entertainment-main.jpg" alt="" />
-        Entertainment100% 다 쓰는 경우
-      </div>
+    <main className="favorite-wrap">
       <div className="inner">
         <section className="card-list">
           <h2>찜리스트</h2>

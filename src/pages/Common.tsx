@@ -49,10 +49,22 @@ const Common = () => {
             <input type="radio" name="a" />
             <input type="radio" name="a" checked />
           </li>
+          <li>
+            <div className="select-list">
+              <p>전체선택</p>
+              <ul>
+                <li>리스트 01</li>
+                <li>리스트 02</li>
+                <li>리스트 03</li>
+                <li>리스트 04</li>
+                <li>리스트 05</li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </div>
       <div className="inner">
-        <section className="card-list">
+        <section>
           <h2>제목입니다</h2>
           <div>내용</div>
         </section>
