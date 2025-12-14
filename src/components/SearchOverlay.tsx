@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import "./scss/SearchOverlay.scss";
 import { useSearchStore } from '../stores/useSearchStore';
 
-const SearchOverlay = () => {
+interface Props{
+  onClose: () => void;
+}
+
+const SearchOverlay = ({ onClose }: Props) => {
   const [text, setText] = useState("");
   const {todos, onAddTextTodo, onRemoveTodos, onRemoveAll} = useSearchStore();
 
@@ -15,7 +19,7 @@ const SearchOverlay = () => {
   return (
     <div className='search-popup'>
       <div className="search-inner-wrap">
-        <div className="close-bg"></div>
+        <div className="close-bg" onClick={onClose}></div>
         <div className="search-inner">
           <div className="keyboard-box">
             <form className="keyboard-top" name="search" onSubmit={handleSubmit}>
@@ -40,11 +44,16 @@ const SearchOverlay = () => {
             <div className="latest-searches-box bottom-search-box">
               <div className="searches-title">
                 <p className="title-left font-wave">최근 검색어</p>
-                <button>전체삭제</button>
+                <button onClick={onRemoveAll}>전체삭제</button>
               </div>
               <ul className="latest-searches-list">
-                {todos.map((todo, id) => (
-                  <li key={id}></li>
+                {todos.map((todo) => (
+                  <li key={todo.id}>
+                    <span>{todo.text}</span>
+                    <button onClick={() => onRemoveTodos(todo.id)}>
+                      <img src="/images/icons/icon-search-remove.svg" alt="삭제" />
+                    </button>
+                  </li>
                 ))}
               </ul> 
             </div>
@@ -58,11 +67,11 @@ const SearchOverlay = () => {
                 </div>
               </div>
               <ul className="popular-searches-list">
-                <li>
+                {/* <li>
                   <button>
                     <span className="rank"></span>
                   </button>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

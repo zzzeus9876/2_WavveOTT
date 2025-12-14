@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./scss/Header.scss";
 import { useAuthStore } from "../stores/useAuthStore";
+import SearchOverlay from "./SearchOverlay";
 
 interface MenuItem {
   id: number;
@@ -27,6 +28,7 @@ const Header = () => {
     useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
   
   // 스크롤 상태 관리
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,6 +75,7 @@ const Header = () => {
   };
 
   return (
+    <>
     <header className={isScrolled ? "active" : ""}>
       <div className="inner">
         <div className="header-left">
@@ -131,7 +134,7 @@ const Header = () => {
           <div className="header-right">
             {/* 키즈 모드에서는 검색 버튼만 숨김 */}
             {!isKidsMode && (
-              <p className="search">
+              <p className="search" onClick={() => setSearchOpen(true)}>
                 <span>검색</span>
               </p>
             )}
@@ -178,6 +181,9 @@ const Header = () => {
         )}
       </div>
     </header>
+
+    {searchOpen && <SearchOverlay onClose={() => setSearchOpen(false)} />}
+    </>
   );
 };
 
