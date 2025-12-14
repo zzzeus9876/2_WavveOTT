@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import "./scss/SearchOverlay.scss";
 import { useSearchStore } from '../stores/useSearchStore';
 
-const SearchOverlay = () => {
+interface Props{
+  onClose: () => void;
+}
+
+const SearchOverlay = ({ onClose }: Props) => {
   const [text, setText] = useState("");
   const {todos, onAddTextTodo, onRemoveTodos, onRemoveAll} = useSearchStore();
 
@@ -15,7 +19,7 @@ const SearchOverlay = () => {
   return (
     <div className='search-popup'>
       <div className="search-inner-wrap">
-        <div className="close-bg"></div>
+        <div className="close-bg" onClick={onClose}></div>
         <div className="search-inner">
           <div className="keyboard-box">
             <form className="keyboard-top" name="search" onSubmit={handleSubmit}>
