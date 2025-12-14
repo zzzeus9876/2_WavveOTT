@@ -2,7 +2,7 @@
 
 .btn {
   min-width: 100px;
-
+font-family: 'wave';
   text-align: center;
   color: g.$color-font-white;
   display: inline-block;
@@ -39,11 +39,24 @@
 
   &.primary {
     background-color: g.$color-font-primary;
+    &:hover{
+      background-color: #003DC2;
+    }
   }
 
   &.secondary {
     background-color: g.$color-secondary-white;
     color: g.$color-font-primary;
+    &:hover{
+      background-color: #E3E3E3;
+    }
+  }
+
+  &.secondary-line {
+    border: 1px solid #FFF;
+    &:hover{
+      background-color: #2C2C2C;
+    }
   }
 
   &.disabled,
@@ -51,6 +64,9 @@
     color: g.$color-font-grey2;
     background-color: g.$color-secondary-dark3;
     cursor: no-drop;
+    &:hover{
+      background-color: g.$color-secondary-dark3;
+    }
   }
 
   &.wFull {
@@ -169,14 +185,6 @@ table {
   width: 100%;
   border-collapse: collapse;
   text-align: center;
-
-  &+.list-content {
-    padding: 80px 64px;
-    line-height: 2;
-    border-bottom: 1px solid g.$color-secondary-dark3;
-    overflow: hidden;
-
-  }
 }
 
 th {
@@ -187,17 +195,12 @@ td {
   line-height: 84px;
 }
 
-tr {
-  >th {
-    background-color: g.$color-secondary-dark1;
-  }
-
-  >td {
-    border-bottom: 1px solid g.$color-secondary-dark3;
-  }
+/* Wavve PADO 폰트 클래스 */
+.font-wave {
+  font-family: "Wave";
 }
 
-.list-button {
-  @include g.myFlex($gap: 20px, $jc: center);
-  padding-top: 40px;
+/* Russo One 폰트 클래스 */
+.font-russo {
+  font-family: "Russo One";
 }
