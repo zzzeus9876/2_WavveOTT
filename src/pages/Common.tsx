@@ -1,5 +1,43 @@
-import "./scss/Common.scss";
+
+import { useState } from "react";
+import CustomSelect from "../components/CustomSelect";
+import type { SelectOption } from "../types/etc";
+import { useNavigate } from "react-router-dom";
+
+// 레이블과 링크값
+const linkOptions: SelectOption[] = [
+  { label: '패스 데이터 없을 때', path: '' },
+  { label: '공지사항', path: '/service-center' },
+  { label: '1:1 문의하기', path: '/service-center/userQna' },
+  { label: '이용약관', path: '/service-center/agreement' },
+  { label: '스크롤 경우 까지 포함', path: '' },
+  { label: '리스트 너비와 같은', path: '' },
+  { label: '값으로 콤포넌트에', path: '' },
+  { label: '입력해 주세요', path: '' },
+];
+
 const Common = () => {
+
+  // --------셀렉트 컴포넌트를 위한 내용----------------------
+  const navigate = useNavigate();
+  // CustomSelect가 '선택'이라는 기본 레이블을 표시하도록 초기 상태를 빈 문자열로 설정합니다.
+  const [currentLabel, setCurrentLabel] = useState('');
+  
+  // path와 selectedLabel을 인수로 받기
+  const handleSelectionAndNavigation = (path: string, selectedLabel: string) => {
+    // 전달받은 label을 바로 설정하여
+    setCurrentLabel(selectedLabel);
+    
+    // 페이지 이동 처리
+    if (path && path !== '??') {
+      navigate(path);
+      console.log(`[라우팅] 경로 이동: ${path}`);
+    } else {
+      console.log(`[라우팅] 경로 이동 생략: 유효하지 않은 path (${path})`);
+    }
+  };
+// -----------// 셀렉트 컴포넌트를 위한 내용-------------------
+
   return (
     <main style={{ paddingTop: "90px" }}>
       <div className="">100% 다 쓰는 경우</div>
@@ -46,28 +84,26 @@ const Common = () => {
             </button>
           </li>
           <li>
-            <input type="text" value="" placeholder="SAMPLE" />
-            <input type="text" disabled value="SAMPLE" />
+            <input type="text" value="" placeholder="SAMPLE" readOnly />
+            <input type="text" disabled value="SAMPLE" readOnly />
           </li>
           <li>
-            <input type="checkbox" />
-            <input type="checkbox" checked />
+            <input type="checkbox" readOnly />
+            <input type="checkbox" checked readOnly />
           </li>
           <li>
-            <input type="radio" name="a" />
-            <input type="radio" name="a" checked />
+            <input type="radio" name="a" readOnly />
+            <input type="radio" name="a" checked readOnly />
           </li>
           <li>
-            <div className="select-list">
-              <p>전체선택</p>
-              <ul>
-                <li>리스트 01</li>
-                <li>리스트 02</li>
-                <li>리스트 03</li>
-                <li>리스트 04</li>
-                <li>리스트 05</li>
-              </ul>
-            </div>
+            {/* 셀렉트를 위한 컴포넌트 */}
+            <CustomSelect
+              options={linkOptions}
+              selectedValue={currentLabel}
+              onSelect={handleSelectionAndNavigation}
+              label="선택하세요"
+              width="205" // 리스트의 너비를 넣어주세요
+            />
           </li>
         </ul>
       </div>
@@ -87,3 +123,4 @@ const Common = () => {
 };
 
 export default Common;
+
