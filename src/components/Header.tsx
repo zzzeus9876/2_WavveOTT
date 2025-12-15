@@ -134,7 +134,7 @@ const Header = () => {
           <div className="header-right">
             {/* 키즈 모드에서는 검색 버튼만 숨김 */}
             {!isKidsMode && (
-              <p className="search" onClick={() => setSearchOpen(true)}>
+              <p className="search" onClick={() => setSearchOpen((prev) => !prev)}>
                 <span>검색</span>
               </p>
             )}

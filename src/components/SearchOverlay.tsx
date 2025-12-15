@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./scss/SearchOverlay.scss";
 import { useSearchStore } from '../stores/useSearchStore';
 
@@ -15,6 +15,13 @@ const SearchOverlay = ({ onClose }: Props) => {
     onAddTextTodo(text);
     setText("");
   }
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [])
 
   return (
     <div className='search-popup'>
