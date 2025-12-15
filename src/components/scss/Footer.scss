@@ -25,6 +25,8 @@ footer {
       }
       > .goToTop {
         background-image: url(/images/icons/icon-top.png);
+        cursor: pointer;
+        transition: opacity 0.6s ease-in-out;
         &:hover {
           background-image: url(/images/icons/icon-top-hover.png);
         }
@@ -41,7 +43,7 @@ footer {
           display: flex;
           gap: 40px;
           margin-bottom: 30px;
-          font-family: 'wave';
+          font-family: "wave";
 
           p {
             font-size: 16px;
