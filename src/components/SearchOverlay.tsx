@@ -6,28 +6,33 @@ interface Props{
   onClose: () => void;
 }
 
-const recommendKeywords = [
-  "지금 우리는",
-  "지금 사랑하는 사람과 살고 있습니까",
-  "지금 만나러",
-  "지금부터",
-  "지금 한가할깡?",
-  "지금부터 스트리밍을 시작",
-  "청춘은 바로 지금",
-  "해결사님은 지금",
-];
-
 const SearchOverlay = ({ onClose }: Props) => {
   const [text, setText] = useState("");
   const [nowDate, setNowDate] = useState<string>("");
-  const {
-    todos, onAddTextTodo, onRemoveTodos, onRemoveAll,
-    results, loading, onFetchSearch, onClearResults,
-  } = useSearchStore();
+  // const {
+  //   todos, onAddTextTodo, onRemoveTodos, onRemoveAll,
+  //   results, loading, onFetchSearch, onClearResults,
+  //   trendingKeywords, onFetchTrendingKeywords,
+  // } = useSearchStore();
+  const todos = useSearchStore((s) => s.todos);
+  const onAddTextTodo = useSearchStore((s) => s.onAddTextTodo);
+  const onRemoveTodos = useSearchStore((s) => s.onRemoveTodos);
+  const onRemoveAll = useSearchStore((s) => s.onRemoveAll);
 
+  const results = useSearchStore((s) => s.results);
+  const loading = useSearchStore((s) => s.loading);
+  const onFetchSearch = useSearchStore((s) => s.onFetchSearch);
+  const onClearResults = useSearchStore((s) => s.onClearResults);
+
+  const trendingKeywords = useSearchStore((s) => s.trendingKeywords);
+  const onFetchTrendingKeywords = useSearchStore((s) => s.onFetchTrendingKeywords);
 
   const trimmed = text.trim();
   const isTyping = trimmed.length > 0;
+
+  useEffect(() => {
+    onFetchTrendingKeywords();
+  }, [onFetchTrendingKeywords]);
 
   useEffect(() => {
     if (!isTyping) {
@@ -39,8 +44,10 @@ const SearchOverlay = ({ onClose }: Props) => {
 
   const previewList = useMemo(() => {
     if (!isTyping) return [];
-    return recommendKeywords.filter((k) => k.includes(trimmed)).slice(0, 10);
-  }, [isTyping, trimmed]);
+    return trendingKeywords
+      .filter((k) => k.includes(trimmed))
+      .slice(0, 10);
+  }, [isTyping, trimmed, trendingKeywords]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,8 +80,6 @@ const SearchOverlay = ({ onClose }: Props) => {
     return () => clearInterval(timer);
   }, []);
 
-  
-
   return (
     <div className='search-popup' role="dialog" aria-modal="true">
       <div className="search-inner-wrap">
@@ -92,9 +97,11 @@ const SearchOverlay = ({ onClose }: Props) => {
                 <img src="/images/icons/icon-search.svg" alt="검색" />
               </button>
             </form>
+
             {/* 입력중일 때만 자동완성(왼쪽 리스트) + 추천칩(오른쪽) */}
             {isTyping && (
               <div className="typing-panel">
+                {/* 자동완성 */}
                 <ul className="preview-list">
                   {previewList.map((t) => (
                     <li key={t}>
@@ -109,10 +116,41 @@ const SearchOverlay = ({ onClose }: Props) => {
                   ))}
                 </ul>
 
+                {/* TMDB 검색 결과 */}
+                <div className="tmdb-result">
+                  {loading && <p className='hint'>검색 중...</p>}
+                  {!loading && results.length === 0 && (
+                    <p className='hint'>검색 결과가 없습니다.</p>
+                  )}
+                  {!loading && results.length > 0 && (
+                    <ul className='result-list'>
+                      {results.map((r) => (
+                        <li key={`${r.kind}-${r.id}`}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setText(r.label);
+                              onAddTextTodo(r.label);
+                            }}
+                          >
+                            <span className='badge'>
+                              {r.kind === "movie" && "영화"}
+                              {r.kind === "collection" && "시리즈"}
+                              {r.kind === "person" && "인물"}
+                            </span>
+                            <span className='word'>{r.label}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                {/* 추천 검색어(=트렌딩 키워드) */}
                 <div className="recommend-box">
                   <p className="recommend-title">추천 검색어</p>
                   <div className="chips">
-                    {recommendKeywords.slice(0, 8).map((k) => (
+                    {trendingKeywords.slice(0, 8).map((k) => (
                       <button
                         type="button"
                         key={k}
@@ -159,7 +197,7 @@ const SearchOverlay = ({ onClose }: Props) => {
                         >
                           <img
                             src="/images/icons/icon-search-remove.svg"
-                            alt=""
+                            alt="닫기"
                           />
                         </button>
                       </li>
@@ -178,7 +216,7 @@ const SearchOverlay = ({ onClose }: Props) => {
                 </div>
 
                 <ol className="popular-searches-list">
-                  {recommendKeywords.slice(0, 10).map((t, i) => (
+                  {trendingKeywords.slice(0, 10).map((t, i) => (
                     <li key={t}>
                       <button type="button" onClick={() => setText(t)}>
                         <span className="rank font-wave">{i + 1}</span>
