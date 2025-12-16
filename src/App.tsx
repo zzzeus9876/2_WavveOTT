@@ -9,8 +9,6 @@ import Common from "./pages/Common";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
-// import Favorite from './pages/Favorite';
-// import PlayList from './pages/PlayList';
 import Entertainment from "./pages/Entertainment";
 import Drama from "./pages/Drama";
 import Movie from "./pages/Movie";
@@ -29,6 +27,7 @@ import UserQna from "./pages/UserQna";
 import Agreement from "./pages/Agreement";
 import NoticeA from "./pages/NoticeA";
 import NoticeAdetail from "./pages/NoticeAdetail";
+import PaymentFinish from "./pages/PaymentFinish";
 
 function App() {
   return (
@@ -37,7 +36,6 @@ function App() {
       <Routes>
         {/*  */}
         <Route path="/" element={<Home />} />
-        {/* 예능, 드라마, 영화, 해외시리즈, 시사교양,애니메이션, 키즈 */}
         <Route path="/entertainment" element={<Entertainment />} />
         <Route path="/drama" element={<Drama />} />
         <Route path="/movie" element={<Movie />} />
@@ -50,10 +48,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
-        {/* <Route path="/favorite" element={<Favorite />} /> 마이페이지로 통합 */}
-        {/* <Route path="/playlist" element={<PlayList />} /> 마이페이지로 통합 */}
         <Route path="/contentsdetail/:type/:id" element={<ContentsDetail />} />
         <Route path="/ticket" element={<Ticket />} />
+        <Route path="/payment-finish" element={<PaymentFinish />} />
         <Route path="/service-center" element={<ServiceCenter />}>
           <Route index element={<NoticeA />} />
           <Route path="notice" element={<NoticeA />} />

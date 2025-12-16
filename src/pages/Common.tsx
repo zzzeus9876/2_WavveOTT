@@ -60,10 +60,13 @@ const Common = () => {
 
   return (
     <main style={{ paddingTop: "90px" }}>
-      <div className="">
-        <p>100% 다 쓰는 경우</p>
-      </div>
-      <div className="inner">
+      <div className="">100%</div>
+      <div className="inner" style={{ gap: "40px" }}>
+        <h2>badge</h2>
+        <div style={{ padding: "20px", backgroundColor: "grey" }}>
+          <span className="badge-text-type">추천</span>
+        </div>
+        <h2>button</h2>
         <ul className="common-btn-list">
           <li>
             <button className="btn xsmall primary">btn xsmall primary</button>
@@ -109,6 +112,9 @@ const Common = () => {
               btn large disabled
             </button>
           </li>
+        </ul>
+        <h2>input</h2>
+        <ul className="common-btn-list">
           <li>
             <input type="text" value="" placeholder="SAMPLE" readOnly />
             <input type="text" disabled value="SAMPLE" readOnly />
@@ -131,6 +137,9 @@ const Common = () => {
               width="205" // 리스트의 너비를 넣어주세요
             />
           </li>
+        </ul>
+        <h2>modal popup</h2>
+        <ul>
           <li>
             {/* -------- 모달 테스트 버튼 --------- */}
             <button
@@ -160,8 +169,11 @@ const Common = () => {
             {/* ----- // 모달 테스트 버튼------ */}
           </li>
         </ul>
+        <section>
+          <h2>제목입니다</h2>
+          <div>내용</div>
+        </section>
       </div>
-
       {/* ------------- 모달 컴포넌트 통합 --------- */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} size={modalSize}>
         {/* 모달 내부 콘텐츠: Header, Body, Footer를 직접 구성 */}
@@ -187,17 +199,6 @@ const Common = () => {
         </div>
       </Modal>
       {/* ----------- // 모달 컴포넌트 통합 ----- */}
-      <div className="inner">
-        <section>
-          <h2>제목입니다</h2>
-          <div>내용</div>
-        </section>
-        <section className="card-list">
-          <h2>제목입니다</h2>
-          <div>내용</div>
-        </section>
-        <div className="">inner 안에서만 보여지면 되는 컨텐츠</div>
-      </div>
     </main>
   );
 };

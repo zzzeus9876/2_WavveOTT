@@ -2,7 +2,7 @@ import "./scss/welcome.scss";
 import "../style/common-button.scss";
 import { Link } from "react-router-dom";
 
-const Welcome = () => {
+const PaymentFinish = () => {
   return (
     <main>
       <div className="Welcome">
@@ -26,4 +26,4 @@ const Welcome = () => {
   );
 };
 
-export default Welcome;
+export default PaymentFinish;
