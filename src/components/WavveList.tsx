@@ -7,6 +7,7 @@ import { Navigation } from 'swiper/modules';
 import type { OnlyWavve } from '../types/movie';
 
 import { getGenres, getGrades } from '../utils/mapping';
+import { backgroundImage, logoImage } from '../utils/getListData';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -75,7 +76,7 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
                         <div className="poster-wrap badge-wavve">
                             <img
                                 className="main"
-                                src={`https://image.tmdb.org/t/p/w500${m.poster_path}`}
+                                src={`https://image.tmdb.org/t/p/original${m.poster_path}`}
                                 alt={m.title}
                             />
                             {(m.wavveVideo?.key || m.backdrop_path) && (
@@ -89,14 +90,18 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
                                             <iframe
                                                 className="hover video"
                                                 src={`https://www.youtube.com/embed/${m.wavveVideo.key}?autoplay=1&mute=1`}
-                                                allow="autoplay; fullscreen"
                                                 allowFullScreen
-                                                title={m.title}
+                                                title={`${m.title}`}
                                             />
                                         ) : (
                                             <img
                                                 className="hover image"
-                                                src={`https://image.tmdb.org/t/p/w500${m.backdrop_path}`}
+                                                src={
+                                                    backgroundImage(m.id) ||
+                                                    (m.backdrop_path
+                                                        ? `https://image.tmdb.org/t/p/original${m.backdrop_path}`
+                                                        : undefined)
+                                                }
                                                 alt={m.title}
                                             />
                                         )}
@@ -104,7 +109,12 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
                                         <div className="logo-box">
                                             <p className="content-logo">
                                                 <img
-                                                    src={`https://image.tmdb.org/t/p/w500${m.logo_path}`}
+                                                    src={
+                                                        logoImage(m.id) ||
+                                                        (m.logo
+                                                            ? `https://image.tmdb.org/t/p/original${m.logo}`
+                                                            : undefined)
+                                                    }
                                                     alt="content-logo"
                                                 />
                                             </p>

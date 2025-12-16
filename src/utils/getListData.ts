@@ -28,37 +28,35 @@ export const backgroundImage = (tmdbId: number): string | null => {
 };
 
 // tmdb 이미지와 wavve 이미지 같이(wavve 쓰고 없을 땐 tmdb 꺼 쓰기 위해)
-export const getContentImages = (selectedContent: {
+export const getContentImages = (tvWavves: {
     id: number;
     logo?: string | null;
     backdrop_path?: string | null;
     episodes?: { still_path?: string | null; backdrop_path?: string | null }[];
 }): ContentImages & { episodeImages?: string[] } => {
     //tmdb에서 로고 가져오기
-    const tmdbLogo = selectedContent.logo
-        ? `https://image.tmdb.org/t/p/original${selectedContent.logo}`
-        : null;
+    const tmdbLogo = tvWavves.logo ? `https://image.tmdb.org/t/p/original${tvWavves.logo}` : null;
     //tmdb에서 배경 가져오기
-    const tmdbBackground = selectedContent.backdrop_path
-        ? `https://image.tmdb.org/t/p/original${selectedContent.backdrop_path}`
+    const tmdbBackground = tvWavves.backdrop_path
+        ? `https://image.tmdb.org/t/p/original${tvWavves.backdrop_path}`
         : null;
 
     //tmdb에는 없고 wavve에는 있는 이미지 가져올 때
-    const wavveLogo = logoImage(selectedContent.id);
-    const wavveBackground = backgroundImage(selectedContent.id);
+    const wavveLogo = logoImage(tvWavves.id);
+    const wavveBackground = backgroundImage(tvWavves.id);
 
     // Wavve 없으면 TMDB 사용
     const logo = wavveLogo ?? tmdbLogo;
     const background = wavveBackground ?? tmdbBackground;
 
     // 에피소드에 still_path (썸네일) 없을 때 전체 배열에서 backdrop_path 가져오기
-    const episodeImages = selectedContent.episodes?.map(
+    const episodeImages = tvWavves.episodes?.map(
         (e) =>
             e.still_path && e.still_path !== ''
                 ? `https://image.tmdb.org/t/p/w500${e.still_path}`
-                : selectedContent.backdrop_path
-                ? `https://image.tmdb.org/t/p/w500${selectedContent.backdrop_path}`
-                : backgroundImage(selectedContent.id) ?? '' // Wavve 이미지, 없으면 빈 문자열
+                : tvWavves.backdrop_path
+                ? `https://image.tmdb.org/t/p/w500${tvWavves.backdrop_path}`
+                : backgroundImage(tvWavves.id) ?? '' // Wavve 이미지, 없으면 빈 문자열
     );
 
     return {
