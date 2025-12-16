@@ -14,6 +14,7 @@ export interface MediaBase {
     season_number: number;
     episodeCount: number;
     logo_path: string;
+    runtime?: number;
     creditData: {
         cast: {
             id: number;
@@ -29,15 +30,23 @@ export interface MediaBase {
 // 영화에대한 타입 -> 더 사용할내용있으면 추가
 export interface Movie extends MediaBase {
     release_data: string;
+    logo: string | null;
+    key: string;
+    videos: Video[];
+    certificationMovie: { certification: number }[] | 'NR';
+    release_date: string;
 }
 
-export interface MovieWithLogo extends MediaBase {
+export interface MovieWithLogo extends Movie {
     logo: string | null;
+    file_path: string;
 }
 
 export interface MovieState {
     popularMovies: MovieWithLogo[];
+    selectedPopular: Movie | null;
     onFetchPopular: () => Promise<void>;
+    setSelectedPopular: (id: number) => void;
 }
 
 // 웨이브 콘텐츠 타입
@@ -55,6 +64,7 @@ export interface OnlyWavve extends MediaBase {
     seasons?: Season[];
     season_number: number;
     first_air_date: string;
+    logo: string;
 }
 
 export interface Video {

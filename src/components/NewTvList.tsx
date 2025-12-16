@@ -7,7 +7,7 @@ import { Navigation } from 'swiper/modules';
 import type { Tv } from '../types/movie';
 
 import { getGenres, getGrades } from '../utils/mapping';
-import { logoImage } from '../utils/getData';
+import { backgroundImage, logoImage } from '../utils/getListData';
 
 interface NewTvListProps {
     title: string;
@@ -71,7 +71,7 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
                         <div className="poster-wrap badge-new">
                             <img
                                 className="main"
-                                src={`https://image.tmdb.org/t/p/w500${t.poster_path}`}
+                                src={`https://image.tmdb.org/t/p/original${t.poster_path}`}
                                 alt={t.title}
                             />
                             {(t.tvsVideo?.key || t.backdrop_path || t.poster_path) && (
@@ -85,16 +85,18 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
                                             <iframe
                                                 className="hover video"
                                                 src={`https://www.youtube.com/embed/${t.tvsVideo.key}?autoplay=1&mute=1`}
-                                                allow="autoplay; fullscreen"
                                                 allowFullScreen
                                                 title={t.title}
                                             />
                                         ) : (
                                             <img
                                                 className="hover image"
-                                                src={`https://image.tmdb.org/t/p/w500${
-                                                    t.backdrop_path || t.poster_path
-                                                }`}
+                                                src={
+                                                    backgroundImage(t.id) ||
+                                                    (t.backdrop_path
+                                                        ? `https://image.tmdb.org/t/p/original${t.backdrop_path}`
+                                                        : undefined)
+                                                }
                                                 alt={t.title}
                                             />
                                         )}
@@ -105,8 +107,8 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
                                                     src={
                                                         logoImage(t.id) ||
                                                         (t.logo
-                                                            ? `https://image.tmdb.org/t/p/w500${t.logo}`
-                                                            : '')
+                                                            ? `https://image.tmdb.org/t/p/original${t.logo}`
+                                                            : undefined)
                                                     }
                                                     alt="content-logo"
                                                 />
@@ -114,7 +116,7 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
                                             {hoverId === t.id && t.tvsVideo?.key && (
                                                 <img
                                                     src="/images/icons/icon-volume-off.svg"
-                                                    alt=""
+                                                    alt="sound-icon"
                                                     className="sound-icon"
                                                 />
                                             )}

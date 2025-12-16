@@ -7,14 +7,12 @@
 
     .episode-menu {
         @include g.myFlex($gap: 10px);
-        border: 1px solid blue;
     }
     .episode-list {
         @include g.myFlexCol();
 
         .episode-card {
             @include g.myFlex($jc: start, $gap: 30px);
-            border: 1px solid red;
 
             .episodes-img {
                 position: relative;
@@ -44,7 +42,6 @@
             }
             .episodes-text {
                 @include g.myFlexCol($gap: 16px);
-                border: 1px solid blue;
                 max-width: 220px;
 
                 .episode-overview {
