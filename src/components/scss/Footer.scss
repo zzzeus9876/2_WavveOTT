@@ -25,6 +25,8 @@ footer {
       }
       > .goToTop {
         background-image: url(/images/icons/icon-top.png);
+        cursor: pointer;
+        transition: opacity 0.6s ease-in-out;
         &:hover {
           background-image: url(/images/icons/icon-top-hover.png);
         }

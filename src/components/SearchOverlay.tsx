@@ -108,36 +108,6 @@ const SearchOverlay = ({ onClose }: Props) => {
                     </li>
                   ))}
                 </ul>
-                {/* TMDB 결과 */}
-                <div className="tmdb-result">
-                  {loading && <p className="hint">검색 중...</p>}
-                  {!loading && results.length === 0 && (
-                    <p className="hint">검색 결과가 없습니다.</p>
-                  )}
-
-                  {!loading && results.length > 0 && (
-                    <ul className="result-list">
-                      {results.map((r) => (
-                        <li key={`${r.kind}-${r.id}`}>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setText(r.label);
-                              onAddTextTodo(r.label);
-                            }}
-                          >
-                            <span className="badge">
-                              {r.kind === "movie" && "영화"}
-                              {r.kind === "collection" && "시리즈"}
-                              {r.kind === "person" && "인물"}
-                            </span>
-                            <span className="word">{r.label}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
 
                 <div className="recommend-box">
                   <p className="recommend-title">추천 검색어</p>

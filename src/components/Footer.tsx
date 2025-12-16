@@ -1,6 +1,20 @@
 import { Link } from "react-router-dom";
 import "./scss/Footer.scss";
+
+export interface goToTopBtnProps {
+  scrollToTop: () => void;
+  onclick: () => void;
+}
+
 const Footer = () => {
+  // 스크롤 함수
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <footer>
       <div className="inner">
@@ -8,7 +22,7 @@ const Footer = () => {
           <p className="chatbot">
             <span className="hidden">chatbot</span>
           </p>
-          <p className="goToTop">
+          <p className="goToTop" onClick={scrollToTop}>
             <span className="hidden">go to top</span>
           </p>
         </div>
