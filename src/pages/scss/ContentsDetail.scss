@@ -22,6 +22,7 @@
                 .detail-backdrop {
                     img {
                         width: 100%;
+                        border-radius: 12px;
                     }
                 }
                 .detail-logo {
@@ -52,18 +53,44 @@
 
                 .detail-title-right {
                     @include g.myFlex($jc: unset, $gap: 20px);
+
+                    .detail-heart-btn {
+                        width: 68px;
+                        height: 68px;
+                        background: url('/images/icons/icon-heart-default.svg') no-repeat center;
+                        background-size: contain;
+
+                        &:hover {
+                            background: url('/images/icons/icon-heart-hover.svg') no-repeat center;
+                        }
+                    }
+                    .detail-share-btn {
+                        width: 68px;
+                        height: 68px;
+                        background: url('/images/icons/icon-share-default.svg') no-repeat center;
+                        background-size: contain;
+
+                        &:hover {
+                            background: url('/images/icons/icon-share-hover.svg') no-repeat center;
+                        }
+                    }
                 }
             }
             .detail-text-box {
                 @include g.myFlexCol($gap: 80px);
 
                 .detail-content {
-                    @include g.myFlex($gap: 120px);
+                    @include g.myFlex($ai: start, $gap: 120px);
 
                     .detail-content-left {
                         @include g.myFlexCol();
                         > p {
                             color: g.$color-other4;
+                            display: -webkit-box;
+                            line-clamp: 3;
+                            -webkit-line-clamp: 3;
+                            -webkit-box-orient: vertical;
+                            overflow: hidden;
                         }
                     }
                     .detail-content-right {
@@ -136,7 +163,6 @@
         }
         .detail-right {
             width: calc(1720px - 1076px);
-            border: 1px solid green;
 
             .detail-menu-wrap {
                 @include g.myFlex($jc: unset, $gap: 30px);
@@ -156,7 +182,6 @@
                     color: white;
                     font-family: 'Wave', sans-serif;
                     font-size: 18px;
-                    border: 1px solid red;
                 }
             }
             .detail-menu-line {

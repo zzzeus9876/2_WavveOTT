@@ -10,7 +10,6 @@
 
         .recommend-card {
             @include g.myFlex($jc: start, $gap: 30px);
-            border: 1px solid red;
 
             .recommend-img {
                 position: relative;
@@ -40,7 +39,6 @@
 
             .recommend-text {
                 @include g.myFlexCol($gap: 16px);
-                border: 1px solid blue;
                 max-width: 220px;
 
                 .recommend-title {

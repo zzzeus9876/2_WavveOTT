@@ -94,7 +94,7 @@ const ContentsEpisode = ({ episodes, seasons = [], episodeImages }: EpisodeProps
                         </div>
                         <div className="episodes-text">
                             <h3>
-                                시즌 {e.season_number}-{e.episode_number}화
+                                시즌 {e.season_number} {e.episode_number}화
                             </h3>
                             <p>{e.runtime}분</p>
                             <p className="episode-overview">{e.overview}</p>

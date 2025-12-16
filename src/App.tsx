@@ -19,6 +19,7 @@ import Kids from "./pages/Kids";
 import ChoiceChar from "./pages/ChoiceChar";
 import Welcome from "./pages/Welcome";
 import ContentsDetail from "./pages/ContentsDetail";
+import MovieDetail from "./pages/MovieDetail";
 import Ticket from "./pages/Ticket";
 import Event from "./pages/Event";
 import ServiceCenter from "./pages/ServiceCenter";
@@ -28,10 +29,12 @@ import Agreement from "./pages/Agreement";
 import NoticeA from "./pages/NoticeA";
 import NoticeAdetail from "./pages/NoticeAdetail";
 import PaymentFinish from "./pages/PaymentFinish";
+import ScrollTop from "./components/ScrollTop";
 
 function App() {
   return (
     <>
+      <ScrollTop />
       <Header />
       <Routes>
         {/*  */}
@@ -49,6 +52,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/contentsdetail/:type/:id" element={<ContentsDetail />} />
+        <Route path="/moviedetail/:type/:id" element={<MovieDetail />} />
         <Route path="/ticket" element={<Ticket />} />
         <Route path="/payment-finish" element={<PaymentFinish />} />
         <Route path="/service-center" element={<ServiceCenter />}>

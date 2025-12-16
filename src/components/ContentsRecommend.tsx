@@ -15,7 +15,7 @@ const ContentsRecommend = ({ wavves }: RecommendProps) => {
                     <li className="recommend-card" key={w.id}>
                         <div className="recommend-img">
                             <img
-                                src={`https://image.tmdb.org/t/p/w500${w.episodes[0]?.still_path}}`}
+                                src={`https://image.tmdb.org/t/p/original${w.episodes[0]?.still_path}}`}
                                 alt="thum"
                             />
                         </div>
@@ -25,7 +25,7 @@ const ContentsRecommend = ({ wavves }: RecommendProps) => {
                             <div className="recommend-middle">
                                 <p className="recommend-vote seperate">
                                     <img src="/images/icons/icon-star.svg" alt="starIcon" />
-                                    <span>{w.vote_average}</span>
+                                    <span>{(w.vote_average ?? 0).toFixed(1)}</span>
                                 </p>
                                 <p className="recommend-date seperate">
                                     {w.first_air_date?.slice(0, 4)}년

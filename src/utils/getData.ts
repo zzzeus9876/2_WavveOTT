@@ -36,11 +36,11 @@ export const getContentImages = (selectedContent: {
 }): ContentImages & { episodeImages?: string[] } => {
     //tmdb에서 로고 가져오기
     const tmdbLogo = selectedContent.logo
-        ? `https://image.tmdb.org/t/p/w500${selectedContent.logo}`
+        ? `https://image.tmdb.org/t/p/original${selectedContent.logo}`
         : null;
     //tmdb에서 배경 가져오기
     const tmdbBackground = selectedContent.backdrop_path
-        ? `https://image.tmdb.org/t/p/w500${selectedContent.backdrop_path}`
+        ? `https://image.tmdb.org/t/p/original${selectedContent.backdrop_path}`
         : null;
 
     //tmdb에는 없고 wavve에는 있는 이미지 가져올 때
