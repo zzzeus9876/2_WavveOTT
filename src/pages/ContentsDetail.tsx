@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { useWavveStore } from '../stores/useWavveStore';
 import { useTvStore } from '../stores/useTvStore';
@@ -48,6 +48,11 @@ const ContentsDetail = () => {
             if (tvs.length > 0) {
                 setSelectedTv(Number(id));
             }
+
+            // ‼️‼️‼️‼️‼️‼️ 여기에 추가되는 것 넣기 ‼️‼️‼️‼️‼️‼️‼️
+            // if (tvs.length > 0) {
+            //     setSelectedTv(Number(id));
+            // }
         }
     }, [id, type, wavves, tvs, setSelectedWavve, setSelectedTv]);
 
@@ -93,7 +98,7 @@ const ContentsDetail = () => {
                             </p>
                             <p className="title-vote seperate">
                                 <img src="/images/icons/icon-star.svg" alt="starIcon" />
-                                <span>{selectedContent.vote_average}</span>
+                                <span>{selectedContent.vote_average.toFixed(1)}</span>
                             </p>
                             <p className="title-genre seperate">
                                 {getGenres(selectedContent.genre_ids).slice(0, 2).join(' · ') ||
@@ -104,12 +109,8 @@ const ContentsDetail = () => {
                             </p>
                         </div>
                         <div className="detail-title-right">
-                            <button>
-                                <img src="/images/icons/icon-heart-default.svg" alt="heartIcon" />
-                            </button>
-                            <button>
-                                <img src="/images/icons/icon-share-default.svg" alt="shareIcon" />
-                            </button>
+                            <button className="detail-heart-btn"></button>
+                            <button className="detail-share-btn"></button>
                         </div>
                     </div>
                     <div className="detail-text-box">
@@ -119,7 +120,9 @@ const ContentsDetail = () => {
                                 <p>{selectedContent.overview}</p>
                             </div>
                             <div className="detail-content-right">
-                                <button className="btn default primary">이용권 구매하기</button>
+                                <Link to="/ticket" className="btn default primary">
+                                    이용권 구매하기
+                                </Link>
                             </div>
                         </div>
                         <div className="detail-cast">
@@ -173,12 +176,15 @@ const ContentsDetail = () => {
                         >
                             에피소드
                         </button>
-                        <button
-                            className={activeMenu === 'relative' ? 'active' : 'detail-menu-btn'}
-                            onClick={() => setActiveMenu('relative')}
-                        >
-                            관련영상
-                        </button>
+                        {/* 관련영상이 있을 때만 버튼 표시 */}
+                        {selectedContent.videos.length > 0 && (
+                            <button
+                                className={activeMenu === 'relative' ? 'active' : 'detail-menu-btn'}
+                                onClick={() => setActiveMenu('relative')}
+                            >
+                                관련영상
+                            </button>
+                        )}
                         <button
                             className={activeMenu === 'recommend' ? 'active' : 'detail-menu-btn'}
                             onClick={() => setActiveMenu('recommend')}
