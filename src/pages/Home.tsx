@@ -16,6 +16,7 @@ import PrimaryList from '../components/PrimaryList';
 import NewMovieList from '../components/NewMovieList';
 import EditorRecommendCardList from '../components/EditorRecommendCardList';
 import NewTvList from '../components/NewTvList';
+import VarietyLiveList from '../components/VarietyLiveList';
 
 import type { PrimaryItem } from '../types/movie';
 
@@ -77,10 +78,7 @@ const Home = () => {
             <EditorRecommendCardList list={popularMovies} />
             <div className="inner">
                 <NewTvList title="NEW! 새로 올라온 시리즈" tvs={tvs} />
-                <section className="card-list">
-                    <h2>지금 방영중인 예능</h2>
-                    <div className="">내용, 슬라이더, 등등</div>
-                </section>
+                <VarietyLiveList title="지금 방영중인 예능" />
                 <section className="card-list">
                     <h2>꼭 봐야하는 이슈</h2>
                     <div className="">내용, 슬라이더, 등등</div>
