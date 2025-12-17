@@ -124,7 +124,4 @@ export interface SearchText {
   onAddTextTodo: (text: string) => void;
   onRemoveTodos: (id: number) => void;
   onRemoveAll: () => void;
-
-  trendingKeywords: string[];
-  onFetchTrendingKeywords: () => Promise<void>;
 }
