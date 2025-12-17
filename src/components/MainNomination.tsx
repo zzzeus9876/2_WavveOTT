@@ -1,15 +1,10 @@
-import { useEffect } from 'react';
 import './scss/MainNomination.scss';
 import { useNavigate } from 'react-router-dom';
 import { useMovieStore } from '../stores/useMovieStore';
 
 const MainNomination = () => {
     const navigate = useNavigate();
-    const { popularMovies, onFetchPopular } = useMovieStore();
-
-    useEffect(() => {
-        onFetchPopular();
-    }, []);
+    const { popularMovies } = useMovieStore();
 
     const movies = popularMovies.slice(0, 3);
 
@@ -46,5 +41,7 @@ const MainNomination = () => {
         </div>
     );
 };
+
+export default MainNomination;
 
 export default MainNomination;
