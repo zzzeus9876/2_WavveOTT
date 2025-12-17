@@ -130,8 +130,10 @@ export const useMovieStore = create<MovieState>((set) => ({
                 `?api_key=${API_KEY}` +
                 `&language=ko-KR` +
                 `&sort_by=popularity.desc` +
-                `&primary_release_date.gte=2024-01-01` +
+                `&primary_release_date.gte=2025-01-01` +
                 `&vote_count.gte=80` +
+                `&watch_region=KR` +
+                `&without_watch_providers=8` +
                 `&page=1`
         );
         const data = await res.json();
