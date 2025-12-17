@@ -4,16 +4,18 @@ import { Link } from 'react-router-dom';
 import { useMovieStore } from '../stores/useMovieStore';
 import { useWavveStore } from '../stores/useWavveStore';
 import { useTvStore } from '../stores/useTvStore';
+import { usePeopleStore } from '../stores/usePeopleStore';
 
-import RankingCardList from '../components/RankingCardList';
-import EditorRecommendCardList from '../components/EditorRecommendCardList';
-import WavveList from '../components/WavveList';
-import MainNomination from '../components/MainNomination';
-import BroadcastList from '../components/BroadcastList';
-import NewTvList from '../components/NewTvList';
 import MainSlider from '../components/MainSection';
-import NewMovieList from '../components/NewMovieList';
+import BroadcastList from '../components/BroadcastList';
+import MainNomination from '../components/MainNomination';
+import RankingCardList from '../components/RankingCardList';
+import WavveList from '../components/WavveList';
+import PeopleList from '../components/PeopleList';
 import PrimaryList from '../components/PrimaryList';
+import NewMovieList from '../components/NewMovieList';
+import EditorRecommendCardList from '../components/EditorRecommendCardList';
+import NewTvList from '../components/NewTvList';
 
 import type { PrimaryItem } from '../types/movie';
 
@@ -25,13 +27,15 @@ const Home = () => {
     const { popularMovies, newMovies, onFetchPopular, onFetchNewMovie } = useMovieStore();
     const { wavves, onFetchWavve } = useWavveStore();
     const { tvs, onFetchTv } = useTvStore();
+    const { people, onFetchPeople } = usePeopleStore();
 
     useEffect(() => {
         onFetchPopular();
         onFetchWavve();
         onFetchNewMovie();
         onFetchTv();
-    }, [onFetchPopular, onFetchWavve, onFetchNewMovie, onFetchTv]);
+        onFetchPeople();
+    }, [onFetchPopular, onFetchWavve, onFetchNewMovie, onFetchTv, onFetchPeople]);
 
     const randomList = useMemo<PrimaryItem[]>(() => {
         return randomArray([
@@ -66,10 +70,7 @@ const Home = () => {
                         <img src="/images/banner/banner-main-event.png" alt="banner event" />
                     </Link>
                 </div>
-                <section className="card-list">
-                    <h2>지금 주목받는 스타들</h2>
-                    <div className="">내용, 슬라이더, 등등</div>
-                </section>
+                <PeopleList title={'지금 주목받는 스타들'} people={people} />
                 <PrimaryList title="이건 꼭 봐야해!" randomList={randomList} />
                 <NewMovieList title="NEW! 새로 올라온 영화" newMovies={newMovies} />
             </div>

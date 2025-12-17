@@ -131,3 +131,51 @@ export interface PrimaryItem extends MediaBase {
     videos: Video[];
     logo: string | null;
 }
+
+export interface People {
+    cast: {
+        id: number;
+        name: string;
+        character: string;
+        poster_path: string | null;
+        first_air_date?: string;
+        adult: boolean;
+        genre_ids: number[];
+        backdrop_path: string | null;
+        overview: string;
+        title: string;
+        vote_average: number;
+        iso_3166_1: string;
+        iso_639_1: string;
+        certification: string;
+        season_number: number;
+        episodeCount: number;
+        logo_path: string;
+        runtime?: number;
+        creditData: {
+            cast: {
+                id: number;
+                name: string;
+                profile_path: string;
+            }[];
+        };
+        known_for_department: string;
+        director: { id: number; name: string }[];
+        writer: { id: number; name: string }[];
+        videos: Video[];
+        logo: string | null;
+    }[];
+}
+
+export interface PeopleState {
+    people: People[];
+    onFetchPeople: () => Promise<void>;
+}
+
+export interface cast {
+    id: number;
+    name: string;
+    character: string;
+    poster_path: string | null;
+    first_air_date?: string;
+}
