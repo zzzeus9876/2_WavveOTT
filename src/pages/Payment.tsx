@@ -35,7 +35,7 @@ const Payment: React.FC = () => {
         <div className="inner">
           <h2>결제 정보 확인</h2>
           <p>선택된 이용권 정보가 유효하지 않습니다.</p>
-          <button onClick={() => navigate("/")}>이용권 페이지로 이동</button>
+          <button onClick={() => navigate("/home")}>이용권 페이지로 이동</button>
         </div>
       </div>
     );

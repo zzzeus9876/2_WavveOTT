@@ -30,7 +30,7 @@ const ChoiceChar = () => {
     if (char.id === 4) {
       navigate("/kids");
     } else {
-      navigate("/");
+      navigate("/home");
     }
   };
 

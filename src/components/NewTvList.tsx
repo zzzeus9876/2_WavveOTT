@@ -65,7 +65,7 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
     <section className="card-list">
       <div className="title-wrap">
         <h2>{title}</h2>
-        <Link to="/"></Link>
+        <Link to="/home"></Link>
       </div>
       <Swiper
         modules={[Navigation]}

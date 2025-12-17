@@ -69,7 +69,7 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
     <section className="card-list">
       <div className="title-wrap">
         <h2>{title}</h2>
-        <Link to="/">더보기</Link>
+        <Link to="/home">더보기</Link>
       </div>
       <Swiper
         modules={[Navigation]}
