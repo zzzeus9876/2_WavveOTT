@@ -9,8 +9,8 @@ main {
     &::before {
       content: "";
       position: absolute;
-      top: 50%;
-      left: -55%;
+      top: 30%;
+      left: -80%;
       width: 300%;
       height: 300%;
       background-image: url("/images/bg-login.png"); 
@@ -26,7 +26,7 @@ main {
   > .login {
     position: relative;
     z-index: 1;
-    margin: 80px auto;
+    margin: 140px auto;
     display: flex;
     flex-direction: column;
     gap: 40px;

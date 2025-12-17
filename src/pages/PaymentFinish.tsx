@@ -17,7 +17,7 @@ const PaymentFinish = () => {
           </p>
         </div>
         <p>
-          <Link to={"/"} className="btn large primary wFull">
+          <Link to={"/home"} className="btn large primary wFull">
             홈으로
           </Link>
         </p>

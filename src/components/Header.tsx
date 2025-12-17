@@ -82,7 +82,7 @@ const Header = () => {
             <h1 className="logo">
               {/* 키즈 모드나 ChoiceChar 페이지에서는 로고 링크 비활성화 */}
               {!isChoiceCharPage && !isKidsMode ? (
-                <Link to={"/"}>
+                <Link to={"/home"}>
                   <img
                     src={
                       isScrolled
