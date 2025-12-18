@@ -4,7 +4,7 @@ import './scss/UserQnaDetail.scss';
 
 const UserQnaDetail = () => {
     return (
-        <div className="detail-menu-content">
+        <div className="detail-menu-content qna-menu">
             <div className="qna-title-wrap">
                 <div className="title-top">
                     <h2>

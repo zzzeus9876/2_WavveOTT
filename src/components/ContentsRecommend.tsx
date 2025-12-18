@@ -14,17 +14,17 @@ const ContentsRecommend = ({ wavves }: RecommendProps) => {
                 {wavves.map((w) => (
                     <li className="recommend-card" key={w.id}>
                         <div className="recommend-img">
-                            {w.episodes[0]?.still_path ? (
+                            {/* {w.episodes[0]?.still_path ? (
                                 <img
                                     src={`https://image.tmdb.org/t/p/original${w.episodes[0]?.still_path}`}
                                     alt="thum"
                                 />
-                            ) : (
-                                <img
-                                    src={`https://image.tmdb.org/t/p/original${w.backdrop_path}`}
-                                    alt="thum"
-                                />
-                            )}
+                            ) : ( */}
+                            <img
+                                src={`https://image.tmdb.org/t/p/original${w.backdrop_path}`}
+                                alt="thum"
+                            />
+                            {/* )} */}
                         </div>
                         <div className="recommend-text">
                             <h3 className="recommend-title">{w.name}</h3>
