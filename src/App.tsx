@@ -33,10 +33,27 @@ import ScrollTop from "./components/ScrollTop";
 import Payment from "./pages/Payment";
 import Intro from "./pages/Intro";
 import Player from "./pages/Player";
+import { useAuthStore } from "./stores/useAuthStore";
+import { usePickStore } from "./stores/usePickStore";
+import { useEffect } from "react";
 
 function App() {
   const location = useLocation(); // 현재 경로 정보 가져오기
   const currentPath = location.pathname.toLowerCase();
+
+  //user 찜리스트 갖어오기
+  const user = useAuthStore((state) => state.user);
+  const fetchPick = usePickStore((state) => state.onFetchPick);
+  const selectedCharId = useAuthStore((state) => state.selectedCharId);
+  const pickList = usePickStore((state) => state.pickList);
+
+  console.log("픽리스트 데이터 값 : ", pickList);
+
+  useEffect(() => {
+    if (user && selectedCharId) {
+      fetchPick();
+    }
+  }, [user, selectedCharId]);
 
   // 숨김 처리가 필요한 경로 리스트
   const isHideLayout =
