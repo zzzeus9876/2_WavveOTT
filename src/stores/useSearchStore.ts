@@ -37,16 +37,17 @@ export const useSearchStore = create<SearchStore>()(
 
         set((state) => ({
           todos: [
-            {id: Date.now(), text: trimmed}, ...state.todos.filter((t) => t.text !== trimmed),
+            { id: Date.now(), text: trimmed },
+            ...state.todos.filter((t) => t.text !== trimmed),
           ].slice(0, 20),
-        }))
+        }));
       },
 
       //검색 기록을 선택해서 삭제
       onRemoveTodos: (id) => {
         set((state) => ({
-          todos: state.todos.filter((t) => t.id !== id)
-        }))
+          todos: state.todos.filter((t) => t.id !== id),
+        }));
       },
 
       //검색 기록들 전부 삭제
@@ -128,7 +129,6 @@ export const useSearchStore = create<SearchStore>()(
             if (aStarts !== bStarts) return bStarts - aStarts;
             return A.localeCompare(B);
           });
-
 
           set({ results: merged, loading: false });
         } catch (err) {
