@@ -31,7 +31,7 @@ const UserWatchList = () => {
   const { user, selectedCharId } = useAuthStore();
   const [history, setHistory] = useState<WatchHistoryItem[]>([]);
 
-  // 에러 해결 1: 초기값 false, 데이터 로드 완료 여부만 따로 관리
+  // 초기값 false, 데이터 로드 완료 여부만 따로 관리
   const [isFetched, setIsFetched] = useState(false);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const UserWatchList = () => {
     return () => unsubscribe();
   }, [user, selectedCharId]);
 
-  // 에러 해결 2: isLoading을 상태가 아닌 변수로 계산
+  // isLoading을 상태가 아닌 변수로 계산
   // 유저 정보가 있고, 아직 데이터를 가져오는 중일 때만 true
   const isLoading = user && selectedCharId && !isFetched;
 

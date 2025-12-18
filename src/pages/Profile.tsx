@@ -15,10 +15,10 @@ const Profile = () => {
   } = useAuthStore();
   const navigate = useNavigate();
 
-  // 1. 에러 해결: useEffect 대신 초기값에 직접 할당
+  // 초기값에 직접 할당
   const [nickname, setNickname] = useState(selectedCharNickname || "");
 
-  // 2. 로그인 및 캐릭터 선택 체크 로직 (이 로직은 외부 시스템 이동이므로 유지)
+  // 로그인 및 캐릭터 선택 체크 로직 (외부 시스템 이동 유지)
   useEffect(() => {
     if (!isInitializing) {
       if (!user) {
@@ -28,8 +28,6 @@ const Profile = () => {
       }
     }
   }, [user, selectedCharId, isInitializing, navigate]);
-
-  // 3. 닉네임 동기화 useEffect 삭제됨 (이 부분이 에러의 원인이었음)
 
   if (isInitializing || !user || !selectedCharId) {
     return <div className="loading">로딩 중...</div>;
