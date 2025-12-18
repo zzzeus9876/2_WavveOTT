@@ -1,74 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../stores/useAuthStore";
+import type { WatchHistoryItem } from "../stores/useAuthStore";
 import { db, deleteWatchHistory } from "../firebase/firebase";
 import {
   collection,
   query,
   orderBy,
-  onSnapshot,
   limit,
+  getDocs,
   Timestamp,
-} from "firebase/firestore";
+} from "firebase/firestore"; // Timestamp 임포트 추가
 import "./scss/UserWatchList.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-interface WatchHistoryItem {
-  docId: string;
-  id: number | string;
-  type: "movie" | "tv" | string;
-  title: string;
-  backdrop_path?: string;
-  poster_path?: string;
-  runtime?: number;
-  lastPosition: number;
-  updatedAt: Timestamp;
-  episodeNumber?: number; // 에피소드 회차 정보가 저장되어 있다고 가정
-}
-
 const UserWatchList = () => {
   const navigate = useNavigate();
-  const { user, selectedCharId } = useAuthStore();
-  const [history, setHistory] = useState<WatchHistoryItem[]>([]);
-  const [isFetched, setIsFetched] = useState(false);
+  const { user, selectedCharId, watchHistoryCache, setWatchHistoryCache } =
+    useAuthStore();
+
+  const [isLoaded, setIsLoaded] = useState(watchHistoryCache.length > 0);
 
   useEffect(() => {
     if (!user || !selectedCharId) return;
 
-    const historyRef = collection(
-      db,
-      "users",
-      user.uid,
-      "profiles",
-      String(selectedCharId),
-      "watch_history"
-    );
-    const q = query(historyRef, orderBy("updatedAt", "desc"), limit(20));
+    const fetchData = async () => {
+      try {
+        const historyRef = collection(
+          db,
+          "users",
+          user.uid,
+          "profiles",
+          String(selectedCharId),
+          "watch_history"
+        );
+        const q = query(historyRef, orderBy("updatedAt", "desc"), limit(20));
+        const snap = await getDocs(q);
 
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const data = snapshot.docs.map(
+        const data: WatchHistoryItem[] = snap.docs.map(
           (doc) =>
             ({
               docId: doc.id,
               ...doc.data(),
             } as WatchHistoryItem)
         );
-        setHistory(data);
-        setIsFetched(true);
-      },
-      (err) => {
-        console.error("Snapshot error:", err);
-        setIsFetched(true);
+
+        setWatchHistoryCache(data);
+        setIsLoaded(true);
+      } catch (err) {
+        console.error("데이터 로딩 실패:", err);
+        setIsLoaded(true);
       }
-    );
+    };
 
-    return () => unsubscribe();
-  }, [user, selectedCharId]);
-
-  const isLoading = user && selectedCharId && !isFetched;
+    fetchData();
+  }, [user, selectedCharId, setWatchHistoryCache]);
 
   const handleDelete = async (
     e: React.MouseEvent,
@@ -80,12 +67,17 @@ const UserWatchList = () => {
 
     try {
       await deleteWatchHistory(user.uid, selectedCharId, contentId);
+      const updated = watchHistoryCache.filter((item) => item.id !== contentId);
+      setWatchHistoryCache(updated);
     } catch (err) {
-      console.error("Delete error:", err);
+      console.error("삭제 실패:", err);
     }
   };
 
-  const formatDate = (timestamp: Timestamp) => {
+  // [any 에러 해결] 매개변수 타입을 Timestamp로 명시
+  const formatDate = (timestamp: Timestamp | null | undefined) => {
+    if (!timestamp || typeof timestamp.toDate !== "function")
+      return { fullDate: "", week: "" };
     const date = timestamp.toDate();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -94,39 +86,34 @@ const UserWatchList = () => {
     return { fullDate: `${year}.${month}.${day}`, week: `(${week})` };
   };
 
-  if (isLoading)
-    return (
-      <div className="playlist-slider">
-        <p>로딩 중...</p>
-      </div>
-    );
-  if (isFetched && history.length === 0)
-    return (
-      <div className="watchList-slider">
-        <p className="empty-text">시청 중인 콘텐츠가 없습니다.</p>
-      </div>
-    );
+  if (isLoaded && watchHistoryCache.length === 0) return null;
 
   return (
     <div className="watchList-slider">
       <ul className="watch-list">
-        {history.map((movie) => {
+        {watchHistoryCache.map((movie, index) => {
           const { fullDate, week } = formatDate(movie.updatedAt);
+
+          // 프로그래스 바 계산
           const progress =
             movie.runtime && movie.lastPosition
               ? Math.min((movie.lastPosition / (movie.runtime * 60)) * 100, 100)
               : 0;
-          const remainingMinutes = movie.runtime
-            ? Math.max(Math.floor(movie.runtime - movie.lastPosition / 60), 0)
-            : 0;
+
+          // [런타임 추가] 분 단위로 표시
+          const runtimeText = movie.runtime ? `${movie.runtime}분` : "";
 
           return (
             <li
               key={movie.docId}
-              onClick={() =>
-                navigate(`/contentsdetail/${movie.type}/${movie.id}`)
-              }
               className="watch-item"
+              onClick={() => {
+                const path =
+                  movie.type === "movie"
+                    ? `/moviedetail/movie/${movie.id}`
+                    : `/contentsdetail/${movie.type}/${movie.id}`;
+                navigate(path);
+              }}
             >
               <div className="img-box">
                 <img
@@ -134,6 +121,7 @@ const UserWatchList = () => {
                     movie.backdrop_path || movie.poster_path
                   }`}
                   alt={movie.title}
+                  loading={index < 4 ? "eager" : "lazy"}
                 />
                 <div className="progress-bar">
                   <div className="fill" style={{ width: `${progress}%` }} />
@@ -141,30 +129,29 @@ const UserWatchList = () => {
               </div>
 
               <div className="text-info">
-                <p className="title">{movie.title}</p>
-
-                {/* 단편 영화가 아니고(tv), 에피소드 정보가 있을 때만 노출 */}
-                {movie.type === "tv" && (
-                  <p className="episode">
-                    {movie.episodeNumber
-                      ? `${movie.episodeNumber}회`
-                      : "시청 중"}
-                  </p>
-                )}
+                <p className="title">
+                  <span>{movie.title}</span>
+                  {movie.type !== "movie" && (
+                    <span className="episode">
+                      {movie.episodeNumber ? `${movie.episodeNumber}회` : "1회"}
+                    </span>
+                  )}
+                </p>
 
                 <div className="bottom-info">
-                  <p className="date-group">
-                    <span className="running-time">
-                      남은 시간 {remainingMinutes}분
-                    </span>
-                    <span className="date">{fullDate}</span>
+                  <div className="date-group">
+                    {/* [런타임 정보] */}
+                    {runtimeText && (
+                      <span className="runtime">{runtimeText}</span>
+                    )}
+                    <span className="date">{fullDate}</span>{" "}
                     <span className="week">{week}</span>
-                  </p>
+                  </div>
                   <button
-                    className="btn small primary"
+                    className="btn-delete"
                     onClick={(e) => handleDelete(e, movie.id)}
                   >
-                    시청내역삭제
+                    시청내역 삭제
                   </button>
                 </div>
               </div>
@@ -176,4 +163,4 @@ const UserWatchList = () => {
   );
 };
 
-export default UserWatchList;
+export default memo(UserWatchList);

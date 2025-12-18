@@ -12,10 +12,25 @@ import {
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { auth, db, updateProfileNickname } from "../firebase/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore";
 
 // ----------------------------------------------------
-// 카카오 타입 선언 (에러 해결: any 대신 구체적인 타입 정의)
+// 타입 정의
+// ----------------------------------------------------
+export interface WatchHistoryItem {
+  docId: string;
+  id: number | string;
+  type: "movie" | "tv" | string;
+  title: string;
+  backdrop_path?: string;
+  poster_path?: string;
+  runtime?: number;
+  lastPosition: number;
+  updatedAt: Timestamp;
+  episodeNumber?: number;
+}
+// ----------------------------------------------------
+// 카카오 타입 선언
 // ----------------------------------------------------
 interface KakaoAuthResponse {
   access_token: string;
@@ -65,6 +80,10 @@ interface AuthState {
   selectedCharId: number | null;
   selectedCharNickname: string | null;
 
+  // [any 제거] 구체적인 타입 적용
+  watchHistoryCache: WatchHistoryItem[];
+  setWatchHistoryCache: (history: WatchHistoryItem[]) => void;
+
   onMember: (email: string, password: string) => Promise<void>;
   onLogin: (email: string, password: string) => Promise<void>;
   onLogout: () => Promise<void>;
@@ -80,11 +99,13 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => {
+      // 초기 상태값 설정 (watchHistoryCache 추가)
       const initialState = {
         user: null,
         isInitializing: true,
         selectedCharId: null,
         selectedCharNickname: null,
+        watchHistoryCache: [],
       };
 
       setPersistence(auth, browserSessionPersistence).catch((error) => {
@@ -97,6 +118,9 @@ export const useAuthStore = create<AuthState>()(
 
       return {
         ...initialState,
+
+        // 1. [구현 추가] 실제 데이터를 상태에 저장하는 함수
+        setWatchHistoryCache: (history) => set({ watchHistoryCache: history }),
 
         updateNickname: async (nickname: string) => {
           const { user, selectedCharId } = get();
@@ -112,8 +136,13 @@ export const useAuthStore = create<AuthState>()(
           }
         },
 
+        // [수정] 캐릭터 선택 시 다른 프로필의 데이터가 보이지 않도록 캐시 초기화
         selectChar: (id, nickname) =>
-          set({ selectedCharId: id, selectedCharNickname: nickname }),
+          set({
+            selectedCharId: id,
+            selectedCharNickname: nickname,
+            watchHistoryCache: [],
+          }),
 
         onMember: async (email, password) => {
           try {
