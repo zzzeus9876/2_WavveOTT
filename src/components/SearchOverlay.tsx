@@ -795,17 +795,30 @@ import React, { useState } from "react";
 // import { useSearchParams } from 'react-router-dom'
 // import SearchInputBar from './SearchInputBar'
 import { searchMulti } from "../api/tmdb";
+import { useSearchStore } from "../stores/useSearchStore";
+import { useNavigate } from "react-router-dom";
 
 const SearchOverlay = () => {
+  const navigate = useNavigate();
+  //입력 상태 (UI 전용)
   const [keyword, setKeyword] = useState("");
-  const [results, setResults] = useState([]);
+  //검색 상태 & 액션 (Zustand)
+  const { results, search } = useSearchStore();
 
-  const onSearch = async (e) => {
+  const onSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = await searchMulti(keyword);
-    console.log(data);
-    setResults(data);
+
+    const trimmed = keyword.trim();
+    if (!trimmed) return;
+
+    await search(trimmed);
   };
+
+  const onClickResult = (item: any) => {
+    //결과 클릭 시 상세 페이지 이동
+    navigate(`/contentsdetail/${item.media_type}/${item.id}`);
+  };
+
   return (
     <div className="search-popup">
       <div className="search-inner-wrap ">
@@ -819,19 +832,38 @@ const SearchOverlay = () => {
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
-              placeholder="검색어를 입력"
+              placeholder="장르, 제목, 배우로 검색해보세요."
             />
-            <button onClick={onSearch}>검색</button>
+            <button type="submit" onClick={onSearch}>
+              검색
+            </button>
           </form>
 
-          <ul>
-            {results.map((item) => (
+          <ul className="result-list">
+            {/* {results.map((item) => (
               <li key={`${item.id}`}>
                 {item.media_type === "movie" && `${item.title}`}
                 {item.media_type === "tv" && `${item.name}`}
                 {item.media_type === "person" && `${item.name}`}
               </li>
-            ))}
+            ))} */}
+            {results.map((item: any) => {
+              const label =
+                item.media_type === "movie" ? item.title : item.name;
+
+              return (
+                <li key={`${item.media_type}-${item.id}`}>
+                  <button type="button" onClick={() => onClickResult(item)}>
+                    <span className="badge">
+                      {item.media_type === "movie" && "영화"}
+                      {item.media_type === "tv" && "시리즈"}
+                      {item.media_type === "person" && "인물"}
+                    </span>
+                    <span className="title">{label}</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

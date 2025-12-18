@@ -356,15 +356,52 @@
 import { create } from "zustand";
 import { searchMulti } from "../api/tmdb";
 
+// TMDB multi 검색 결과에서 우리가 쓰는 최초 필드 타입
+type MultiItem = {
+  id: number;
+  media_type: "movie" | "tv" | "person" | string;
+  title?: string;
+  name?: string;
+  popularity?: number;
+};
+
 interface SearchStore {
-  results: [];
+  results: MultiItem[];
   search: (keyword: string) => Promise<void>;
 }
 
+const normalize = (s: string) =>
+  s
+    .toLowerCase()
+    .trim()
+    // 공백 여러 개를 1개로
+    .replace(/\s+/g, " ");
+
+const getLabel = (item: MultiItem) => {
+  if (item.media_type === "movie") return item.title ?? "";
+  return item.name ?? "";
+};
+
+const scoreMatch = (label: string, keyword: string) => {
+  const l = normalize(label);
+  const k = normalize(keyword);
+
+  if (!k) return 999;
+
+  if (l === k) return 0;
+  if (l.startsWith(k)) return 1;
+  if (l.includes(k)) return 2;
+  return 3;
+};
+
 export const useSearchStore = create<SearchStore>((set) => ({
   results: [],
+
   search: async (keyword) => {
-    const data = await searchMulti(keyword);
-    set({ results: data });
+    const trimmed = await keyword.trim();
+    if (!trimmed) {
+      set({ results: [] });
+      return;
+    }
   },
 }));
