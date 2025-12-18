@@ -19,7 +19,10 @@ import { saveWatchHistory } from '../firebase/firebase'; // KEH  왓치리스트
 
 import Modal from '../components/Modal';
 
+import { newsTop50 } from '../data/2025_newsTop50_tmdb';
+
 import './scss/ContentsDetail.scss';
+import { usePeopleStore } from '../stores/usePeopleStore';
 
 const ContentsDetail = () => {
     // --- 유저 정보 가져오기 ---// KEH  왓치리스트를 위해 추가
@@ -29,6 +32,7 @@ const ContentsDetail = () => {
 
     const { wavves, selectedWavve, onFetchWavve, setSelectedWavve } = useWavveStore();
     const { tvs, selectedTv, onFetchTv, setSelectedTv } = useTvStore();
+    const { people, selectedPeople, onFetchPeople, setSelectedPeople } = usePeopleStore();
 
     const navigate = useNavigate();
 
@@ -43,31 +47,43 @@ const ContentsDetail = () => {
         if (type === 'tv') {
             onFetchTv();
             onFetchWavve();
+            onFetchPeople();
         }
-    }, [type, onFetchWavve, onFetchTv]);
+    }, [type, onFetchWavve, onFetchTv, onFetchPeople]);
 
     // type에 따라 select
     useEffect(() => {
         if (!id || !type) return;
 
         if (type === 'tv') {
-            if (wavves.length > 0) {
-                setSelectedWavve(Number(id));
-            }
-
-            if (tvs.length > 0) {
-                setSelectedTv(Number(id));
-            }
+            if (wavves.length > 0) setSelectedWavve(Number(id));
+            if (tvs.length > 0) setSelectedTv(Number(id));
+            if (people.length > 0) setSelectedPeople(Number(id));
         }
-    }, [id, type, wavves, tvs, setSelectedWavve, setSelectedTv]);
+
+        // if (type === 'tv') {
+        //     if (wavves.length > 0) {
+        //         setSelectedWavve(Number(id));
+        //     }
+
+        //     if (tvs.length > 0) {
+        //         setSelectedTv(Number(id));
+        //     }
+        //     if (people.length > 0) {
+        //         setSelectedPeople(Number(id));
+        //     }
+        // }
+    }, [id, type, wavves, tvs, people, setSelectedWavve, setSelectedTv, setSelectedPeople]);
 
     // 전체 콘텐츠 (wavves + tvs)
     let selectedContent = null;
 
     if (type === 'tv') {
-        selectedContent = selectedTv || selectedWavve;
+        selectedContent = selectedTv || selectedWavve || selectedPeople;
     } else if (type === 'wavve') {
-        selectedContent = selectedWavve;
+        selectedContent = selectedWavve || selectedPeople;
+    } else if (type === 'people') {
+        selectedContent = selectedPeople;
     }
 
     const videoKey = selectedContent?.videos?.[0]?.key;
@@ -172,9 +188,11 @@ const ContentsDetail = () => {
                                 {getGenres(selectedContent.genre_ids).slice(0, 2).join(' · ') ||
                                     '기타'}
                             </p>
-                            <p className="title-episode">
-                                에피소드 {selectedContent.episodes.length}
-                            </p>
+                            {selectedContent.episodes && selectedContent.episodes.length > 0 && (
+                                <p className="title-episode">
+                                    에피소드 {selectedContent.episodes.length}
+                                </p>
+                            )}
                         </div>
                         <div className="detail-title-right">
                             <button className="detail-heart-btn"></button>
@@ -290,7 +308,7 @@ const ContentsDetail = () => {
                             에피소드
                         </button>
                         {/* 관련영상이 있을 때만 버튼 표시 */}
-                        {selectedContent.videos.length > 0 && (
+                        {selectedContent.videos?.length > 0 && (
                             <button
                                 className={activeMenu === 'relative' ? 'active' : 'detail-menu-btn'}
                                 onClick={() => setActiveMenu('relative')}

@@ -137,51 +137,78 @@ export interface People extends MediaBase {
     videos: Video[];
     episodes: Episodes[];
     seasons: Season[];
-    cast: {
-        id: number;
-        name: string;
-        character: string;
-        poster_path: string | null;
-        first_air_date?: string;
-        adult: boolean;
-        genre_ids: number[];
-        backdrop_path: string | null;
-        overview: string;
-        title: string;
-        vote_average: number;
-        iso_3166_1: string;
-        iso_639_1: string;
-        certification: string;
-        season_number: number;
-        episodeCount: number;
-        logo_path: string;
-        runtime?: number;
-        creditData: {
-            cast: {
-                id: number;
-                name: string;
-                profile_path: string;
-            }[];
-        };
-        known_for_department: string;
-        director: { id: number; name: string }[];
-        writer: { id: number; name: string }[];
-        videos: Video[];
-        logo: string | null;
-    }[];
+    cast: Cast[];
+    //     id: number;
+    //     name: string;
+    //     character: string;
+    //     poster_path: string | null;
+    //     first_air_date?: string;
+    //     adult: boolean;
+    //     genre_ids: number[];
+    //     backdrop_path: string | null;
+    //     overview: string;
+    //     title: string;
+    //     vote_average: number;
+    //     iso_3166_1: string;
+    //     iso_639_1: string;
+    //     certification: string;
+    //     season_number: number;
+    //     episodeCount: number;
+    //     logo_path: string;
+    //     runtime?: number;
+    //     creditData: {
+    //         cast: {
+    //             id: number;
+    //             name: string;
+    //             profile_path: string;
+    //         }[];
+    //     };
+    //     known_for_department: string;
+    //     director: { id: number; name: string }[];
+    //     writer: { id: number; name: string }[];
+    //     videos: Video[];
+    //     logo: string | null;
+    // }[];
 }
 
-export interface PeopleState {
-    people: People[];
-    selectedPeople: People | null;
-    onFetchPeople: () => Promise<void>;
-    setSelectedPeople: (id: number) => void;
-}
-
-export interface cast {
+export interface Cast {
     id: number;
     name: string;
     character: string;
     poster_path: string | null;
     first_air_date?: string;
+    adult: boolean;
+    genre_ids: number[];
+    backdrop_path: string | null;
+    overview: string;
+    title: string;
+    vote_average: number;
+    iso_3166_1: string;
+    iso_639_1: string;
+    certification: string;
+    season_number: number;
+    episodeCount: number;
+    logo_path: string;
+    runtime?: number;
+    creditData: {
+        cast: {
+            id: number;
+            name: string;
+            profile_path: string;
+        }[];
+    };
+    known_for_department: string;
+    director: { id: number; name: string }[];
+    writer: { id: number; name: string }[];
+    videos: Video[];
+    logo: string | null;
+    episodes: Episodes[];
+    seasons: Season[];
+}
+export interface PeopleState {
+    people: People[];
+    // selectedPeople: People | null;
+    selectedPeople: People['cast'][number] | null;
+    onFetchPeople: () => Promise<void>;
+    setSelectedPeople: (id: number) => void;
 }
