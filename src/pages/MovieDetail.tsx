@@ -10,18 +10,14 @@ import MovieRecommend from '../components/MovieRecommend';
 import MovieRelative from '../components/MovieRelative';
 import Modal from '../components/Modal';
 
-
-import { useAuthStore } from '../stores/useAuthStore';  // KEH  왓치리스트를 위해 추가
-import { saveWatchHistory } from '../firebase/firebase';  // KEH  왓치리스트를 위해 추가
-
+import { useAuthStore } from '../stores/useAuthStore'; // KEH  왓치리스트를 위해 추가
+import { saveWatchHistory } from '../firebase/firebase'; // KEH  왓치리스트를 위해 추가
 
 import './scss/ContentsDetail.scss';
+import type { CreditPerson } from '../types/movie';
 
 const MovieDetail = () => {
-
-
     const { user, selectedCharId } = useAuthStore(); // KEH  왓치리스트를 위해 추가
-
 
     const { type, id } = useParams<{ type: string; id: string }>();
 
@@ -53,7 +49,7 @@ const MovieDetail = () => {
         }
     }, [id, type, popularMovies, setSelectedPopular]);
 
-    let selectedContent: any = null;
+    let selectedContent = null;
 
     if (type === 'movie') {
         selectedContent = selectedPopular;
@@ -87,10 +83,6 @@ const MovieDetail = () => {
     const certificationValue = Array.isArray(selectedContent.certificationMovie)
         ? selectedContent.certificationMovie[0]?.certification
         : selectedContent.certificationMovie; // 'NR'
-
-
-
-
 
     // ========== 3. handlePlayClick 함수 추가 (김은희 추가) ==========
     const handlePlayClick = async () => {
@@ -199,7 +191,7 @@ const MovieDetail = () => {
 
                                 <button
                                     className="btn default primary"
-                                    onClick={handlePlayClick}  // KEH  왓치리스트를 위해 추가
+                                    onClick={handlePlayClick} // KEH  왓치리스트를 위해 추가
                                 >
                                     재생하기
                                 </button>
@@ -208,21 +200,23 @@ const MovieDetail = () => {
                         <div className="detail-cast">
                             <h3>출연진</h3>
                             <ul className="detail-cast-list">
-                                {selectedContent.creditData.cast.slice(0, 7).map((actor) => (
-                                    <li key={`a-${actor.id}`} className="cast-card">
-                                        <p className="cast-card-imgbox">
-                                            <img
-                                                src={
-                                                    actor.profile_path
-                                                        ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
-                                                        : '/images/actor-no-image.svg'
-                                                }
-                                                alt={actor.name}
-                                            />
-                                        </p>
-                                        <p className="actor-name">{actor.name}</p>
-                                    </li>
-                                ))}
+                                {selectedContent.creditData.cast
+                                    .slice(0, 7)
+                                    .map((actor: CreditPerson) => (
+                                        <li key={`a-${actor.id}`} className="cast-card">
+                                            <p className="cast-card-imgbox">
+                                                <img
+                                                    src={
+                                                        actor.profile_path
+                                                            ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
+                                                            : '/images/actor-no-image.svg'
+                                                    }
+                                                    alt={actor.name}
+                                                />
+                                            </p>
+                                            <p className="actor-name">{actor.name}</p>
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
                         <div className="detail-crew-list">
@@ -230,9 +224,9 @@ const MovieDetail = () => {
                                 <h3>감독</h3>
                                 <ul className="director-list">
                                     {selectedContent.director &&
-                                        selectedContent.director.length > 0 ? (
+                                    selectedContent.director.length > 0 ? (
                                         selectedContent.director
-                                            .map((d, index) => (
+                                            .map((d: CreditPerson, index: CreditPerson) => (
                                                 <li key={`d-${d.id}-${index}`}>{d.name}</li>
                                             ))
                                             .slice(0, 7)
@@ -248,7 +242,7 @@ const MovieDetail = () => {
                                 <ul className="writer-list">
                                     {selectedContent.writer && selectedContent.writer.length > 0 ? (
                                         selectedContent.writer
-                                            ?.map((w, index) => (
+                                            ?.map((w: CreditPerson, index: CreditPerson) => (
                                                 <li key={`w-${w.id}-${index}`}>{w.name}</li>
                                             ))
                                             .slice(0, 7)

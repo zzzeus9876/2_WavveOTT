@@ -3,18 +3,18 @@ import type { Episodes, Tv, Video, CreditPerson } from '../types/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-interface VarietyState {
-    selectedVariety: Tv | null;
-    fetchVarietyDetail: (id: number) => Promise<void>;
-    clearVariety: () => void;
+interface NewsState {
+    news: Tv[];
+    selectedNews: Tv | null;
+    fetchNewsDetail: (id: number) => Promise<void>;
 }
 
-export const useVarietyStore = create<VarietyState>((set) => ({
-    selectedVariety: null,
+export const useNewsStore = create<NewsState>((set) => ({
+    news: [],
+    selectedNews: null,
 
-    //Detail
-    fetchVarietyDetail: async (id: number) => {
-        /* TV 기본 정보 */
+    fetchNewsDetail: async (id: number) => {
+        /* 기본 정보 */
         const tvRes = await fetch(
             `https://api.themoviedb.org/3/tv/${id}?api_key=${API_KEY}&language=ko-KR`
         );
@@ -63,16 +63,16 @@ export const useVarietyStore = create<VarietyState>((set) => ({
             creditData.crew?.filter((c: CreditPerson) => c.known_for_department === 'Writing') ||
             [];
 
-        /* 에피소드 (시즌 1만) */
+        /* 에피소드 */
         const epRes = await fetch(
             `https://api.themoviedb.org/3/tv/${id}/season/1?api_key=${API_KEY}&language=ko-KR`
         );
         const epData = await epRes.json();
         const episodes: Episodes[] = epData.episodes || [];
 
-        const varietyDetail: Tv = {
+        const newsDetail: Tv = {
             ...tv,
-            media_type: 'variety',
+            media_type: 'news',
             videos,
             tvsVideo,
             certification,
@@ -84,8 +84,9 @@ export const useVarietyStore = create<VarietyState>((set) => ({
             runtime: tv.episode_run_time?.[0] ?? null,
         };
 
-        set({ selectedVariety: varietyDetail });
+        set({
+            news: [newsDetail],
+            selectedNews: newsDetail,
+        });
     },
-
-    clearVariety: () => set({ selectedVariety: null }),
 }));

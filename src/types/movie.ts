@@ -1,91 +1,39 @@
-// 공통 타입
+//  공통 타입
+
 export interface MediaBase {
-    adult: boolean;
-    genre_ids: number[];
-    backdrop_path: string | null;
     id: number;
-    overview: string;
-    poster_path: string | null;
-    title: string;
-    vote_average: number;
-    iso_3166_1: string;
-    iso_639_1: string;
-    certification: string;
-    season_number: number;
-    episodeCount: number;
-    logo_path: string;
-    runtime?: number;
-    creditData: {
-        cast: {
-            id: number;
-            name: string;
-            profile_path: string;
-        }[];
-    };
-    known_for_department: string;
-    director: { id: number; name: string }[];
-    writer: { id: number; name: string }[];
+    adult?: boolean;
+    backdrop_path?: string | null;
+    poster_path?: string | null;
+    overview?: string;
+    vote_average?: number;
+
+    iso_3166_1?: string;
+    iso_639_1?: string;
+
+    certification?: string;
+    runtime?: number | null;
+
+    logo_path?: string | null;
 }
 
-// 영화에대한 타입 -> 더 사용할내용있으면 추가
-export interface Movie extends MediaBase {
-    release_data: string;
-    logo: string | null;
-    key: string;
-    videos: Video[];
-    certificationMovie: string;
-    release_date: string;
-    type: number;
-}
-
-export interface MovieWithLogo extends Movie {
-    logo: string | null;
-    file_path: string;
-}
-
-export interface MovieState {
-    popularMovies: MovieWithLogo[];
-    newMovies: MovieWithLogo[];
-    selectedPopular: Movie | null;
-    selectedNewMovie: Movie | null;
-    onFetchPopular: () => Promise<void>;
-    setSelectedPopular: (id: number) => void;
-    onFetchNewMovie: () => Promise<void>;
-    setSelectedNewMovie: (id: number) => void;
-}
-
-// 웨이브 콘텐츠 타입
-export interface OnlyWavve extends MediaBase {
-    rating: string;
-    context_type: string;
-    context_id: string;
-    results: Video[];
-    wavveVideo: Video | null;
-    isWavveOnly: boolean;
-    isNew: boolean;
-    name: string;
-    episodes: Episodes[];
-    videos: Video[];
-    seasons?: Season[];
-    season_number: number;
-    first_air_date: string;
-    logo: string | null;
-}
-
+//Video
 export interface Video {
     type: string;
     site: string;
     key: string;
 }
 
-export interface Episodes extends MediaBase {
+//Episode / Season
+export interface Episodes {
+    id: number;
     name: string;
     episode_number: number;
-    still_path: string;
+    still_path: string | null;
     show_id: number;
-    runtime: number;
-    image?: string;
-    // episodeImages?: string;
+    runtime?: number;
+    season_number?: number;
+    overview?: string;
 }
 
 export interface Season {
@@ -98,117 +46,222 @@ export interface Season {
     poster_path?: string;
 }
 
-export interface OnlyWavveState {
-    wavves: OnlyWavve[];
-    selectedWavve: OnlyWavve | null;
-    onFetchWavve: () => Promise<void>;
-    setSelectedWavve: (id: number) => void;
+//credit
+export interface CreditPerson {
+    id: number;
+    name: string;
+    profile_path: string | null;
+    known_for_department?: string;
+    character: string;
 }
 
-//tv 시리즈 타입
-export interface Tv extends MediaBase {
-    tvsVideo: Video | null;
-    first_air_date: string;
-    logo: string;
-    results: Video[];
-    episodes: Episodes[];
-    videos: Video[];
-    seasons?: Season[];
-    season_number: number;
+//movie
+export interface Movie extends MediaBase {
+    title: string;
+    release_date: string;
+
+    videos?: Video[];
+    key?: string;
+
+    logo?: string | null;
+    certificationMovie?: string;
+
+    genre_ids?: number[];
+    type?: number;
 }
+
+export interface MovieWithLogo extends Movie {
+    file_path?: string;
+}
+
+// logo
+export interface Logo {
+    file_path: string;
+    iso_639_1: string | null;
+}
+
+//wavve
+export interface OnlyWavve extends MediaBase {
+    media_type: 'tv';
+
+    name: string;
+    first_air_date: string;
+
+    videos?: Video[];
+    wavveVideo?: Video | null;
+
+    genre_ids?: number[];
+
+    episodes?: Episodes[];
+    seasons?: Season[];
+
+    rating?: string;
+    isWavveOnly?: boolean;
+    isNew?: boolean;
+
+    logo?: string | null;
+
+    creditData?: {
+        cast: CreditPerson[];
+        crew: CreditPerson[];
+    };
+
+    director?: CreditPerson[];
+    writer?: CreditPerson[];
+}
+
+//tv
+export interface Tv extends MediaBase {
+    media_type: 'tv';
+
+    name: string;
+    first_air_date: string;
+
+    videos?: Video[];
+    tvsVideo?: Video | null;
+
+    genre_ids?: number[];
+
+    episodes?: Episodes[];
+    seasons?: Season[];
+
+    logo?: string | null;
+
+    creditData?: {
+        cast: CreditPerson[];
+        crew: CreditPerson[];
+    };
+
+    director?: CreditPerson[];
+    writer?: CreditPerson[];
+}
+
+//tv state
 export interface TvState {
     tvs: Tv[];
     selectedTv: Tv | null;
+
+    /* 리스트 */
     onFetchTv: () => Promise<void>;
+    fetchTvs: () => Promise<void>;
+
+    /* 상세 */
+    fetchTvDetail: (id: number) => Promise<void>;
+
     setSelectedTv: (id: number) => void;
 }
 
-export interface PrimaryItem extends MediaBase {
-    id: number;
-    poster_path: string | null;
-    name?: string; // tv
-    mediaType: string;
-    videos: Video[];
-    logo: string | null;
-}
-
-export interface People extends MediaBase {
-    id: number;
-    videos: Video[];
-    episodes: Episodes[];
-    seasons: Season[];
-    cast: Cast[];
-    //     id: number;
-    //     name: string;
-    //     character: string;
-    //     poster_path: string | null;
-    //     first_air_date?: string;
-    //     adult: boolean;
-    //     genre_ids: number[];
-    //     backdrop_path: string | null;
-    //     overview: string;
-    //     title: string;
-    //     vote_average: number;
-    //     iso_3166_1: string;
-    //     iso_639_1: string;
-    //     certification: string;
-    //     season_number: number;
-    //     episodeCount: number;
-    //     logo_path: string;
-    //     runtime?: number;
-    //     creditData: {
-    //         cast: {
-    //             id: number;
-    //             name: string;
-    //             profile_path: string;
-    //         }[];
-    //     };
-    //     known_for_department: string;
-    //     director: { id: number; name: string }[];
-    //     writer: { id: number; name: string }[];
-    //     videos: Video[];
-    //     logo: string | null;
-    // }[];
-}
-
-export interface Cast {
+//people
+export interface People {
     id: number;
     name: string;
-    character: string;
-    poster_path: string | null;
-    first_air_date?: string;
-    adult: boolean;
-    genre_ids: number[];
-    backdrop_path: string | null;
-    overview: string;
-    title: string;
-    vote_average: number;
-    iso_3166_1: string;
-    iso_639_1: string;
-    certification: string;
-    season_number: number;
-    episodeCount: number;
-    logo_path: string;
-    runtime?: number;
-    creditData: {
-        cast: {
-            id: number;
-            name: string;
-            profile_path: string;
-        }[];
-    };
-    known_for_department: string;
-    director: { id: number; name: string }[];
-    writer: { id: number; name: string }[];
-    videos: Video[];
-    logo: string | null;
-    episodes: Episodes[];
-    seasons: Season[];
+    profile_path: string | null;
+    cast: PersonCast[];
 }
+
+//person cast
+export interface PersonCast {
+    id: number;
+    name: string;
+    character?: string;
+    poster_path: string | null;
+
+    certification?: string;
+    videos?: Video[];
+
+    creditData?: {
+        cast: CreditPerson[];
+        crew: CreditPerson[];
+    };
+
+    director?: CreditPerson[];
+    writer?: CreditPerson[];
+
+    episodes?: Episodes[];
+    runtime?: number | null;
+    logo?: string | null;
+
+    profile_path?: string;
+
+    vote_average?: number;
+    genre_ids?: number[];
+    overview?: string;
+
+    backdrop_path?: string;
+
+    seasons?: Season[];
+}
+export interface TMDBTvCast {
+    id: number;
+    name: string;
+    character?: string;
+    poster_path: string | null;
+}
+
+//people state
 export interface PeopleState {
     people: People[];
-    // selectedPeople: People | null;
-    selectedPeople: People['cast'][number] | null;
+    selectedPeople: PersonCast | null;
     onFetchPeople: () => Promise<void>;
     setSelectedPeople: (id: number) => void;
+}
+
+//onlywavvestate
+export interface OnlyWavveState {
+    wavves: OnlyWavve[];
+    selectedWavve: OnlyWavve | null;
+    fetchWavves: () => Promise<void>;
+    fetchWavveDetail: (id: number) => Promise<void>;
+}
+
+//primaryItem (홈 사용)
+export interface PrimaryItem {
+    id: number;
+    poster_path?: string | null;
+    backdrop_path?: string | null;
+    title?: string;
+    name?: string;
+    vote_average?: number;
+    mediaType: 'tv' | 'movie';
+}
+
+//Variety
+export interface Variety {
+    id: number;
+    name: string;
+    poster_path?: string | null;
+    backdrop_path?: string | null;
+    overview?: string;
+    videos?: Video[];
+    episodes?: Episodes[];
+    seasons?: Season[];
+    genre_ids?: number[];
+    runtime?: number | null;
+    logo?: string | null;
+    creditData?: {
+        cast: CreditPerson[];
+        crew: CreditPerson[];
+    };
+    director?: CreditPerson[];
+    writer?: CreditPerson[];
+}
+
+export interface News {
+    id: number;
+    name: string;
+    poster_path?: string | null;
+    backdrop_path?: string | null;
+    overview?: string;
+    videos?: Video[];
+    episodes?: Episodes[];
+    seasons?: Season[];
+    genre_ids?: number[];
+    runtime?: number | null;
+    logo?: string | null;
+    creditData?: {
+        cast: CreditPerson[];
+        crew: CreditPerson[];
+    };
+    director?: CreditPerson[];
+    writer?: CreditPerson[];
 }

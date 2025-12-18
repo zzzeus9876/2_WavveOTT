@@ -149,7 +149,7 @@ const VarietyLiveList = ({ title }: VarietyLiveList) => {
                                             <button className="preview-play-btn"></button>
                                             <button className="preview-heart-btn"></button>
                                         </div>
-                                        <Link to={`/contentsdetail/tv/${t.index}`}></Link>
+                                        <Link to={`/contentsdetail/tv/${t.tmdb_id}`}></Link>
                                     </div>
                                 </div>
                             )}
