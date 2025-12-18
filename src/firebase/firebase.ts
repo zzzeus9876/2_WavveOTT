@@ -189,7 +189,7 @@ export const deleteWatchHistory = async (
     );
 
     await deleteDoc(historyRef);
-    console.log(`✅ 시청 기록 삭제 성공: ${contentId}`);
+    console.log(`시청 기록 삭제 성공: ${contentId}`);
     return true;
   } catch (error) {
     console.error("시청 기록 삭제 에러:", error);
@@ -257,7 +257,7 @@ export const updateProfileNickname = async (
       { merge: true }
     );
 
-    console.log(`✅ Firebase 닉네임 저장 성공: ${nickname}`);
+    console.log(`Firebase 닉네임 저장 성공: ${nickname}`);
     return true;
   } catch (error) {
     console.error("닉네임 저장 에러:", error);

@@ -20,7 +20,6 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 interface KakaoAuthResponse {
   access_token: string;
   refresh_token: string;
-  // 필요한 다른 속성들을 추가할 수 있습니다.
 }
 
 declare global {
@@ -150,7 +149,6 @@ export const useAuthStore = create<AuthState>()(
               window.Kakao.init("f42c7217dba2db4b19dd471308a132fa");
             }
 
-            // 에러 해결: 사용하지 않는 authObj 변수 할당 제거
             await new Promise<KakaoAuthResponse>((resolve, reject) => {
               window.Kakao.Auth.login({
                 scope: "profile_nickname, profile_image",
@@ -205,7 +203,6 @@ export const useAuthStore = create<AuthState>()(
               }
             }
           } catch (err) {
-            // 에러 해결: any 제거 (err는 기본적으로 unknown)
             const error = err as Error;
             console.error("카카오 로그인 중 오류:", error);
             alert(
