@@ -6,19 +6,19 @@ import { usePickStore } from "../stores/usePickStore";
 import Modal from "./Modal";
 
 const MainSlider = () => {
-  const { onAddPick, pickList } = usePickStore();
+  const { onTogglePick, pickList } = usePickStore();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [showVideo, setShowVideo] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalSize, setModalSize] = useState<"xsmall" | "small" | "default" | "large">("default");
   const handleCloseModal = () => setIsModalOpen(false);
-  //하트선택상태변수
-  const [activeheart, setActiveHeart] = useState(false);
+
+  // const isPicked = pickList.some((p) => (p.tmdb_id ?? p.id) === main.id);
+
   //찜리스트 추가예정
   const handleHeart = async () => {
-    await onAddPick(main);
-    setActiveHeart(!activeheart);
+    await onTogglePick(main);
     setModalSize("small");
     setIsModalOpen(true);
     console.log("픽리스트 : ", pickList);
@@ -64,7 +64,7 @@ const MainSlider = () => {
               <video
                 ref={videoRef}
                 className={mStyle.video}
-                src={main.main_video}
+                src="/videos/video-mSection.mp4"
                 onPlay={() => setIsPlaying(true)}
                 onEnded={() => {
                   setIsPlaying(false);
@@ -114,9 +114,7 @@ const MainSlider = () => {
             )}
             <div className={mStyle.btnBoxT}>
               <span className={mStyle.playBtn} onClick={handleNavigate}></span>
-              <span
-                className={`${mStyle.heartBtn} ${activeheart ? mStyle.active : ""}`}
-                onClick={handleHeart}></span>
+              <span className={`${mStyle.heartBtn} `} onClick={handleHeart}></span>
             </div>
           </div>
         </div>

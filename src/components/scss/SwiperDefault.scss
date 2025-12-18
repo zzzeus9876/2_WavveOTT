@@ -10,13 +10,13 @@
       overflow: visible;
 
       .swiper-slide {
-        position: relative; // ✅ 추가
+        position: relative;
         overflow: visible;
         width: 220px;
-        z-index: 1; // ✅ 추가
+        z-index: 1;
 
         &:hover {
-          z-index: 50; // ✅ 핵심: 슬라이드 자체를 위로
+          z-index: 50;
         }
 
         // 메인 카드
@@ -48,7 +48,7 @@
             min-height: 464px;
             opacity: 0;
             pointer-events: auto;
-            z-index: 20; // ✅ 추가 (poster-wrap 위)
+            z-index: 20;
 
             @include g.myFlex($jc: unset, $gap: 1.4rem);
             flex-direction: column;
@@ -64,9 +64,7 @@
 
           // hover
           &:hover {
-            z-index: 30; // ✅ 추가 (poster-wrap도 같이 상승)
-
-            .main {
+            z-index: 30 .main {
               opacity: 0;
             }
 

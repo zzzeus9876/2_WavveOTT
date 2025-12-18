@@ -8,5 +8,5 @@ export interface Pick {
 
 export interface PickState {
   pickList: Pick[];
-  onAddPick: (item: Pick) => Promise<void>;
+  onTogglePick: (item: Pick) => Promise<void>;
 }
