@@ -17,6 +17,7 @@ import NewMovieList from "../components/NewMovieList";
 import EditorRecommendCardList from "../components/EditorRecommendCardList";
 import NewTvList from "../components/NewTvList";
 import VarietyLiveList from "../components/VarietyLiveList";
+import NewsNowList from "../components/NewsNowList";
 
 import type { PrimaryItem } from "../types/movie";
 
@@ -26,8 +27,7 @@ import "./scss/Home.scss";
 import UserWatchList from "../components/UserWatchList";
 
 const Home = () => {
-  const { popularMovies, newMovies, onFetchPopular, onFetchNewMovie } =
-    useMovieStore();
+  const { popularMovies, newMovies, onFetchPopular, onFetchNewMovie } = useMovieStore();
   const { wavves, onFetchWavve } = useWavveStore();
   const { tvs, onFetchTv } = useTvStore();
   const { people, onFetchPeople } = usePeopleStore();
@@ -69,10 +69,7 @@ const Home = () => {
         <WavveList title="오직 웨이브에서만" wavves={wavves} />
         <div className="banner-event">
           <Link to={"/event/1"}>
-            <img
-              src="/images/banner/banner-main-event.png"
-              alt="banner event"
-            />
+            <img src="/images/banner/banner-main-event.png" alt="banner event" />
           </Link>
         </div>
         <PeopleList title={"지금 주목받는 스타들"} people={people} />
@@ -83,10 +80,7 @@ const Home = () => {
       <div className="inner">
         <NewTvList title="NEW! 새로 올라온 시리즈" tvs={tvs} />
         <VarietyLiveList title="지금 방영중인 예능" />
-        <section className="card-list">
-          <h2>꼭 봐야하는 이슈</h2>
-          <div className="">내용, 슬라이더, 등등</div>
-        </section>
+        <NewsNowList title="꼭 봐야하는 이슈" />
       </div>
     </main>
   );
