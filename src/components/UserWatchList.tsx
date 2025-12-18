@@ -1,58 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../stores/useAuthStore";
+import type { WatchHistoryItem } from "../stores/useAuthStore";
 import { db, deleteWatchHistory } from "../firebase/firebase";
 import {
   collection,
   query,
   orderBy,
-  onSnapshot,
   limit,
+  getDocs,
   Timestamp,
-} from "firebase/firestore";
+} from "firebase/firestore"; // Timestamp 임포트 추가
 import "./scss/UserWatchList.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-interface WatchHistoryItem {
-  docId: string;
-  id: number | string;
-  type: "movie" | "tv" | string;
-  title: string;
-  backdrop_path?: string;
-  poster_path?: string;
-  runtime?: number;
-  lastPosition: number;
-  updatedAt: Timestamp;
-}
-
 const UserWatchList = () => {
   const navigate = useNavigate();
-  const { user, selectedCharId } = useAuthStore();
-  const [history, setHistory] = useState<WatchHistoryItem[]>([]);
+  const { user, selectedCharId, watchHistoryCache, setWatchHistoryCache } =
+    useAuthStore();
 
-  // 초기값 false, 데이터 로드 완료 여부만 따로 관리
-  const [isFetched, setIsFetched] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(watchHistoryCache.length > 0);
 
   useEffect(() => {
-    // 정보가 없으면 아무것도 하지 않음 (setIsLoading 호출 제거)
     if (!user || !selectedCharId) return;
 
-    const historyRef = collection(
-      db,
-      "users",
-      user.uid,
-      "profiles",
-      String(selectedCharId),
-      "watch_history"
-    );
-    const q = query(historyRef, orderBy("updatedAt", "desc"), limit(20));
+    const fetchData = async () => {
+      try {
+        const historyRef = collection(
+          db,
+          "users",
+          user.uid,
+          "profiles",
+          String(selectedCharId),
+          "watch_history"
+        );
+        const q = query(historyRef, orderBy("updatedAt", "desc"), limit(20));
+        const snap = await getDocs(q);
 
-    // onSnapshot 콜백 내부(비동기)에서 상태를 바꾸는 것은 ESLint가 허용함
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const data = snapshot.docs.map(
+        const data: WatchHistoryItem[] = snap.docs.map(
           (doc) =>
             ({
               docId: doc.id,
@@ -60,21 +46,16 @@ const UserWatchList = () => {
             } as WatchHistoryItem)
         );
 
-        setHistory(data);
-        setIsFetched(true); // 데이터 로드 성공 시 완료 표시
-      },
-      (err) => {
-        console.error("Snapshot error:", err);
-        setIsFetched(true); // 에러 발생 시에도 완료 표시 (무한 로딩 방지)
+        setWatchHistoryCache(data);
+        setIsLoaded(true);
+      } catch (err) {
+        console.error("데이터 로딩 실패:", err);
+        setIsLoaded(true);
       }
-    );
+    };
 
-    return () => unsubscribe();
-  }, [user, selectedCharId]);
-
-  // isLoading을 상태가 아닌 변수로 계산
-  // 유저 정보가 있고, 아직 데이터를 가져오는 중일 때만 true
-  const isLoading = user && selectedCharId && !isFetched;
+    fetchData();
+  }, [user, selectedCharId, setWatchHistoryCache]);
 
   const handleDelete = async (
     e: React.MouseEvent,
@@ -86,68 +67,100 @@ const UserWatchList = () => {
 
     try {
       await deleteWatchHistory(user.uid, selectedCharId, contentId);
+      const updated = watchHistoryCache.filter((item) => item.id !== contentId);
+      setWatchHistoryCache(updated);
     } catch (err) {
-      console.error("Delete error:", err);
+      console.error("삭제 실패:", err);
     }
   };
 
-  // 로딩 중일 때
-  if (isLoading)
-    return (
-      <div className="playlist-slider">
-        <p>로딩 중...</p>
-      </div>
-    );
+  // [any 에러 해결] 매개변수 타입을 Timestamp로 명시
+  const formatDate = (timestamp: Timestamp | null | undefined) => {
+    if (!timestamp || typeof timestamp.toDate !== "function")
+      return { fullDate: "", week: "" };
+    const date = timestamp.toDate();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const week = ["일", "월", "화", "수", "목", "금", "토"][date.getDay()];
+    return { fullDate: `${year}.${month}.${day}`, week: `(${week})` };
+  };
 
-  // 시청 내역이 없을 때 (유저 정보는 있지만 데이터가 빈 경우)
-  if (isFetched && history.length === 0)
-    return (
-      <div className="playlist-slider">
-        <p className="empty-text">시청 중인 콘텐츠가 없습니다.</p>
-      </div>
-    );
+  if (isLoaded && watchHistoryCache.length === 0) return null;
 
   return (
-    <div className="playlist-slider">
-      {history.map((movie) => {
-        const progress =
-          movie.runtime && movie.lastPosition
-            ? Math.min((movie.lastPosition / (movie.runtime * 60)) * 100, 100)
-            : 0;
+    <div className="watchList-slider">
+      <ul className="watch-list">
+        {watchHistoryCache.map((movie, index) => {
+          const { fullDate, week } = formatDate(movie.updatedAt);
 
-        return (
-          <div
-            key={movie.docId}
-            className="play-card"
-            onClick={() =>
-              navigate(`/contentsdetail/${movie.type}/${movie.id}`)
-            }
-          >
-            <div className="img-box">
-              <img
-                src={`${IMAGE_BASE_URL}${
-                  movie.backdrop_path || movie.poster_path
-                }`}
-                alt={movie.title}
-              />
-              <button
-                className="btn xsmall primary"
-                onClick={(e) => handleDelete(e, movie.id)}
-              >
-                ✕
-              </button>
-              <div className="progress-bar">
-                <div className="fill" style={{ width: `${progress}%` }} />
+          // 프로그래스 바 계산
+          const progress =
+            movie.runtime && movie.lastPosition
+              ? Math.min((movie.lastPosition / (movie.runtime * 60)) * 100, 100)
+              : 0;
+
+          // [런타임 추가] 분 단위로 표시
+          const runtimeText = movie.runtime ? `${movie.runtime}분` : "";
+
+          return (
+            <li
+              key={movie.docId}
+              className="watch-item"
+              onClick={() => {
+                const path =
+                  movie.type === "movie"
+                    ? `/moviedetail/movie/${movie.id}`
+                    : `/contentsdetail/${movie.type}/${movie.id}`;
+                navigate(path);
+              }}
+            >
+              <div className="img-box">
+                <img
+                  src={`${IMAGE_BASE_URL}${
+                    movie.backdrop_path || movie.poster_path
+                  }`}
+                  alt={movie.title}
+                  loading={index < 4 ? "eager" : "lazy"}
+                />
+                <div className="progress-bar">
+                  <div className="fill" style={{ width: `${progress}%` }} />
+                </div>
               </div>
-            </div>
-            <div className="play-info">
-              <p className="play-title">{movie.title}</p>
-            </div>
-          </div>
-        );
-      })}
+
+              <div className="text-info">
+                <p className="title">
+                  <span>{movie.title}</span>
+                  {movie.type !== "movie" && (
+                    <span className="episode">
+                      {movie.episodeNumber ? `${movie.episodeNumber}회` : "1회"}
+                    </span>
+                  )}
+                </p>
+
+                <div className="bottom-info">
+                  <div className="date-group">
+                    {/* [런타임 정보] */}
+                    {runtimeText && (
+                      <span className="runtime">{runtimeText}</span>
+                    )}
+                    <span className="date">{fullDate}</span>{" "}
+                    <span className="week">{week}</span>
+                  </div>
+                  <button
+                    className="btn-delete"
+                    onClick={(e) => handleDelete(e, movie.id)}
+                  >
+                    시청내역 삭제
+                  </button>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
 
-export default UserWatchList;
+export default memo(UserWatchList);
