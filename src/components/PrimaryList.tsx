@@ -1,25 +1,25 @@
-import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-import { Swiper, SwiperSlide, type SwiperClass } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide, type SwiperClass } from "swiper/react";
+import { Navigation } from "swiper/modules";
 
-// import { usePickStore } from '../stores/usePickStore';
+import { usePickStore } from "../stores/usePickStore";
 
-import { backgroundImage, logoImage } from '../utils/getListData';
-import { getGenres, getGrades } from '../utils/mapping';
+import { backgroundImage, logoImage } from "../utils/getListData";
+import { getGenres, getGrades } from "../utils/mapping";
 
-import type { PrimaryItem } from '../types/movie';
+import type { PrimaryItem } from "../types/movie";
 
-// import Modal from './Modal';
+import Modal from "./Modal";
 
-import 'swiper/css';
-import 'swiper/css/navigation';
-import './scss/WavveList.scss';
+import "swiper/css";
+import "swiper/css/navigation";
+import "./scss/WavveList.scss";
 
 interface PrimaryListProps {
-    title: string;
-    randomList: PrimaryItem[];
+  title: string;
+  randomList: PrimaryItem[];
 }
 
 const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
@@ -209,28 +209,70 @@ const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
                 </div>
                 <div className="modal-content">
                     <p>
-                        {pickAction === 'add'
-                            ? '찜 리스트에 추가되었습니다!'
-                            : '찜 리스트에서 제거되었습니다!'}
+                      <img src={getGrades(m.certification ?? "")} alt="certification" />
                     </p>
+                    <p className="preview-genre">
+                      {getGenres(m.genre_ids).slice(0, 2).join(" · ") || "기타"}
+                    </p>
+                    {m.episodes?.length ? <p>에피소드 {m.episodes.length}</p> : null}
+                  </div>
+                  <div className="preview-badge-bottom">
+                    <div className="preview-btn-wrap">
+                      <button className="preview-play-btn"></button>
+                      <button
+                        className={`preview-heart-btn ${
+                          pickList.some((p) => (p.tmdb_id ?? p.id) === (m.tmdb_id ?? m.id))
+                            ? "active"
+                            : ""
+                        }`}
+                        onClick={() => handleHeart(m)}></button>
+                    </div>
+                    <Link to={`/contentsdetail/tv/${m.id}`}></Link>
+                  </div>
                 </div>
-                <div className="modal-footer">
-                    <button
-                        className="btn default primary"
-                        onClick={() => {
-                            handleCloseModal();
-                            navigate('/profile');
-                        }}
-                    >
-                        찜 바로가기
-                    </button>
-                    <button className="btn default secondary-line" onClick={handleCloseModal}>
-                        닫기
-                    </button>
-                </div>
-            </Modal> */}
-        </section>
-    );
+              )}
+            </div>
+          </SwiperSlide>
+        ))}
+        <div className="prev-wrap">
+          <div ref={prevBtn} className="swiper-button-prev"></div>
+        </div>
+        <div className="next-wrap">
+          <div ref={nextBtn} className="swiper-button-next"></div>
+        </div>
+      </Swiper>
+
+      {/* 찜 모달 */}
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} size={modalSize}>
+        {/* 모달 내부 콘텐츠: Header, Body, Footer를 직접 구성 */}
+        <div className="modal-header">
+          <h3 className="modal-title">알림</h3>
+          {/* 닫기 버튼은 onCLose 핸들러를 호출 */}
+          <button className="close-button" onClick={handleCloseModal}>
+            <span>닫기</span>
+          </button>
+        </div>
+        <div className="modal-content">
+          <p>
+            {pickAction === "add" ? "찜 리스트에 추가되었습니다!" : "찜 리스트에서 제거되었습니다!"}
+          </p>
+        </div>
+        <div className="modal-footer">
+          <button
+            className="btn default primary"
+            onClick={() => {
+              handleCloseModal();
+              navigate("/profile");
+            }}>
+            찜 바로가기
+          </button>
+          <button className="btn default secondary-line" onClick={handleCloseModal}>
+            닫기
+          </button>
+        </div>
+      </Modal>
+    </section>
+  );
 };
 
 export default PrimaryList;
