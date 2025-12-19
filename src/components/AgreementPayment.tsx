@@ -3,7 +3,7 @@ import React from 'react';
 const AgreementPayment = () => {
     return (
         <div>
-            <h2>유료상품 이용약관</h2>
+            <h3>유료상품 이용약관</h3>
             <div className="policy-desc">
                 <ol>
                     <li>

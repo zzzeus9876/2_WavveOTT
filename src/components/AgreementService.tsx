@@ -3,7 +3,7 @@ import React from 'react';
 const AgreementService = () => {
     return (
         <div>
-            <h2>서비스 이용약관</h2>
+            <h3>서비스 이용약관</h3>
             <div className="policy-desc">
                 <div id="bizinfo">
                     <h3>사업자 정보</h3>
