@@ -91,6 +91,11 @@ const SearchOverlay = ({ onClose }: Props) => {
     onClose();
   };
 
+  useEffect(() => {
+    inputRef.current?.focus();
+    void onFetchTrendingKeywords(); // ✅ 실시간 인기 검색어 가져오기
+  }, [onFetchTrendingKeywords]);
+
   const goFirstByKeyword = async (keyword: string) => {
     const q = keyword.trim();
     if (q.length < MIN_LEN) return;
