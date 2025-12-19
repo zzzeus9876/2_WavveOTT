@@ -1,15 +1,38 @@
 import { create } from 'zustand';
-import type { Episodes, Tv, Video, CreditPerson } from '../types/movie';
+import type { Episodes, Tv, Video, CreditPerson, VarietyState } from '../types/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-interface VarietyState {
-    selectedVariety: Tv | null;
-    fetchVarietyDetail: (id: number) => Promise<void>;
-    clearVariety: () => void;
-}
-
 export const useVarietyStore = create<VarietyState>((set) => ({
+    //list
+    tvVideos: [],
+    onFetchVariety: async (id: number) => {
+        const videoRes = await fetch(
+            `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${API_KEY}&language=ko-KR`
+        );
+        const videoData = await videoRes.json();
+        const videos: Video[] = videoData.results || [];
+
+        const tvsVideo =
+            videos.find((v) => v.type === 'Trailer' && v.site === 'YouTube') ||
+            videos.find((v) => v.site === 'YouTube') ||
+            null;
+
+        /* 에피소드 (시즌 1만) */
+        const epRes = await fetch(
+            `https://api.themoviedb.org/3/tv/${id}/season/1?api_key=${API_KEY}&language=ko-KR`
+        );
+        const epData = await epRes.json();
+        const episodes: Episodes[] = epData.episodes || [];
+
+        set((state) => ({
+            tvVideos: {
+                ...state.tvVideos,
+                [id]: { tvsVideo, episodes },
+            },
+        }));
+    },
+
     selectedVariety: null,
 
     //Detail
@@ -85,7 +108,12 @@ export const useVarietyStore = create<VarietyState>((set) => ({
         };
 
         set({ selectedVariety: varietyDetail });
+        console.log(varietyDetail);
     },
 
     clearVariety: () => set({ selectedVariety: null }),
+
+    //웨이브 콘텐츠 필터 걸기
+    wavveIds: [1234, 5678, 9012],
+    setWavveIds: (ids: number[]) => set({ wavveIds: ids }),
 }));

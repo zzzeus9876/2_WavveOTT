@@ -10,7 +10,7 @@ const RankingCard = ({ id, poster }: RankingProps) => {
     return (
         <div className={style.Rankingcard}>
             <Link to={`/moviedetail/movie/${id}`}>
-                <img src={`http://image.tmdb.org/t/p/w200${poster}`} alt="" />
+                <img src={`http://image.tmdb.org/t/p/original${poster}`} alt="" />
             </Link>
         </div>
     );

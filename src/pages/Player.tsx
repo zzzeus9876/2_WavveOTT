@@ -1,6 +1,8 @@
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import './scss/Player.scss';
+
 const Player = () => {
     const { videoKey } = useParams();
 
@@ -11,19 +13,17 @@ const Player = () => {
     return (
         <div className="player-page">
             <button className="btn default primary" onClick={() => navigate(-1)}>
-                뒤로가기
+                <img src="/images/button/btn-close.svg" alt="back" />
+                <span>뒤로가기</span>
             </button>
-            <iframe
-                ref={iframeRef}
-                src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&controls=1&rel=0&playsinline=1`}
-                allowFullScreen={false}
-                title="youtube-player"
-                style={{
-                    width: '100vw',
-                    height: '100vh',
-                    border: 'none',
-                }}
-            />
+            <div className="player-container">
+                <iframe
+                    ref={iframeRef}
+                    src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&controls=1&rel=0&playsinline=1`}
+                    allowFullScreen={true}
+                    title="youtube-player"
+                />
+            </div>
         </div>
     );
 };

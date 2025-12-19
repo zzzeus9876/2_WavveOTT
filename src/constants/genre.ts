@@ -11,4 +11,5 @@ export const GENRE_MAP: Record<number, string> = {
     28: '액션',
     27: '공포',
     53: '스릴러',
+    99: '다큐멘터리',
 };
