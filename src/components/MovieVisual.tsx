@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 
-// Blob 클래스를 컴포넌트 외부로 분리 (ESLint 에러 방지)
+// Blob 클래스 (변경 없음)
 class Blob {
   x: number;
   y: number;
@@ -12,11 +12,7 @@ class Blob {
   constructor(w: number, h: number, colors: string[]) {
     this.x = Math.random() * w;
     this.y = Math.random() * h;
-
-    // 볼 사이즈를 기존 대비 1.2배 상향 조정 (약 145 ~ 360)
     this.radius = (Math.random() * 180 + 120) * 1.2;
-
-    // 역동적인 움직임을 위한 속도 설정
     this.vx = (Math.random() - 0.5) * 6;
     this.vy = (Math.random() - 0.5) * 6;
     this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -25,8 +21,6 @@ class Blob {
   update(w: number, h: number) {
     this.x += this.vx;
     this.y += this.vy;
-
-    // 화면 경계에서 부드럽게 루프
     if (this.x < -this.radius) this.x = w + this.radius;
     if (this.x > w + this.radius) this.x = -this.radius;
     if (this.y < -this.radius) this.y = h + this.radius;
@@ -34,17 +28,9 @@ class Blob {
   }
 
   draw(context: CanvasRenderingContext2D) {
-    const grad = context.createRadialGradient(
-      this.x,
-      this.y,
-      0,
-      this.x,
-      this.y,
-      this.radius
-    );
+    const grad = context.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
     grad.addColorStop(0, this.color);
     grad.addColorStop(1, "rgba(0, 0, 0, 0)");
-
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fillStyle = grad;
@@ -65,17 +51,15 @@ const MovieVisual: React.FC = () => {
 
     let blobs: Blob[] = [];
     let animationFrameId: number;
-
     const colors = [
-      "rgba(0, 255, 255, 1)", // Cyan
-      "rgba(255, 0, 150, 1)", // Magenta
-      "rgba(100, 0, 255, 1)", // Purple
-      "rgba(0, 100, 255, 1)", // Deep Blue
+      "rgba(0, 255, 255, 1)",
+      "rgba(255, 0, 150, 1)",
+      "rgba(100, 0, 255, 1)",
+      "rgba(0, 100, 255, 1)",
     ];
 
     const resize = () => {
       if (container) {
-        // 이미지 비율에 따른 높이를 캔버스에 정확히 반영
         canvas.width = container.clientWidth;
         canvas.height = container.clientHeight;
         init();
@@ -98,7 +82,6 @@ const MovieVisual: React.FC = () => {
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    // 이미지 로드 후 캔버스 사이즈 재설정
     const img = container.querySelector("img");
     if (img) {
       if (img.complete) resize();
@@ -115,6 +98,37 @@ const MovieVisual: React.FC = () => {
     };
   }, []);
 
+  // 애니메이션 키프레임 정의
+  const keyframes = `
+    /* 왼쪽/오른쪽 슬라이드 인 */
+    @keyframes slideInLeft {
+      0% { opacity: 0; transform: translateX(-100%); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      0% { opacity: 0; transform: translateX(100%); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    
+    /* 중앙 텍스트 100px 밑에서 올라오는 효과 */
+    @keyframes textRevealUp {
+      0% { 
+        opacity: 0; 
+        transform: translateY(100px); 
+      }
+      100% { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+
+    /* 미세한 부유 효과 */
+    @keyframes subtleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+  `;
+
   return (
     <div
       ref={containerRef}
@@ -122,24 +136,27 @@ const MovieVisual: React.FC = () => {
       style={{
         position: "relative",
         width: "100%",
+        maxHeight: "680px",
         overflow: "hidden",
         backgroundColor: "#000",
-        borderRadius: "0px", // 보더 라디우스 제거
       }}
     >
+      <style>{keyframes}</style>
+
+      {/* 배경 레이어 */}
       <img
         src="/images/visual/bg-visual-movie.jpg"
         alt=""
         style={{
           width: "100%",
-          maxHeight:'680px',
+          maxHeight: "680px",
           height: "auto",
           display: "block",
           opacity: 0.4,
         }}
       />
 
-      {/* 메타볼 레이어: 더 커진 사이즈와 강렬한 대비 */}
+      {/* 메타볼 캔버스 레이어 */}
       <div
         style={{
           position: "absolute",
@@ -147,9 +164,7 @@ const MovieVisual: React.FC = () => {
           left: 0,
           width: "100%",
           height: "100%",
-          // filter: "blur(40px) contrast(25)", // 볼이 커진 만큼 블러도 살짝 조정
-          filter: "blur(40px) contrast(25)", // 볼이 커진 만큼 블러도 살짝 조정
-          // mixBlendMode: "screen",
+          filter: "blur(40px) contrast(25)",
           mixBlendMode: "color-dodge",
           pointerEvents: "none",
         }}
@@ -157,7 +172,7 @@ const MovieVisual: React.FC = () => {
         <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
       </div>
 
-      {/* 3. 글래시스(유리) 질감 오버레이 */}
+      {/* 글래시스 오버레이 */}
       <div
         style={{
           position: "absolute",
@@ -173,7 +188,7 @@ const MovieVisual: React.FC = () => {
         }}
       />
 
-      {/* 4. 중앙 텍스트 컨텐츠 */}
+      {/* 중앙 텍스트 컨텐츠 */}
       <div
         style={{
           position: "absolute",
@@ -192,6 +207,8 @@ const MovieVisual: React.FC = () => {
             fontWeight: 900,
             letterSpacing: "-0.03em",
             textShadow: "0 10px 30px rgba(0,0,0,0.5)",
+            opacity: 0,
+            animation: "textRevealUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards",
           }}
         >
           영화 <span style={{ opacity: 0.6 }}>WAVVE</span>
@@ -199,13 +216,48 @@ const MovieVisual: React.FC = () => {
         <p
           style={{
             fontSize: "1.2rem",
-            opacity: 0.8,
             marginTop: "12px",
             fontWeight: 500,
+            opacity: 0,
+            animation: "textRevealUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards", // 타이틀 이후 0.3초 뒤 등장
           }}
         >
           세상을 보는 새로운 시선
         </p>
+      </div>
+
+      {/* 왼쪽 남자 배우 */}
+      <div
+        style={{
+          position: "absolute",
+          left: "100px",
+          bottom: "-10px",
+          width: "430px",
+          minWidth: "230px",
+
+          opacity: 0,
+          animation: "slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+        }}
+      >
+        <div style={{ animation: "subtleFloat 6s ease-in-out infinite 1.2s" }}>
+          <img src="/images/visual/visual-movie-main-actor1.png" alt="배우" style={{ width: "100%" }} />
+        </div>
+      </div>
+
+      {/* 오른쪽 배우들 */}
+      <div
+        style={{
+          position: "absolute",
+          right: "0",
+          bottom: "-10px",
+          width: "600px",
+          opacity: 0,
+          animation: "slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards",
+        }}
+      >
+        <div style={{ animation: "subtleFloat 7s ease-in-out infinite 1.5s" }}>
+          <img src="/images/visual/visual-movie-main-actor2.png" alt="배우" style={{ width: "100%" }} />
+        </div>
       </div>
     </div>
   );
