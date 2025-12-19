@@ -23,7 +23,7 @@
         margin: 0 0 26px 0;
     }
 
-    h2 {
+    h3 {
         padding: 40px 0;
     }
 
@@ -55,18 +55,18 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
-            line-height: 1.1;
 
             th {
                 padding: 12px;
                 border: 1px solid #878c9e;
+                line-height: 40px;
             }
 
             td {
                 padding: 12px 20px;
                 border: 1px solid #878c9e;
                 cursor: pointer;
-                // line-height: 1;
+                line-height: 40px;
             }
         }
 
@@ -96,11 +96,13 @@
                     th {
                         font-weight: 500;
                         border: 1px solid #878c9e;
+                        line-height: 40px;
                     }
 
                     td {
                         border: 1px solid #878c9e;
                         vertical-align: middle;
+                        line-height: 40px;
                     }
                 }
             }
