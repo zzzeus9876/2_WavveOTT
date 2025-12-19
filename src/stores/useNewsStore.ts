@@ -1,16 +1,38 @@
 import { create } from 'zustand';
-import type { Episodes, Tv, Video, CreditPerson } from '../types/movie';
+import type { Episodes, Tv, Video, CreditPerson, NewsState } from '../types/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-interface NewsState {
-    news: Tv[];
-    selectedNews: Tv | null;
-    fetchNewsDetail: (id: number) => Promise<void>;
-}
-
 export const useNewsStore = create<NewsState>((set) => ({
     news: [],
+    newsVideos: {},
+    onFetchNews: async (id: number) => {
+        const videoRes = await fetch(
+            `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${API_KEY}&language=ko-KR`
+        );
+        const videoData = await videoRes.json();
+        const videos: Video[] = videoData.results || [];
+
+        const tvsVideo =
+            videos.find((v) => v.type === 'Trailer' && v.site === 'YouTube') ||
+            videos.find((v) => v.site === 'YouTube') ||
+            null;
+
+        /* 에피소드 (시즌 1만) */
+        const epRes = await fetch(
+            `https://api.themoviedb.org/3/tv/${id}/season/1?api_key=${API_KEY}&language=ko-KR`
+        );
+        const epData = await epRes.json();
+        const episodes: Episodes[] = epData.episodes || [];
+
+        set((state) => ({
+            newsVideos: {
+                ...state.newsVideos,
+                [id]: { tvsVideo, episodes },
+            },
+        }));
+    },
+
     selectedNews: null,
 
     fetchNewsDetail: async (id: number) => {

@@ -1,0 +1,156 @@
+// .animation-container {
+//     position: relative;
+//     width: 100%;
+//     height: 450px; // 배너 높이
+//     background: linear-gradient(135deg, #2ae0c1 0%, #a1e04c 100%);
+//     overflow: hidden;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+
+//     // 배경 움직이는 사선 패턴
+//     .bg-layer {
+//         position: absolute;
+//         inset: 0;
+//         .moving-stripe {
+//             position: absolute;
+//             width: 200%;
+//             height: 200%;
+//             top: -50%;
+//             left: -50%;
+//             background-image: repeating-linear-gradient(
+//                 45deg,
+//                 rgba(255, 255, 255, 0.05) 0px,
+//                 rgba(255, 255, 255, 0.05) 20px,
+//                 transparent 20px,
+//                 transparent 40px
+//             );
+//             animation: stripeMove 20s linear infinite;
+//         }
+//     }
+
+//     // 캐릭터 애니메이션
+//     .character-wrapper {
+//         position: absolute;
+//         inset: 0;
+//         display: flex;
+//         justify-content: space-between;
+//         align-items: flex-end;
+//         padding: 0 5%;
+
+//         .character {
+//             height: 90%;
+//             img {
+//                 height: 100%;
+//                 width: auto;
+//                 object-fit: contain;
+//                 filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.3));
+//             }
+
+//             &.left {
+//                 transform: translateX(-100px);
+//                 opacity: 0;
+//                 animation: charEnter 1s ease-out forwards, float 4s ease-in-out infinite 1s;
+//             }
+
+//             &.right {
+//                 transform: translateX(100px);
+//                 opacity: 0;
+//                 animation: charEnter 1s ease-out forwards,
+//                     float 4.5s ease-in-out infinite reverse 1s;
+//             }
+//         }
+//     }
+
+//     // 텍스트 디자인 (오! 하는 포인트)
+//     .content {
+//         position: relative;
+//         z-index: 10;
+//         text-align: center;
+//         color: white;
+
+//         .title-box {
+//             overflow: hidden;
+//             .title {
+//                 font-size: clamp(2.5rem, 6vw, 4.5rem);
+//                 font-weight: 900;
+//                 margin-bottom: 0.5rem;
+//                 position: relative;
+//                 animation: titleUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+
+//                 // 글자 뒤에 살짝 비치는 잔상 효과
+//                 &::after {
+//                     content: attr(data-text);
+//                     position: absolute;
+//                     left: 0;
+//                     top: 0;
+//                     z-index: -1;
+//                     color: rgba(255, 255, 255, 0.1);
+//                     transform: scale(1.2);
+//                     filter: blur(8px);
+//                 }
+//             }
+//         }
+
+//         .desc {
+//             font-size: 1.1rem;
+//             font-weight: 300;
+//             letter-spacing: 0.2rem;
+//             opacity: 0;
+//             animation: fadeIn 1s ease-out forwards 0.8s;
+//         }
+//     }
+
+//     // 유리 질감 (전체적인 톤 정리)
+//     .glass-overlay {
+//         position: absolute;
+//         inset: 0;
+//         background: radial-gradient(circle at center, transparent, rgba(0, 0, 0, 0.1));
+//         pointer-events: none;
+//     }
+// }
+
+// // --- 애니메이션 키프레임 ---
+
+// @keyframes stripeMove {
+//     0% {
+//         transform: translate(0, 0);
+//     }
+//     100% {
+//         transform: translate(40px, 40px);
+//     }
+// }
+
+// @keyframes charEnter {
+//     to {
+//         transform: translateX(0);
+//         opacity: 1;
+//     }
+// }
+
+// @keyframes float {
+//     0%,
+//     100% {
+//         transform: translateY(0);
+//     }
+//     50% {
+//         transform: translateY(-15px) rotate(1deg);
+//     }
+// }
+
+// @keyframes titleUp {
+//     from {
+//         transform: translateY(100%);
+//         clip-path: inset(0 0 100% 0);
+//     }
+//     to {
+//         transform: translateY(0);
+//         clip-path: inset(0 0 0 0);
+//     }
+// }
+
+// @keyframes fadeIn {
+//     to {
+//         opacity: 0.9;
+//     }
+// }

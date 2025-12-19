@@ -7,7 +7,8 @@ import type {
     Video,
     PersonCast,
     CreditPerson,
-    TMDBTvCast,
+    Logo,
+    Season,
 } from '../types/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -28,7 +29,7 @@ export const usePeopleStore = create<PeopleState>((set) => ({
                     const data = await res.json();
 
                     const castWithExtra: PersonCast[] = await Promise.all(
-                        data.cast.map(async (tv: TMDBTvCast) => {
+                        data.cast.map(async (tv: PersonCast) => {
                             /* TV 상세 */
                             const tvRes = await fetch(
                                 `https://api.themoviedb.org/3/tv/${tv.id}?api_key=${API_KEY}&language=ko-KR`
@@ -44,6 +45,22 @@ export const usePeopleStore = create<PeopleState>((set) => ({
                                 (r: { iso_3166_1: string }) => r.iso_3166_1 === 'KR'
                             );
                             const certification = kr?.rating || 'NR';
+
+                            /* 로고 */
+                            const imageRes = await fetch(
+                                `https://api.themoviedb.org/3/tv/${tv.id}/images?api_key=${API_KEY}`
+                            );
+                            const imageData = await imageRes.json();
+                            const logo =
+                                imageData.logos?.find((l: Logo) => l.iso_639_1 === 'ko')
+                                    ?.file_path ||
+                                imageData.logos?.find((l: Logo) => l.iso_639_1 === 'en')
+                                    ?.file_path ||
+                                null;
+
+                            /* 백드롭 */
+                            const backdrop =
+                                imageData.backdrops?.[0]?.file_path || tv.backdrop_path || null;
 
                             /* 비디오 */
                             const videoRes = await fetch(
@@ -75,11 +92,26 @@ export const usePeopleStore = create<PeopleState>((set) => ({
                             const epData = await epRes.json();
                             const episodes: Episodes[] = epData.episodes || [];
 
+                            /* 에피소드 다 가져오기 */
+                            const epPromises = tvData.seasons.map(async (s: Season) => {
+                                const epRes = await fetch(
+                                    `https://api.themoviedb.org/3/tv/${tv.id}/season/${s.season_number}?api_key=${API_KEY}&language=ko-KR`
+                                );
+                                const epData = await epRes.json();
+                                return {
+                                    season_number: s.season_number,
+                                    episodes: epData.episodes || [],
+                                };
+                            });
+
+                            const seasons = await Promise.all(epPromises);
+
                             return {
                                 id: tv.id,
                                 name: tv.name,
                                 character: tv.character,
                                 poster_path: tv.poster_path,
+                                genre_ids: tv.genre_ids,
                                 certification,
                                 videos,
                                 creditData,
@@ -87,16 +119,19 @@ export const usePeopleStore = create<PeopleState>((set) => ({
                                 writer,
                                 episodes,
                                 runtime: tvData.episode_run_time?.[0] ?? null,
-                                logo: null,
+                                logo,
+                                backdrop,
+                                seasons,
                             };
                         })
                     );
+                    const trimmedCast = castWithExtra.slice(0, 5);
 
                     return {
                         id: data.id,
                         name: data.name,
                         profile_path: data.profile_path,
-                        cast: castWithExtra,
+                        cast: trimmedCast,
                     };
                 })
             );
@@ -115,4 +150,8 @@ export const usePeopleStore = create<PeopleState>((set) => ({
             }
             return { selectedPeople: null };
         }),
+
+    //웨이브 콘텐츠 필터 걸기
+    wavveIds: [1234, 5678, 9012],
+    setWavveIds: (ids: number[]) => set({ wavveIds: ids }),
 }));

@@ -1,8 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Episodes, Season } from '../types/movie';
-
 import CustomSelect from './CustomSelect';
-
 import './scss/ContentsEpisode.scss';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,31 +9,79 @@ interface EpisodeProps {
     seasons?: Season[];
     episodeImages?: string[];
     videoKey: string | undefined;
+    selectedPerson: {
+        id: number;
+        name: string;
+    } | null;
 }
+
 export interface SelectOption {
     label: string;
     path: string;
 }
 
-const ContentsEpisode = ({ episodes, seasons = [], episodeImages, videoKey }: EpisodeProps) => {
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
+const ContentsEpisode = ({
+    episodes,
+    seasons = [],
+    episodeImages,
+    videoKey,
+    selectedPerson,
+}: EpisodeProps) => {
     const navigate = useNavigate();
 
-    const [selectedSeason, setSelectedSeason] = useState('전체 시즌');
-    const [selectedSeasonNumber, setSelectedSeasonNumber] = useState<number | null>(null);
+    // 첫 시즌 기본값
+    const defaultSeason = seasons?.[0];
+    const [selectedSeason, setSelectedSeason] = useState(defaultSeason ? defaultSeason.name : '');
     const [selectedSort, setSelectedSort] = useState('오래된 순');
 
-    // 시즌 옵션
-    const seasonOptions: SelectOption[] = [
-        { label: '전체 시즌', path: '' },
-        ...seasons.map((season) => ({
-            label: `${season.name}`,
-            path: season.season_number.toString(),
-        })),
-    ];
+    // 초기 에피소드 데이터
+    const initialEpisodes = useMemo(() => {
+        if (defaultSeason?.episodes) {
+            return defaultSeason.episodes;
+        }
+        return episodes;
+    }, [episodes, defaultSeason]);
 
-    const handleSeasonSelect = (path: string, label: string) => {
+    const [episodesState, setEpisodes] = useState<Episodes[]>([]);
+
+    // 초기 데이터 설정
+    useEffect(() => {
+        setEpisodes(initialEpisodes);
+    }, [initialEpisodes]);
+
+    // 시즌 옵션
+    const seasonOptions: SelectOption[] = seasons.length
+        ? seasons.map((season) => ({
+              label: season.name,
+              path: season.season_number.toString(),
+          }))
+        : [];
+
+    // 시즌 선택 핸들러
+    const handleSeasonSelect = async (path: string, label: string) => {
         setSelectedSeason(label);
-        setSelectedSeasonNumber(path ? Number(path) : null);
+        const seasonNumber = path ? Number(path) : null;
+
+        let filtered: Episodes[] = [];
+
+        if (seasonNumber && selectedPerson) {
+            const res = await fetch(
+                `https://api.themoviedb.org/3/tv/${selectedPerson.id}/season/${seasonNumber}?api_key=${API_KEY}&language=ko-KR`
+            );
+            const data = await res.json();
+            filtered = data.episodes || [];
+        }
+
+        // 선택된 정렬 기준 적용
+        filtered.sort((a, b) =>
+            selectedSort === '오래된 순'
+                ? a.episode_number - b.episode_number
+                : b.episode_number - a.episode_number
+        );
+
+        setEpisodes(filtered);
     };
 
     // 정렬 옵션
@@ -46,40 +92,47 @@ const ContentsEpisode = ({ episodes, seasons = [], episodeImages, videoKey }: Ep
 
     const handleSortSelect = (label: string) => {
         setSelectedSort(label);
+        // 정렬 즉시 적용
+        setEpisodes((prev) =>
+            [...prev].sort((a, b) =>
+                label === '오래된 순'
+                    ? a.episode_number - b.episode_number
+                    : b.episode_number - a.episode_number
+            )
+        );
     };
 
-    // episodes와 episodeImages를 같이 묶어서 처리
-    const episodesWithImages = episodes.map((e, index) => ({
-        ...e,
-        image: episodeImages?.[index] ?? '', //
-    }));
-
-    // 필터 & 정렬된 에피소드
-    const filteredEpisodes = episodesWithImages
-        .filter((e) => !selectedSeasonNumber || e.season_number === selectedSeasonNumber)
-        .sort((a, b) => {
-            if (selectedSort === '오래된 순') {
-                return a.episode_number - b.episode_number;
-            } else {
-                return b.episode_number - a.episode_number;
-            }
-        });
+    // episodes + 이미지 처리, 정렬 적용
+    const filteredEpisodes = episodesState
+        .map((e, index) => ({
+            ...e,
+            image:
+                episodeImages?.[index] ??
+                (e.still_path
+                    ? `https://image.tmdb.org/t/p/original${e.still_path}`
+                    : '/images/default-thumbnail.png'),
+        }))
+        .sort((a, b) =>
+            selectedSort === '오래된 순'
+                ? a.episode_number - b.episode_number
+                : b.episode_number - a.episode_number
+        );
 
     return (
         <div className="episode-wrap">
             <div className="episode-menu">
-                {/* 시즌 select */}
-                <div className="episode-select season">
-                    <CustomSelect
-                        options={seasonOptions}
-                        selectedValue={selectedSeason}
-                        onSelect={handleSeasonSelect}
-                        label="전체 시즌"
-                        width="256"
-                    />
-                </div>
+                {seasonOptions.length > 0 && (
+                    <div className="episode-select season">
+                        <CustomSelect
+                            options={seasonOptions}
+                            selectedValue={selectedSeason}
+                            onSelect={handleSeasonSelect}
+                            label={selectedSeason}
+                            width="256"
+                        />
+                    </div>
+                )}
 
-                {/* 정렬 select */}
                 <div className="episode-select latest">
                     <CustomSelect
                         options={sortOptions}
@@ -90,6 +143,7 @@ const ContentsEpisode = ({ episodes, seasons = [], episodeImages, videoKey }: Ep
                     />
                 </div>
             </div>
+
             <ul className="episode-list">
                 {filteredEpisodes.map((e) => (
                     <li key={e.id} className="episode-card">

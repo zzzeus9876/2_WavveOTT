@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { Movie } from '../types/movie';
 
 import { getGenres } from '../utils/mapping';
@@ -6,27 +7,37 @@ import './scss/MovieRecommend.scss';
 
 interface RecommendProps {
     popularMovies: Movie[];
+    videoKey: string | undefined;
 }
 
 const MovieRecommend = ({ popularMovies }: RecommendProps) => {
+    const navigate = useNavigate();
     return (
         <div className="recommend-wrap">
             <ul className="recommend-list">
                 {popularMovies.map((p) => (
                     <li className="recommend-card" key={p.id}>
-                        <div className="recommend-img">
+                        <div
+                            className="recommend-img"
+                            onClick={() => navigate(`/moviedetail/movie/${p.id}`)}
+                        >
+                            {/* {w.episodes[0]?.still_path ? (
+                                <img
+                                    src={`https://image.tmdb.org/t/p/original${w.episodes[0]?.still_path}`}
+                                    alt="thum"
+                                />
+                            ) : ( */}
                             <img
-                                src={`https://image.tmdb.org/t/p/original${p.backdrop_path}}`}
+                                src={`https://image.tmdb.org/t/p/original${p.backdrop_path}`}
                                 alt="thum"
+                                className="play-default"
                             />
-                            {/* <p>
-                                {p.logo && (
-                                    <img
-                                        src={`https://image.tmdb.org/t/p/original${p.logo}`}
-                                        alt="logo"
-                                    />
-                                )}
-                            </p> */}
+                            <img
+                                className="play-hover"
+                                src="/images/icons/icon-play-white.svg"
+                                alt="playIcon"
+                            />
+                            {/* )} */}
                         </div>
                         <div className="recommend-text">
                             <h3 className="recommend-title">{p.title}</h3>

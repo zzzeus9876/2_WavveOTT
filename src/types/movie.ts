@@ -34,6 +34,7 @@ export interface Episodes {
     runtime?: number;
     season_number?: number;
     overview?: string;
+    backdrop_path?: string;
 }
 
 export interface Season {
@@ -44,6 +45,7 @@ export interface Season {
     air_date?: string;
     overview?: string;
     poster_path?: string;
+    episodes?: Episodes[];
 }
 
 //credit
@@ -189,13 +191,14 @@ export interface PersonCast {
 
     backdrop_path?: string;
 
-    seasons?: Season[];
+    seasons?: { season_number: number; episodes: Episodes[] }[];
 }
 export interface TMDBTvCast {
     id: number;
     name: string;
     character?: string;
     poster_path: string | null;
+    backdrop_path: string | null;
 }
 
 //people state
@@ -204,6 +207,7 @@ export interface PeopleState {
     selectedPeople: PersonCast | null;
     onFetchPeople: () => Promise<void>;
     setSelectedPeople: (id: number) => void;
+    wavveIds: number[];
 }
 
 //onlywavvestate
@@ -214,7 +218,7 @@ export interface OnlyWavveState {
     fetchWavveDetail: (id: number) => Promise<void>;
 }
 
-//primaryItem (홈 사용)
+//primaryItem
 export interface PrimaryItem {
     id: number;
     poster_path?: string | null;
@@ -223,6 +227,11 @@ export interface PrimaryItem {
     name?: string;
     vote_average?: number;
     mediaType: 'tv' | 'movie';
+    videos?: { key: string }[];
+    logo?: string | null;
+    certification?: string | null;
+    genre_ids?: number[];
+    episodes?: Episodes[];
 }
 
 //Variety
@@ -246,6 +255,15 @@ export interface Variety {
     writer?: CreditPerson[];
 }
 
+export interface VarietyState {
+    selectedVariety: Tv | null;
+    tvVideos: Record<number, { tvsVideo: Video | null; episodes: Episodes[] }>;
+    onFetchVariety: (id: number) => Promise<void>;
+    fetchVarietyDetail: (id: number) => Promise<void>;
+    clearVariety: () => void;
+    wavveIds: number[];
+}
+
 export interface News {
     id: number;
     name: string;
@@ -264,4 +282,12 @@ export interface News {
     };
     director?: CreditPerson[];
     writer?: CreditPerson[];
+}
+
+export interface NewsState {
+    news: Tv[];
+    selectedNews: Tv | null;
+    newsVideos: Record<number, { tvsVideo: Video | null; episodes: Episodes[] }>;
+    onFetchNews: (id: number) => Promise<void>;
+    fetchNewsDetail: (id: number) => Promise<void>;
 }
