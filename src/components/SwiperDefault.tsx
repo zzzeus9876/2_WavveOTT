@@ -1,13 +1,14 @@
-import React, { useState } from "react";
 import { SwiperSlide, Swiper } from "swiper/react";
 import { backgroundImage, logoImage } from "../utils/getListData";
 import { getGenres, getGrades } from "../utils/mapping";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { usePickStore } from "../stores/usePickStore";
 import Modal from "./Modal";
+import type { Pick } from "../types/pick";
+import { useState } from "react";
 
-const SwiperDefault = ({ data }) => {
-  const { onTogglePick, pickList, pickAction } = usePickStore();
+const SwiperDefault = ({ data }: { data: Pick[] }) => {
+  const { onTogglePick, pickAction } = usePickStore();
 
   const [hoverId, setHoverId] = useState<number | null>(null);
   const list = Array.isArray(data) ? data : [];
@@ -15,7 +16,9 @@ const SwiperDefault = ({ data }) => {
   const [modalSize, setModalSize] = useState<"xsmall" | "small" | "default" | "large">("default"); //모달 size
   const [isModalOpen, setIsModalOpen] = useState(false); //모달오픈 상태변수
 
-  const handleHeart = async (item) => {
+  const navigate = useNavigate();
+
+  const handleHeart = async (item: Pick) => {
     await onTogglePick(item);
     setModalSize("small");
     setIsModalOpen(true);
@@ -36,14 +39,14 @@ const SwiperDefault = ({ data }) => {
               <img
                 className="main"
                 src={`https://image.tmdb.org/t/p/original${d.poster_path}`}
-                alt={d.title}
+                alt={d.title || d.name}
               />
               <div className="preview-wrap">
                 <div
                   className="img-box"
                   onMouseEnter={() => setHoverId(d.id)}
                   onMouseLeave={() => setHoverId(null)}>
-                  {d.tvsVideos?.key && hoverId === d.id ? (
+                  {d.tvsVideo?.key && hoverId === d.id ? (
                     <iframe
                       className="hover video"
                       src={`https://www.youtube.com/embed/${d.tvsVideo.key}?autoplay=1&mute=1`}
