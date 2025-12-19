@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useMovieStore } from '../stores/useMovieStore';
+// import { usePickStore } from '../stores/usePickStore';
 
 import { getGenres, getGrades } from '../utils/mapping';
 import { getContentImages } from '../utils/getData';
@@ -13,8 +14,9 @@ import Modal from '../components/Modal';
 import { useAuthStore } from '../stores/useAuthStore'; // KEH  왓치리스트를 위해 추가
 import { saveWatchHistory } from '../firebase/firebase'; // KEH  왓치리스트를 위해 추가
 
-import './scss/ContentsDetail.scss';
 import type { CreditPerson } from '../types/movie';
+
+import './scss/ContentsDetail.scss';
 
 const MovieDetail = () => {
     const { user, selectedCharId } = useAuthStore(); // KEH  왓치리스트를 위해 추가
@@ -24,10 +26,15 @@ const MovieDetail = () => {
     const navigate = useNavigate();
 
     const { popularMovies, selectedPopular, onFetchPopular, setSelectedPopular } = useMovieStore();
+    // const { onTogglePick, pickList, pickAction } = usePickStore();
 
     const [shareOpen, setShareOpen] = useState(false);
     const [activeMenu, setActiveMenu] = useState('relative');
     const [showVideo, setShowVideo] = useState(false);
+    const [isWatched, setIsWatched] = useState(false);
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const [modalSize, setModalSize] = useState<'xsmall' | 'small' | 'default' | 'large'>('default'); //모달 size
+    // const [isModalOpen, setIsModalOpen] = useState(false); //모달오픈 상태변수
 
     // type에 따라 fetch
     useEffect(() => {
@@ -79,6 +86,21 @@ const MovieDetail = () => {
     // 실제 화면에 보여줄 메뉴
     const visibleMenu = hasVideos ? activeMenu : 'recommend';
 
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // 찜 리스트에 들어있는지 확인
+    // const isPicked = pickList.some(
+    //     (p) => p.contentId === (selectedContent.id ?? selectedContent.tmdb_id)
+    // );
+
+    // const handleHeart = async () => {
+    //     await onTogglePick(selectedContent);
+    //     setModalSize('small');
+    //     setIsModalOpen(true);
+    // };
+
+    //모달 닫기 핸들러
+    // const handleCloseModal = () => setIsModalOpen(false);
+
     // 등급 데이터 [] 배열일 수도 있고, NR 수도 있어서 한꺼번에 변수 설정
     const certificationValue = Array.isArray(selectedContent.certificationMovie)
         ? selectedContent.certificationMovie[0]?.certification
@@ -106,6 +128,9 @@ const MovieDetail = () => {
                 console.error('시청 기록 저장 실패:', error);
             }
         }
+        //===============/// 버튼 누르면 재생하기 -> 이어보기로 변경 ===============
+        setIsWatched(true);
+        //==============================
         navigate(`/player/${videoKey}`);
     };
 
@@ -116,7 +141,29 @@ const MovieDetail = () => {
             <div className="inner">
                 <div className="detail-left">
                     <div className="detail-img-box">
-                        {!showVideo && background && (
+                        {(!showVideo || !videoKey) && background && (
+                            <>
+                                <p className="detail-backdrop">
+                                    <img src={background} alt={selectedContent.title} />
+                                </p>
+                                {logo && (
+                                    <p className="detail-logo">
+                                        <img src={logo} alt={`${selectedContent.title} logo`} />
+                                    </p>
+                                )}
+                            </>
+                        )}
+
+                        {showVideo && videoKey && (
+                            <iframe
+                                key={videoKey}
+                                className="detail-video"
+                                src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&mute=1&controls=0&rel=0`}
+                                title={`${selectedContent.title} trailer`}
+                            />
+                        )}
+
+                        {/* {!showVideo && background && (
                             <>
                                 <p className="detail-backdrop">
                                     <img src={background} alt={selectedContent.title} />
@@ -136,7 +183,7 @@ const MovieDetail = () => {
                                 src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&mute=1&controls=0&rel=0`}
                                 title={`${selectedContent.title} trailer`}
                             />
-                        )}
+                        )} */}
                     </div>
                     <div className="detail-title-box">
                         <div className="detail-title-left">
@@ -193,7 +240,7 @@ const MovieDetail = () => {
                                     className="btn default primary"
                                     onClick={handlePlayClick} // KEH  왓치리스트를 위해 추가
                                 >
-                                    재생하기
+                                    {isWatched ? '이어보기' : '재생하기'}
                                 </button>
                             </div>
                         </div>
@@ -291,11 +338,43 @@ const MovieDetail = () => {
                             <MovieRelative videos={selectedContent.videos} />
                         )}
                         {visibleMenu === 'recommend' && (
-                            <MovieRecommend popularMovies={popularMovies} />
+                            <MovieRecommend popularMovies={popularMovies} videoKey={videoKey} />
                         )}
                     </div>
                 </div>
             </div>
+            {/* //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️=============== */}
+            {/* <Modal isOpen={isModalOpen} onClose={handleCloseModal} size={modalSize}>
+                모달 내부 콘텐츠: Header, Body, Footer를 직접 구성
+                <div className="modal-header">
+                    <h3 className="modal-title">알림</h3>
+                    닫기 버튼은 onCLose 핸들러를 호출
+                    <button className="close-button" onClick={handleCloseModal}>
+                        <span>닫기</span>
+                    </button>
+                </div>
+                <div className="modal-content">
+                    <p>
+                        {pickAction === 'add'
+                            ? '찜 리스트에 추가되었습니다!'
+                            : '찜 리스트에서 제거되었습니다!'}
+                    </p>
+                </div>
+                <div className="modal-footer">
+                    <button
+                        className="btn default primary"
+                        onClick={() => {
+                            handleCloseModal();
+                            navigate('/profile');
+                        }}
+                    >
+                        찜 바로가기
+                    </button>
+                    <button className="btn default secondary-line" onClick={handleCloseModal}>
+                        닫기
+                    </button>
+                </div>
+            </Modal> */}
         </main>
     );
 };

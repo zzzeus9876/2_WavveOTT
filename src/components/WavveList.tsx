@@ -1,18 +1,21 @@
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Swiper, SwiperSlide, type SwiperClass } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
+
+import { usePickStore } from '../stores/usePickStore';
 
 import type { OnlyWavve } from '../types/movie';
 
 import { getGenres, getGrades } from '../utils/mapping';
 import { backgroundImage, logoImage } from '../utils/getListData';
 
+import Modal from './Modal';
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import './scss/WavveList.scss';
-import { usePickStore } from '../stores/usePickStore';
 
 interface WavveListProps {
     title: string;
@@ -20,17 +23,18 @@ interface WavveListProps {
 }
 
 const WavveList = ({ title, wavves }: WavveListProps) => {
+    const { onTogglePick, pickList, pickAction } = usePickStore();
+
     //어떤거가 호버됐는지 체크
     const [hoverId, setHoverId] = useState<number | null>(null); //숫자로 받기
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalSize, setModalSize] = useState<'xsmall' | 'small' | 'default' | 'large'>('default');
 
     //스와이퍼 슬라이드 첫번째,마지막 슬라이더 버튼 숨기기
     const prevBtn = useRef<HTMLDivElement>(null);
     const nextBtn = useRef<HTMLDivElement>(null);
 
-    const handleAddPick = (content) => {
-        const onTogglePick = usePickStore.getState().onTogglePick;
-        onTogglePick(content);
-    };
+    const navigate = useNavigate();
 
     const handleSwiperBtns = (swiper: SwiperClass) => {
         const isFirst = swiper.activeIndex === 0;
@@ -58,6 +62,14 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
         }
     };
 
+    const handleCloseModal = () => setIsModalOpen(false);
+
+    const handleHeart = async (item) => {
+        await onTogglePick(item);
+        setModalSize('small');
+        setIsModalOpen(true);
+    };
+
     return (
         <section className="card-list">
             <div className="title-wrap">
@@ -79,7 +91,11 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
             >
                 {wavves.map((m) => (
                     <SwiperSlide key={m.id}>
-                        <div className="poster-wrap badge-wavve">
+                        <div
+                            className="poster-wrap badge-wavve"
+                            onMouseEnter={() => setHoverId(m.id)}
+                            onMouseLeave={() => setHoverId(null)}
+                        >
                             <img
                                 className="main"
                                 src={`https://image.tmdb.org/t/p/original${m.poster_path}`}
@@ -87,15 +103,11 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
                             />
                             {(m.wavveVideo?.key || m.backdrop_path) && (
                                 <div className="preview-wrap">
-                                    <div
-                                        className="img-box"
-                                        onMouseEnter={() => setHoverId(m.id)}
-                                        onMouseLeave={() => setHoverId(null)}
-                                    >
-                                        {m.wavveVideo?.key && hoverId === m.id ? (
+                                    <div className="img-box">
+                                        {m.videos?.[0]?.key && hoverId === m.id ? (
                                             <iframe
                                                 className="hover video"
-                                                src={`https://www.youtube.com/embed/${m.wavveVideo.key}?autoplay=1&mute=1`}
+                                                src={`https://www.youtube.com/embed/${m.videos[0]?.key}?autoplay=1&mute=1`}
                                                 allowFullScreen
                                                 title={`${m.name}`}
                                             />
@@ -145,14 +157,24 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
                                             {getGenres(m.genre_ids).slice(0, 2).join(' · ') ||
                                                 '기타'}
                                         </p>
-                                        <p>에피소드 {m.episodes?.length ?? 0}</p>
+                                        {m.episodes?.length ? (
+                                            <p>에피소드 {m.episodes.length}</p>
+                                        ) : null}
                                     </div>
                                     <div className="preview-badge-bottom">
                                         <div className="preview-btn-wrap">
                                             <button className="preview-play-btn"></button>
                                             <button
-                                                className="preview-heart-btn"
-                                                onClick={() => handleAddPick(m)}
+                                                className={`preview-heart-btn ${
+                                                    pickList.some(
+                                                        (p) =>
+                                                            (p.tmdb_id ?? p.id) ===
+                                                            (m.tmdb_id ?? m.id)
+                                                    )
+                                                        ? 'active'
+                                                        : ''
+                                                }`}
+                                                onClick={() => handleHeart(m)}
                                             ></button>
                                         </div>
                                         <Link to={`/contentsdetail/wavve/${m.id}`}></Link>
@@ -169,6 +191,38 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
                     <div ref={nextBtn} className="swiper-button-next"></div>
                 </div>
             </Swiper>
+            {/* 찜 모달 */}
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal} size={modalSize}>
+                {/* 모달 내부 콘텐츠: Header, Body, Footer를 직접 구성 */}
+                <div className="modal-header">
+                    <h3 className="modal-title">알림</h3>
+                    {/* 닫기 버튼은 onCLose 핸들러를 호출 */}
+                    <button className="close-button" onClick={handleCloseModal}>
+                        <span>닫기</span>
+                    </button>
+                </div>
+                <div className="modal-content">
+                    <p>
+                        {pickAction === 'add'
+                            ? '찜 리스트에 추가되었습니다!'
+                            : '찜 리스트에서 제거되었습니다!'}
+                    </p>
+                </div>
+                <div className="modal-footer">
+                    <button
+                        className="btn default primary"
+                        onClick={() => {
+                            handleCloseModal();
+                            navigate('/profile');
+                        }}
+                    >
+                        찜 바로가기
+                    </button>
+                    <button className="btn default secondary-line" onClick={handleCloseModal}>
+                        닫기
+                    </button>
+                </div>
+            </Modal>
         </section>
     );
 };

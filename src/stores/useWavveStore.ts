@@ -64,6 +64,13 @@ export const useWavveStore = create<OnlyWavveState>((set) => ({
                 const videoData = await videoRes.json();
                 const videos: Video[] = videoData.results || [];
 
+                /* 에피소드 */
+                const epRes = await fetch(
+                    `https://api.themoviedb.org/3/tv/${tv.id}/season/1?api_key=${API_KEY}&language=ko-KR`
+                );
+                const epData = await epRes.json();
+                const episodes: Episodes[] = epData.episodes || [];
+
                 return {
                     ...tv,
                     media_type: 'tv',
@@ -71,6 +78,7 @@ export const useWavveStore = create<OnlyWavveState>((set) => ({
                     runtime,
                     logo,
                     videos,
+                    episodes,
                 };
             })
         );

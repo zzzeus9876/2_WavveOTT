@@ -4,36 +4,34 @@ import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide, type SwiperClass } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 
+// import { usePickStore } from '../stores/usePickStore';
+
 import type { Tv } from '../types/movie';
 
 import { getGenres, getGrades } from '../utils/mapping';
 import { backgroundImage, logoImage } from '../utils/getListData';
-import { usePickStore } from '../stores/usePickStore';
+
+// import Modal from './Modal';
 
 interface NewTvListProps {
     title: string;
     tvs: Tv[];
 }
 const NewTvList = ({ title, tvs }: NewTvListProps) => {
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const { onTogglePick, pickList, pickAction } = usePickStore();
+
     //어떤거가 호버됐는지 체크
     const [hoverId, setHoverId] = useState<number | null>(null); //숫자로 받기
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [modalSize, setModalSize] = useState<'xsmall' | 'small' | 'default' | 'large'>('default');
 
     //스와이퍼 슬라이드 첫번째,마지막 슬라이더 버튼 숨기기
     const prevBtn = useRef<HTMLDivElement>(null);
     const nextBtn = useRef<HTMLDivElement>(null);
 
-    const handelAddPick = (content) => {
-        console.log('newList데이터 값 : ', content);
-        const pickList = usePickStore.getState().pickList;
-        const onAddPick = usePickStore.getState().onAddPick;
-        const match = pickList.some((p) => p.id === content.id);
-        if (!match) {
-            onAddPick(content);
-            alert('찜리스트에 추가되었습니다');
-        } else {
-            alert('이미 찜리스트에 있는 항목입니다.');
-        }
-    };
+    // const navigate = useNavigate();
 
     const handleSwiperBtns = (swiper: SwiperClass) => {
         const isFirst = swiper.activeIndex === 0;
@@ -61,6 +59,14 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
         }
     };
 
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const handleCloseModal = () => setIsModalOpen(false);
+
+    // const handleHeart = async (item) => {
+    //     await onTogglePick(item);
+    //     setModalSize('small');
+    //     setIsModalOpen(true);
+    // };
     return (
         <section className="card-list">
             <div className="title-wrap">
@@ -117,15 +123,15 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
 
                                         <div className="logo-box">
                                             <p className="content-logo">
-                                                <img
-                                                    src={
-                                                        logoImage(t.id) ||
-                                                        (t.logo
-                                                            ? `https://image.tmdb.org/t/p/original${t.logo}`
-                                                            : undefined)
-                                                    }
-                                                    alt="content-logo"
-                                                />
+                                                {t.logo ? (
+                                                    <img
+                                                        src={
+                                                            logoImage(t.id) ||
+                                                            `https://image.tmdb.org/t/p/original${t.logo}`
+                                                        }
+                                                        alt="content-logo"
+                                                    />
+                                                ) : null}
                                             </p>
                                             {hoverId === t.id && t.tvsVideo?.key && (
                                                 <img
@@ -148,15 +154,26 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
                                             {getGenres(t.genre_ids).slice(0, 2).join(' · ') ||
                                                 '기타'}
                                         </p>
-                                        <p>에피소드 {t.episodes?.length ?? 0}</p>
+                                        {t.episodes?.length ? (
+                                            <p>에피소드 {t.episodes.length}</p>
+                                        ) : null}
                                     </div>
                                     <div className="preview-badge-bottom">
                                         <div className="preview-btn-wrap">
                                             <button className="preview-play-btn"></button>
-                                            <button
-                                                className="preview-heart-btn"
-                                                onClick={() => handelAddPick(t)}
-                                            ></button>
+                                            {/* //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️=============== */}
+                                            {/* <button
+                                                className={`preview-heart-btn ${
+                                                    pickList.some(
+                                                        (p) =>
+                                                            (p.tmdb_id ?? p.id) ===
+                                                            (t.tmdb_id ?? t.id)
+                                                    )
+                                                        ? 'active'
+                                                        : ''
+                                                }`}
+                                                onClick={() => handleHeart(t)}
+                                            ></button> */}
                                         </div>
                                         <Link to={`/contentsdetail/tv/${t.id}`}></Link>
                                     </div>
@@ -172,6 +189,39 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
                     <div ref={nextBtn} className="swiper-button-next"></div>
                 </div>
             </Swiper>
+            {/* 찜 모달 */}
+            {/* //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️=============== */}
+            {/* <Modal isOpen={isModalOpen} onClose={handleCloseModal} size={modalSize}>
+                모달 내부 콘텐츠: Header, Body, Footer를 직접 구성
+                <div className="modal-header">
+                    <h3 className="modal-title">알림</h3>
+                    닫기 버튼은 onCLose 핸들러를 호출
+                    <button className="close-button" onClick={handleCloseModal}>
+                        <span>닫기</span>
+                    </button>
+                </div>
+                <div className="modal-content">
+                    <p>
+                        {pickAction === 'add'
+                            ? '찜 리스트에 추가되었습니다!'
+                            : '찜 리스트에서 제거되었습니다!'}
+                    </p>
+                </div>
+                <div className="modal-footer">
+                    <button
+                        className="btn default primary"
+                        onClick={() => {
+                            handleCloseModal();
+                            navigate('/profile');
+                        }}
+                    >
+                        찜 바로가기
+                    </button>
+                    <button className="btn default secondary-line" onClick={handleCloseModal}>
+                        닫기
+                    </button>
+                </div>
+            </Modal> */}
         </section>
     );
 };

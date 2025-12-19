@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide, type SwiperClass } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 
+// import { usePickStore } from '../stores/usePickStore';
+
 import { backgroundImage, logoImage } from '../utils/getListData';
 import { getGenres, getGrades } from '../utils/mapping';
 
 import type { PrimaryItem } from '../types/movie';
+
+// import Modal from './Modal';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -19,12 +23,20 @@ interface PrimaryListProps {
 }
 
 const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const { onTogglePick, pickList, pickAction } = usePickStore();
+
     //어떤거가 호버됐는지 체크
     const [hoverId, setHoverId] = useState<number | null>(null); //숫자로 받기
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [modalSize, setModalSize] = useState<'xsmall' | 'small' | 'default' | 'large'>('default');
 
     //스와이퍼 슬라이드 첫번째,마지막 슬라이더 버튼 숨기기
     const prevBtn = useRef<HTMLDivElement>(null);
     const nextBtn = useRef<HTMLDivElement>(null);
+
+    // const navigate = useNavigate();
 
     const handleSwiperBtns = (swiper: SwiperClass) => {
         const isFirst = swiper.activeIndex === 0;
@@ -52,6 +64,15 @@ const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
         }
     };
 
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+
+    // const handleCloseModal = () => setIsModalOpen(false);
+
+    // const handleHeart = async (item) => {
+    //     await onTogglePick(item);
+    //     setModalSize('small');
+    //     setIsModalOpen(true);
+    // };
     return (
         <section className="card-list">
             <div className="title-wrap">
@@ -108,15 +129,15 @@ const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
 
                                         <div className="logo-box">
                                             <p className="content-logo">
-                                                <img
-                                                    src={
-                                                        logoImage(m.id) ||
-                                                        (m.logo
-                                                            ? `https://image.tmdb.org/t/p/original${m.logo}`
-                                                            : undefined)
-                                                    }
-                                                    alt="content-logo"
-                                                />
+                                                {m.logo ? (
+                                                    <img
+                                                        src={
+                                                            logoImage(m.id) ||
+                                                            `https://image.tmdb.org/t/p/original${m.logo}`
+                                                        }
+                                                        alt="content-logo"
+                                                    />
+                                                ) : null}
                                             </p>
                                             {hoverId === m.id && m.videos?.[0]?.key && (
                                                 <img
@@ -131,7 +152,7 @@ const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
                                     <div className="preview-badge-top">
                                         <p>
                                             <img
-                                                src={getGrades(m.certification)}
+                                                src={getGrades(m.certification ?? '')}
                                                 alt="certification"
                                             />
                                         </p>
@@ -139,12 +160,26 @@ const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
                                             {getGenres(m.genre_ids).slice(0, 2).join(' · ') ||
                                                 '기타'}
                                         </p>
-                                        {/* <p>에피소드 {m.episodes.length}</p> */}
+                                        {m.episodes?.length ? (
+                                            <p>에피소드 {m.episodes.length}</p>
+                                        ) : null}
                                     </div>
                                     <div className="preview-badge-bottom">
                                         <div className="preview-btn-wrap">
                                             <button className="preview-play-btn"></button>
-                                            <button className="preview-heart-btn"></button>
+                                            {/*     //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️=============== */}
+                                            {/* <button
+                                                className={`preview-heart-btn ${
+                                                    pickList.some(
+                                                        (p) =>
+                                                            (p.tmdb_id ?? p.id) ===
+                                                            (m.tmdb_id ?? m.id)
+                                                    )
+                                                        ? 'active'
+                                                        : ''
+                                                }`}
+                                                onClick={() => handleHeart(m)}
+                                            ></button> */}
                                         </div>
                                         <Link to={`/contentsdetail/tv/${m.id}`}></Link>
                                     </div>
@@ -160,6 +195,40 @@ const PrimaryList = ({ title, randomList }: PrimaryListProps) => {
                     <div ref={nextBtn} className="swiper-button-next"></div>
                 </div>
             </Swiper>
+
+            {/*     //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️=============== */}
+            {/* 찜 모달 */}
+            {/* <Modal isOpen={isModalOpen} onClose={handleCloseModal} size={modalSize}>
+                모달 내부 콘텐츠: Header, Body, Footer를 직접 구성
+                <div className="modal-header">
+                    <h3 className="modal-title">알림</h3>
+                    닫기 버튼은 onCLose 핸들러를 호출
+                    <button className="close-button" onClick={handleCloseModal}>
+                        <span>닫기</span>
+                    </button>
+                </div>
+                <div className="modal-content">
+                    <p>
+                        {pickAction === 'add'
+                            ? '찜 리스트에 추가되었습니다!'
+                            : '찜 리스트에서 제거되었습니다!'}
+                    </p>
+                </div>
+                <div className="modal-footer">
+                    <button
+                        className="btn default primary"
+                        onClick={() => {
+                            handleCloseModal();
+                            navigate('/profile');
+                        }}
+                    >
+                        찜 바로가기
+                    </button>
+                    <button className="btn default secondary-line" onClick={handleCloseModal}>
+                        닫기
+                    </button>
+                </div>
+            </Modal> */}
         </section>
     );
 };

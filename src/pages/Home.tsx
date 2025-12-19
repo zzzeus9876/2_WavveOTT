@@ -5,6 +5,8 @@ import { useMovieStore } from '../stores/useMovieStore';
 import { useWavveStore } from '../stores/useWavveStore';
 import { useTvStore } from '../stores/useTvStore';
 import { usePeopleStore } from '../stores/usePeopleStore';
+import { useVarietyStore } from '../stores/useVarietyStore';
+import { useNewsStore } from '../stores/useNewsStore';
 
 import MainSlider from '../components/MainSection';
 import BroadcastList from '../components/BroadcastList';
@@ -24,6 +26,9 @@ import type { PrimaryItem } from '../types/movie';
 
 import { randomArray } from '../utils/randomData';
 
+import { varietyTop50 } from '../data/2025_varietyTop50_tmdb';
+import { newsTop50 } from '../data/2025_newsTop50_tmdb';
+
 import './scss/Home.scss';
 
 const Home = () => {
@@ -31,6 +36,8 @@ const Home = () => {
     const { wavves, fetchWavves } = useWavveStore();
     const { tvs, fetchTvs } = useTvStore();
     const { people, onFetchPeople } = usePeopleStore();
+    const { tvVideos, onFetchVariety } = useVarietyStore();
+    const { newsVideos, onFetchNews } = useNewsStore();
     //찜리스트
 
     useEffect(() => {
@@ -39,6 +46,16 @@ const Home = () => {
         onFetchNewMovie();
         fetchTvs();
         onFetchPeople();
+        varietyTop50.forEach((v) => {
+            if (v.tmdb_id) {
+                onFetchVariety(v.tmdb_id);
+            }
+        });
+        newsTop50.forEach((v) => {
+            if (v.tmdb_id) {
+                onFetchNews(v.tmdb_id);
+            }
+        });
     }, []);
 
     const randomList = useMemo<PrimaryItem[]>(() => {
@@ -76,11 +93,11 @@ const Home = () => {
                 <PrimaryList title="이건 꼭 봐야해!" randomList={randomList} />
                 <NewMovieList title="NEW! 새로 올라온 영화" newMovies={newMovies} />
             </div>
-            <EditorRecommendCardList list={popularMovies} />
+            <EditorRecommendCardList title="믿고보는 에디터 추천작" list={popularMovies} />
             <div className="inner">
                 <NewTvList title="NEW! 새로 올라온 시리즈" tvs={tvs} />
-                <VarietyLiveList title="지금 방영중인 예능" />
-                <NewsNowList title="꼭 봐야하는 이슈" />
+                <VarietyLiveList title="지금 방영중인 예능" video={tvVideos} />
+                <NewsNowList title="꼭 봐야하는 이슈" video={newsVideos} />
             </div>
         </main>
     );

@@ -6,10 +6,15 @@ import type { PickState } from "../types/pick";
 
 export const usePickStore = create<PickState>((set, get) => ({
   pickList: [],
+
+  isPickModalOpen: false,
+  pickAction: "add",
+
+  closePickModal: () => set({ isPickModalOepn: false }),
+
   onTogglePick: async (item) => {
     //id값, tmdb_id로 들어올 수 있는 변수 설정
     const contentId = item.id ?? item.tmdb_id;
-    console.log("pickList : ", item);
 
     const { user, selectedCharId } = useAuthStore.getState();
 
@@ -41,8 +46,10 @@ export const usePickStore = create<PickState>((set, get) => ({
       await deleteDoc(ref);
       set((state) => ({
         pickList: state.pickList.filter((w) => (w.tmdb_id ?? w.id) !== contentId),
+        isPickModalOpen: true,
+        pickAction: "remove",
       }));
-      alert("찜리스트에서 제거되었습니다!");
+
       return;
     }
 
@@ -52,10 +59,11 @@ export const usePickStore = create<PickState>((set, get) => ({
       updatedAt: Date.now(),
     };
     await setDoc(ref, data);
-    alert("찜리스트에 추가되었습니다!");
 
     set((state) => ({
       pickList: [...state.pickList, data],
+      isPickModalOpen: true,
+      pickAction: "add",
     }));
   },
 

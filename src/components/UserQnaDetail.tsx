@@ -1,8 +1,9 @@
-import React from 'react';
-
 import './scss/UserQnaDetail.scss';
 
 const UserQnaDetail = () => {
+    const handlebtn = () => {
+        alert('1:1 문의 내역은 준비중입니다.');
+    };
     return (
         <div className="detail-menu-content qna-menu">
             <div className="qna-title-wrap">
@@ -52,34 +53,40 @@ const UserQnaDetail = () => {
                     <p className="label-text">서비스구분</p>
                     <ul className="check-box">
                         <li>
-                            {' '}
-                            <input type="checkbox" readOnly />
-                            Live
+                            <label className="checkbox">
+                                <input type="checkbox" readOnly />
+                                Live
+                            </label>
                         </li>
                         <li>
-                            {' '}
-                            <input type="checkbox" readOnly />
-                            Vod
+                            <label className="checkbox">
+                                <input type="checkbox" readOnly />
+                                VOD
+                            </label>
                         </li>
                         <li>
-                            {' '}
-                            <input type="checkbox" readOnly />
-                            영화
+                            <label className="checkbox">
+                                <input type="checkbox" readOnly />
+                                영화
+                            </label>
                         </li>
                         <li>
-                            {' '}
-                            <input type="checkbox" readOnly />
-                            타임머신
+                            <label className="checkbox">
+                                <input type="checkbox" readOnly />
+                                타임머신
+                            </label>
                         </li>
                         <li>
-                            {' '}
-                            <input type="checkbox" readOnly />
-                            다운로드
+                            <label className="checkbox">
+                                <input type="checkbox" readOnly />
+                                다운로드
+                            </label>
                         </li>
                         <li>
-                            {' '}
-                            <input type="checkbox" readOnly />
-                            기타
+                            <label className="checkbox">
+                                <input type="checkbox" readOnly />
+                                기타
+                            </label>
                         </li>
                     </ul>
                 </div>
@@ -94,32 +101,46 @@ const UserQnaDetail = () => {
                     <p className="label-text">사용환경 (디바이스)</p>
                     <ul className="check-box">
                         <li>
-                            <input type="checkbox" readOnly />
-                            PC web
+                            <label className="checkbox">
+                                <input type="checkbox" readOnly />
+                                PC web
+                            </label>
                         </li>
                         <li>
-                            <input type="checkbox" readOnly />
-                            안드로이드 폰
+                            <label className="privacy-agree">
+                                <input type="checkbox" readOnly />
+                                안드로이드 폰
+                            </label>
                         </li>
                         <li>
-                            <input type="checkbox" readOnly />
-                            아이폰
+                            <label className="privacy-agree">
+                                <input type="checkbox" readOnly />
+                                아이폰
+                            </label>
                         </li>
                         <li>
-                            <input type="checkbox" readOnly />
-                            안드로이드 태블릿
+                            <label className="privacy-agree">
+                                <input type="checkbox" readOnly />
+                                안드로이드 태블릿
+                            </label>
                         </li>
                         <li>
-                            <input type="checkbox" readOnly />
-                            아이패드
+                            <label className="privacy-agree">
+                                <input type="checkbox" readOnly />
+                                아이패드
+                            </label>
                         </li>
                         <li>
-                            <input type="checkbox" readOnly />
-                            스마트TV
+                            <label className="privacy-agree">
+                                <input type="checkbox" readOnly />
+                                스마트TV
+                            </label>
                         </li>
                         <li>
-                            <input type="checkbox" readOnly />
-                            기타
+                            <label className="privacy-agree">
+                                <input type="checkbox" readOnly />
+                                기타
+                            </label>
                         </li>
                     </ul>
                 </div>
@@ -163,10 +184,10 @@ const UserQnaDetail = () => {
                 </div>
 
                 <div className="button-group">
-                    <button type="button" className="btn-cancel">
+                    <button type="button" className="btn-cancel" onClick={handlebtn}>
                         취소
                     </button>
-                    <button type="submit" className="btn-submit">
+                    <button type="submit" className="btn-submit" onClick={handlebtn}>
                         문의 등록
                     </button>
                 </div>

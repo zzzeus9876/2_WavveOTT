@@ -14,10 +14,9 @@
 
         .detail-left {
             @include g.myFlexCol($gap: 40px);
-            max-width: 1076px;
+            width: 1076px;
 
             .detail-img-box {
-                max-width: 1076px;
                 width: 100%;
                 position: relative;
 
@@ -82,6 +81,10 @@
 
                         &:hover {
                             background: url('/images/icons/icon-heart-hover.svg') no-repeat center;
+                        }
+
+                        &.active {
+                            background: url('/images/icons/icon-heart-active.svg') no-repeat center;
                         }
                     }
                     .detail-share-btn {

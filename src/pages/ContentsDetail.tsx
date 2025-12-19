@@ -6,6 +6,7 @@ import { useTvStore } from '../stores/useTvStore';
 import { usePeopleStore } from '../stores/usePeopleStore';
 import { useVarietyStore } from '../stores/useVarietyStore';
 import { useNewsStore } from '../stores/useNewsStore';
+// import { usePickStore } from '../stores/usePickStore';
 
 import { getGenres, getGrades } from '../utils/mapping';
 import { getContentImages } from '../utils/getData';
@@ -13,13 +14,14 @@ import { getContentImages } from '../utils/getData';
 import ContentsEpisode from '../components/ContentsEpisode';
 import ContentsRelative from '../components/ContentsRelative';
 import ContentsRecommend from '../components/ContentsRecommend';
+import Modal from '../components/Modal';
 
 // --- 추가된 임포트 ---
 import { useAuthStore } from '../stores/useAuthStore';
 import { saveWatchHistory } from '../firebase/firebase';
 // --------------------
 
-import Modal from '../components/Modal';
+import type { Season } from '../types/movie';
 
 import './scss/ContentsDetail.scss';
 
@@ -46,10 +48,17 @@ const ContentsDetail = () => {
     const { selectedPeople, onFetchPeople } = usePeopleStore();
     const { selectedVariety, fetchVarietyDetail } = useVarietyStore();
     const { selectedNews, fetchNewsDetail } = useNewsStore();
+    // const { onTogglePick, pickList, pickAction } = usePickStore();
 
     const [shareOpen, setShareOpen] = useState(false);
     const [activeMenu, setActiveMenu] = useState('episode');
     const [showVideo, setShowVideo] = useState(false);
+    const [isWatched, setIsWatched] = useState(false);
+
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const [modalSize, setModalSize] = useState<'xsmall' | 'small' | 'default' | 'large'>('default'); //모달 size
+    // const [isModalOpen, setIsModalOpen] = useState(false); //모달오픈 상태변수
+    //==============================================================
 
     useEffect(() => {
         if (!type || !id) return;
@@ -81,7 +90,24 @@ const ContentsDetail = () => {
         return <div>🔥콘텐츠 불러오는 중🔥</div>;
     }
 
+    const seasonsForEpisode: Season[] =
+        selectedContent.seasons?.map((s) => ({
+            id: s.season_number, // 기존 id
+            season_number: s.season_number, // 필수 필드 추가
+            name: `시즌 ${s.season_number}`,
+            episode_count: s.episodes?.length ?? 0,
+        })) ?? [];
+
     const { logo, background, episodeImages } = getContentImages(selectedContent);
+
+    //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️===============
+    // const handleCloseModal = () => setIsModalOpen(false);
+    // const handleHeart = async () => {
+    //     await onTogglePick(selectedContent);
+    //     setModalSize('small');
+    //     setIsModalOpen(true);
+    // };
+    //==============================================================
 
     // ========== 시청 기록 저장 및 재생 함수==========
 
@@ -118,7 +144,9 @@ const ContentsDetail = () => {
                 console.error('시청 기록 저장 실패:', error);
             }
         }
-
+        //===============/// 버튼 누르면 재생하기 -> 이어보기로 변경 (김초원 추가) ===============
+        setIsWatched(true);
+        //==============================
         navigate(`/player/${videoKey}`);
     };
     // ============================================================
@@ -128,26 +156,30 @@ const ContentsDetail = () => {
             <div className="inner">
                 <div className="detail-left">
                     <div className="detail-img-box">
-                        {!showVideo && background && (
+                        {(!showVideo || !videoKey) && background && (
                             <>
                                 <p className="detail-backdrop">
                                     <img
                                         src={background}
-                                        alt={selectedContent.name || selectedContent.name}
+                                        alt={selectedContent.name || 'TV 콘텐츠'}
                                     />
                                 </p>
-                                <p className="detail-logo">
-                                    {logo && <img src={logo} alt="logo" />}
-                                </p>
+                                {logo && (
+                                    <p className="detail-logo">
+                                        <img src={logo} alt={`${selectedContent.name} 로고`} />
+                                    </p>
+                                )}
                             </>
                         )}
 
                         {showVideo && videoKey && (
                             <iframe
+                                key={videoKey}
                                 className="detail-video"
                                 src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&mute=1&controls=0&rel=0`}
                                 allow="autoplay; fullscreen"
                                 allowFullScreen
+                                title={`${selectedContent.name} trailer`}
                             />
                         )}
                     </div>
@@ -183,7 +215,11 @@ const ContentsDetail = () => {
                         </div>
 
                         <div className="detail-title-right">
-                            <button className="detail-heart-btn"></button>
+                            {/* //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️=============== */}
+                            {/* <button
+                                className={`detail-heart-btn ${isPicked ? 'active' : ''}`}
+                                onClick={handleHeart}
+                            ></button> */}
                             <button
                                 className="detail-share-btn"
                                 onClick={() => setShareOpen(true)}
@@ -204,7 +240,7 @@ const ContentsDetail = () => {
                             <div className="detail-content-right">
                                 {/* 수정한 부분: onClick 핸들러 연결  // KEH  왓치리스트를 위해 추가*/}
                                 <button className="btn default primary" onClick={handlePlayClick}>
-                                    재생하기
+                                    {isWatched ? '이어보기' : '재생하기'}
                                 </button>
                             </div>
                         </div>
@@ -306,9 +342,13 @@ const ContentsDetail = () => {
                         {activeMenu === 'episode' && (
                             <ContentsEpisode
                                 episodes={selectedContent.episodes ?? []}
-                                seasons={selectedContent.seasons ?? []}
+                                seasons={seasonsForEpisode}
                                 episodeImages={episodeImages}
                                 videoKey={videoKey}
+                                selectedPerson={{
+                                    id: selectedContent.id,
+                                    name: selectedContent.name ?? '',
+                                }}
                             />
                         )}
                         {activeMenu === 'relative' && (
@@ -317,10 +357,44 @@ const ContentsDetail = () => {
                                 backdrop={selectedContent.backdrop_path ?? null}
                             />
                         )}
-                        {activeMenu === 'recommend' && <ContentsRecommend wavves={wavves} />}
+                        {activeMenu === 'recommend' && (
+                            <ContentsRecommend wavves={wavves} videoKey={videoKey} />
+                        )}
                     </div>
                 </div>
             </div>
+            {/* //============오류나서 실행이 안됨 확인 부탁 ‼️‼️‼️‼️‼️‼️‼️=============== */}
+            {/* <Modal isOpen={isModalOpen} onClose={handleCloseModal} size={modalSize}>
+                모달 내부 콘텐츠: Header, Body, Footer를 직접 구성
+                <div className="modal-header">
+                    <h3 className="modal-title">알림</h3>
+                    닫기 버튼은 onCLose 핸들러를 호출
+                    <button className="close-button" onClick={handleCloseModal}>
+                        <span>닫기</span>
+                    </button>
+                </div>
+                <div className="modal-content">
+                    <p>
+                        {pickAction === 'add'
+                            ? '찜 리스트에 추가되었습니다!'
+                            : '찜 리스트에서 제거되었습니다!'}
+                    </p>
+                </div>
+                <div className="modal-footer">
+                    <button
+                        className="btn default primary"
+                        onClick={() => {
+                            handleCloseModal();
+                            navigate('/profile');
+                        }}
+                    >
+                        찜 바로가기
+                    </button>
+                    <button className="btn default secondary-line" onClick={handleCloseModal}>
+                        닫기
+                    </button>
+                </div>
+            </Modal> */}
         </main>
     );
 };
