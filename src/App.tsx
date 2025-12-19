@@ -43,14 +43,17 @@ function App() {
 
   //user 찜리스트 갖어오기
   const user = useAuthStore((state) => state.user);
-  const fetchPick = usePickStore((state) => state.onFetchPick);
+  const onFetchPick = usePickStore((state) => state.onFetchPick);
   const selectedCharId = useAuthStore((state) => state.selectedCharId);
+  const { pickList } = usePickStore();
 
   useEffect(() => {
     if (user && selectedCharId) {
-      fetchPick();
+      onFetchPick();
     }
   }, [user, selectedCharId]);
+
+  console.log("데이터 키값 : ", pickList);
 
   // 숨김 처리가 필요한 경로 리스트
   const isHideLayout =

@@ -14,6 +14,7 @@ import { newsTop50 } from "../data/2025_newsTop50_tmdb";
 import type { Episodes, Video } from "../types/movie";
 
 import Modal from "./Modal";
+import type { Pick } from "../types/pick";
 
 interface NewsNowList {
   title: string;
@@ -73,7 +74,7 @@ const NewsNowList = ({ title, video }: NewsNowList) => {
 
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleHeart = async (item) => {
+  const handleHeart = async (item: Pick) => {
     await onTogglePick(item);
     setModalSize("small");
     setIsModalOpen(true);
@@ -166,9 +167,7 @@ const NewsNowList = ({ title, video }: NewsNowList) => {
                       <button className="preview-play-btn"></button>
                       <button
                         className={`preview-heart-btn ${
-                          pickList.some((p) => (p.tmdb_id ?? p.id) === (t.tmdb_id ?? t.id))
-                            ? "active"
-                            : ""
+                          pickList.some((p) => p.tmdb_id === t.tmdb_id) ? "active" : ""
                         }`}
                         onClick={() => handleHeart(t)}></button>
                     </div>
