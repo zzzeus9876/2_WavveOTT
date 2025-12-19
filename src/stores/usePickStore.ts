@@ -10,7 +10,7 @@ export const usePickStore = create<PickState>((set, get) => ({
   isPickModalOpen: false,
   pickAction: "add",
 
-  closePickModal: () => set({ isPickModalOepn: false }),
+  closePickModal: () => set({ isPickModalOpen: false }),
 
   onTogglePick: async (item) => {
     //id값, tmdb_id로 들어올 수 있는 변수 설정
@@ -49,7 +49,6 @@ export const usePickStore = create<PickState>((set, get) => ({
         isPickModalOpen: true,
         pickAction: "remove",
       }));
-
       return;
     }
 
@@ -74,7 +73,6 @@ export const usePickStore = create<PickState>((set, get) => ({
     const snap = await getDocs(
       collection(db, "users", user.uid, "profiles", String(selectedCharId), "pickList")
     );
-
     const data = snap.docs.map((doc) => doc.data());
     set({ pickList: data });
   },

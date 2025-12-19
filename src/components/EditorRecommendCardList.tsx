@@ -4,8 +4,8 @@ import Marquee from "react-fast-marquee";
 import "./scss/EditorRecommend.scss";
 
 interface Props {
+  title: string | null;
   list: MovieWithLogo[];
-  title: string;
 }
 
 const EditorRecommendCardList = ({ title, list }: Props) => {
@@ -19,7 +19,7 @@ const EditorRecommendCardList = ({ title, list }: Props) => {
               <EditorRecommendCard
                 backposter={l.backdrop_path ?? ""}
                 id={l.id}
-                title={l.logo}
+                title={l.logo ?? null}
               />
             </div>
           ))}
@@ -32,7 +32,7 @@ const EditorRecommendCardList = ({ title, list }: Props) => {
               <EditorRecommendCard
                 backposter={l.backdrop_path ?? ""}
                 id={l.id}
-                title={l.logo}
+                title={l.logo ?? null}
               />
             </div>
           ))}
