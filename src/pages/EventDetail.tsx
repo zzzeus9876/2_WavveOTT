@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { eventData } from "../data/eventData";
-import "./scss/Event.scss";
+import "./scss/EventDetail.scss";
 
 const EventDetail = () => {
   const { eventId } = useParams<{ eventId: string }>();
