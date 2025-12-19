@@ -1,0 +1,5 @@
+@use "../../App.scss" as g;
+
+.sub-movie-main {
+  @include g.myFlexCol($gap: 120px);
+}
