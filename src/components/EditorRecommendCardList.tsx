@@ -11,7 +11,7 @@ interface Props {
 const EditorRecommendCardList = ({ title, list }: Props) => {
   return (
     <section className="rec-section">
-      <h2 className="font-wave inner">{title}</h2>
+      <h2 className="font-wave">{title}</h2>
       <div className="swiper-top">
         <Marquee direction="right" speed={60} pauseOnHover={true}>
           {list.map((l) => (

@@ -3,6 +3,7 @@ import MovieVisual from "../components/MovieVisual";
 import EditorRecommendCardList from "../components/EditorRecommendCardList";
 import { useMovieStore } from "../stores/useMovieStore";
 import RankingCardList from "../components/RankingCardList";
+import "./scss/Movie.scss";
 
 const Movie: React.FC = () => {
   const { popularMovies } = useMovieStore();
