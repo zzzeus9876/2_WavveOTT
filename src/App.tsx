@@ -1,122 +1,140 @@
-import "./App.css";
+import { Suspense, lazy, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import { BendNotice } from "./components/BendNotice";
-import Home from "./pages/Home";
+import "./App.css";
 
-import Common from "./pages/Common";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
-import Entertainment from "./pages/Entertainment";
-import Drama from "./pages/Drama";
-import Movie from "./pages/Movie";
-import OverseasSeries from "./pages/OverseasSeries";
-import CurrentAffairs from "./pages/CurrentAffairs";
-import Animation from "./pages/Animation";
-import Kids from "./pages/Kids";
-import ChoiceChar from "./pages/ChoiceChar";
-import Welcome from "./pages/Welcome";
-import ContentsDetail from "./pages/ContentsDetail";
-import MovieDetail from "./pages/MovieDetail";
-import Ticket from "./pages/Ticket";
-import Event from "./pages/Event";
-import ServiceCenter from "./pages/ServiceCenter";
-import EventDetail from "./pages/EventDetail";
-import UserQna from "./pages/UserQna";
-import Agreement from "./pages/Agreement";
-import NoticeA from "./pages/NoticeA";
-import NoticeAdetail from "./pages/NoticeAdetail";
-import PaymentFinish from "./pages/PaymentFinish";
+// 1. 공통 컴포넌트 및 로딩바
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import ScrollTop from "./components/ScrollTop";
-import Payment from "./pages/Payment";
-import Intro from "./pages/Intro";
-import Player from "./pages/Player";
+import { BendNotice } from "./components/BendNotice";
+
+// 2. Zustand Stores
 import { useAuthStore } from "./stores/useAuthStore";
 import { usePickStore } from "./stores/usePickStore";
-import { useEffect } from "react";
-import EventGroup from "./pages/EventGroup";
-import EventWinner from "./pages/EventWinner";
-import MovieDetailEX from "./pages/MovieDetailEX";
+
+// 3. 페이지 컴포넌트 Lazy Loading (첫 진입 속도 4초 이하 달성의 핵심)
+const Intro = lazy(() => import("./pages/Intro"));
+const Login = lazy(() => import("./pages/Login"));
+const Signup = lazy(() => import("./pages/Signup"));
+const ChoiceChar = lazy(() => import("./pages/ChoiceChar"));
+const Home = lazy(() => import("./pages/Home"));
+const Common = lazy(() => import("./pages/Common"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Entertainment = lazy(() => import("./pages/Entertainment"));
+const Drama = lazy(() => import("./pages/Drama"));
+const Movie = lazy(() => import("./pages/Movie"));
+const OverseasSeries = lazy(() => import("./pages/OverseasSeries"));
+const CurrentAffairs = lazy(() => import("./pages/CurrentAffairs"));
+const Animation = lazy(() => import("./pages/Animation"));
+const Kids = lazy(() => import("./pages/Kids"));
+const Welcome = lazy(() => import("./pages/Welcome"));
+const ContentsDetail = lazy(() => import("./pages/ContentsDetail"));
+const MovieDetail = lazy(() => import("./pages/MovieDetail"));
+const MovieDetailEX = lazy(() => import("./pages/MovieDetailEX"));
+const Player = lazy(() => import("./pages/Player"));
+const Ticket = lazy(() => import("./pages/Ticket"));
+const Payment = lazy(() => import("./pages/Payment"));
+const PaymentFinish = lazy(() => import("./pages/PaymentFinish"));
+const ServiceCenter = lazy(() => import("./pages/ServiceCenter"));
+const Event = lazy(() => import("./pages/Event"));
+const EventDetail = lazy(() => import("./pages/EventDetail"));
+const EventGroup = lazy(() => import("./pages/EventGroup"));
+const EventWinner = lazy(() => import("./pages/EventWinner"));
+const UserQna = lazy(() => import("./pages/UserQna"));
+const Agreement = lazy(() => import("./pages/Agreement"));
+const NoticeA = lazy(() => import("./pages/NoticeA"));
+const NoticeAdetail = lazy(() => import("./pages/NoticeAdetail"));
 
 function App() {
-  const location = useLocation(); // 현재 경로 정보 가져오기
+  const location = useLocation();
   const currentPath = location.pathname.toLowerCase();
 
-  //user 찜리스트 갖어오기
   const user = useAuthStore((state) => state.user);
-  const onFetchPick = usePickStore((state) => state.onFetchPick);
   const selectedCharId = useAuthStore((state) => state.selectedCharId);
-  const { pickList } = usePickStore();
+  const onFetchPick = usePickStore((state) => state.onFetchPick);
 
   useEffect(() => {
     if (user && selectedCharId) {
       onFetchPick();
     }
-  }, [user, selectedCharId]);
+  }, [user, selectedCharId, onFetchPick]);
 
-  console.log("데이터 키값 : ", pickList);
-
-  // 숨김 처리가 필요한 경로 리스트
-  const isHideLayout =
-    currentPath === "/" ||
-    currentPath.includes("/login") ||
-    currentPath.includes("/signup") ||
-    currentPath.includes("/choice-char");
+  // [레이아웃 제어] 인트로, 로그인, 회원가입, 캐릭터 선택 페이지에서는 헤더/푸터를 숨김
+  const hideLayoutPaths = ["/", "/login", "/signup", "/choice-char"];
+  const isHideLayout = hideLayoutPaths.includes(currentPath);
 
   return (
-    <>
-      <ScrollTop />
-      <Header />
-      <Routes>
-        <Route path="/" element={<Intro />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/entertainment" element={<Entertainment />} />
-        <Route path="/drama" element={<Drama />} />
-        <Route path="/movie" element={<Movie />} />
-        <Route path="/overseasSeries" element={<OverseasSeries />} />
-        <Route path="/currentAffairs" element={<CurrentAffairs />} />
-        <Route path="/animation" element={<Animation />} />
-        <Route path="/kids" element={<Kids />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/choice-char" element={<ChoiceChar />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/contentsdetail/:type/:id" element={<ContentsDetail />} />
-        <Route path="/moviedetail/:type/:id" element={<MovieDetail />} />
-        <Route path="/moviedetailEX/:type/:id" element={<MovieDetailEX />} />
-        <Route path="/player/:videoKey" element={<Player />} />
-        <Route path="/ticket" element={<Ticket />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/payment-finish" element={<PaymentFinish />} />
-        <Route path="/service-center" element={<ServiceCenter />}>
-          <Route index element={<NoticeA />} />
-          <Route path="notice" element={<NoticeA />} />
-          <Route path="notice/:noticeId" element={<NoticeAdetail />} />
-          <Route path="userQna" element={<UserQna />} />
-          <Route path="agreement" element={<Agreement />} />
-        </Route>
-        <Route path="/event-group" element={<EventGroup />}>
-          <Route index element={<Event />} />
-          <Route path="event" element={<Event />} />
-          <Route path="event/:eventId" element={<EventDetail />} />
-          <Route path="event-winner" element={<EventWinner />} />
-        </Route>
-        {/* <Route path="/event" element={<Event />} />
-        <Route path="/event/:eventId" element={<EventDetail />} /> */}
-        <Route path="/common" element={<Common />} />
-      </Routes>
+    // Suspense를 최상단에 배치하여 Lazy 로딩되는 모든 페이지에 로딩바 적용
+    <Suspense>
+      {/* 1. 상단 레이아웃 영역 */}
+      {!isHideLayout && (
+        <>
+          <ScrollTop />
+          <Header />
+        </>
+      )}
 
-      {/* 홈에 도착전까지는 숨겨야하는 내용 */}
+      {/* 2. 메인 콘텐츠 영역 */}
+      <main className="app-main-layout">
+        <Routes>
+          {/* 인증 및 초기 진입 프로세스 */}
+          <Route path="/" element={<Intro />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/choice-char" element={<ChoiceChar />} />
+
+          {/* 서비스 주요 페이지 */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/entertainment" element={<Entertainment />} />
+          <Route path="/drama" element={<Drama />} />
+          <Route path="/movie" element={<Movie />} />
+          <Route path="/overseasSeries" element={<OverseasSeries />} />
+          <Route path="/currentAffairs" element={<CurrentAffairs />} />
+          <Route path="/animation" element={<Animation />} />
+          <Route path="/kids" element={<Kids />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/profile" element={<Profile />} />
+
+          {/* 상세 및 미디어 플레이어 */}
+          <Route path="/contentsdetail/:type/:id" element={<ContentsDetail />} />
+          <Route path="/moviedetail/:type/:id" element={<MovieDetail />} />
+          <Route path="/moviedetailEX/:type/:id" element={<MovieDetailEX />} />
+          <Route path="/player/:videoKey" element={<Player />} />
+
+          {/* 이용권 및 결제 */}
+          <Route path="/ticket" element={<Ticket />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment-finish" element={<PaymentFinish />} />
+
+          {/* 고객센터 (중첩 라우팅) */}
+          <Route path="/service-center" element={<ServiceCenter />}>
+            <Route index element={<NoticeA />} />
+            <Route path="notice" element={<NoticeA />} />
+            <Route path="notice/:noticeId" element={<NoticeAdetail />} />
+            <Route path="userQna" element={<UserQna />} />
+            <Route path="agreement" element={<Agreement />} />
+          </Route>
+
+          {/* 이벤트 (중첩 라우팅) */}
+          <Route path="/event-group" element={<EventGroup />}>
+            <Route index element={<Event />} />
+            <Route path="event" element={<Event />} />
+            <Route path="event/:eventId" element={<EventDetail />} />
+            <Route path="event-winner" element={<EventWinner />} />
+          </Route>
+
+          <Route path="/common" element={<Common />} />
+        </Routes>
+      </main>
+
+      {/* 3. 하단 레이아웃 영역 */}
       {!isHideLayout && (
         <>
           <BendNotice />
           <Footer />
         </>
       )}
-    </>
+    </Suspense>
   );
 }
 
