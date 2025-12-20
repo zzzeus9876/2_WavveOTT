@@ -189,9 +189,9 @@ const Common = () => {
           <p>이 모달은 부모 컴포넌트의 상태로 크기가 동적으로 변경됩니다.</p>
         </div>
         <div className="modal-footer">
-          <button className="btn default primary">확인 </button>
+          <button className="btn small primary">확인 </button>
           <button
-            className="btn default secondary-line"
+            className="btn small secondary-line"
             onClick={handleCloseModal}
           >
             닫기
