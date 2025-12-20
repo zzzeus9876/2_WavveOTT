@@ -244,7 +244,7 @@ const Movie: React.FC = () => {
     <main className="sub-movie-main">
       <MovieVisual />
 
-      <div className="inner">
+      <div className="inner movie-main">
         {/* 실시간 랭킹 */}
         <RankingCardList RankingData={popularMovies} title="영화 실시간 TOP 10" limit={10} />
 
