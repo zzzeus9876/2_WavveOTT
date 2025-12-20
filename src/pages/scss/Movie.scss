@@ -4,8 +4,10 @@
     @include g.myFlexCol($gap: 60px);
     overflow-x: hidden;
 
-    &.inner {
-        @include g.myFlexCol($gap: 60px);
+    .inner {
+        &.movie-main {
+            @include g.myFlexCol($gap: 60px);
+        }
     }
 
     .card-list {
