@@ -139,6 +139,8 @@ const MovieVisual: React.FC = () => {
         maxHeight: "680px",
         overflow: "hidden",
         backgroundColor: "#000",
+        borderRadius: "0px",
+        maxHeight: "680px",
       }}
     >
       <style>{keyframes}</style>
