@@ -140,8 +140,7 @@ const MovieVisual: React.FC = () => {
         overflow: "hidden",
         backgroundColor: "#000",
         borderRadius: "0px",
-      }}
-    >
+      }}>
       <style>{keyframes}</style>
 
       {/* 배경 레이어 */}
@@ -168,8 +167,7 @@ const MovieVisual: React.FC = () => {
           filter: "blur(40px) contrast(25)",
           mixBlendMode: "color-dodge",
           pointerEvents: "none",
-        }}
-      >
+        }}>
         <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
       </div>
 
@@ -200,8 +198,7 @@ const MovieVisual: React.FC = () => {
           textAlign: "center",
           zIndex: 3,
           pointerEvents: "none",
-        }}
-      >
+        }}>
         <h2
           style={{
             fontSize: "clamp(2rem, 5vw, 4.5rem)",
@@ -210,8 +207,7 @@ const MovieVisual: React.FC = () => {
             textShadow: "0 10px 30px rgba(0,0,0,0.5)",
             opacity: 0,
             animation: "textRevealUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards",
-          }}
-        >
+          }}>
           영화 <span style={{ opacity: 0.6 }}>WAVVE</span>
         </h2>
         <p
@@ -221,8 +217,7 @@ const MovieVisual: React.FC = () => {
             fontWeight: 500,
             opacity: 0,
             animation: "textRevealUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards", // 타이틀 이후 0.3초 뒤 등장
-          }}
-        >
+          }}>
           세상을 보는 새로운 시선
         </p>
       </div>
@@ -233,14 +228,17 @@ const MovieVisual: React.FC = () => {
           position: "absolute",
           left: "0",
           bottom: "-10px",
-          width:'36%',
+          width: "36%",
 
           opacity: 0,
           animation: "slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
-        }}
-      >
+        }}>
         <div style={{ animation: "subtleFloat 6s ease-in-out infinite 1.2s" }}>
-          <img src="/images/visual/visual-movie-main-actor1.png" alt="배우" style={{ width: "100%" }} />
+          <img
+            src="/images/visual/visual-movie-main-actor1.png"
+            alt="배우"
+            style={{ width: "100%" }}
+          />
         </div>
       </div>
 
@@ -250,13 +248,16 @@ const MovieVisual: React.FC = () => {
           position: "absolute",
           right: "0",
           bottom: "-10px",
-          width:'34%',
+          width: "34%",
           opacity: 0,
           animation: "slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards",
-        }}
-      >
+        }}>
         <div style={{ animation: "subtleFloat 7s ease-in-out infinite 1.5s" }}>
-          <img src="/images/visual/visual-movie-main-actor2.png" alt="배우" style={{ width: "100%" }} />
+          <img
+            src="/images/visual/visual-movie-main-actor2.png"
+            alt="배우"
+            style={{ width: "100%" }}
+          />
         </div>
       </div>
     </div>

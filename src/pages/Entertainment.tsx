@@ -1,10 +1,9 @@
+import EntertainmentVisual from "../components/EntertainmentVisual";
+
 const Entertainment = () => {
   return (
     <main className="entertainment-wrap">
-      <div>
-        <img src="/images/visual/visual-entertainment-main.jpg" alt="" />
-        Entertainment100% 다 쓰는 경우
-      </div>
+      <EntertainmentVisual />
       <div className="inner">
         <section className="card-list">
           <h2>제목입니다</h2>
