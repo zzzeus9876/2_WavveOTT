@@ -1,14 +1,10 @@
 @use '../../App.scss' as g;
 
 .sub-movie-main {
-    @include g.myFlexCol($gap: 60px);
+    @include g.myFlexCol($gap: 80px);
     overflow-x: hidden;
 
-    .inner {
-        &.movie-main {
-            @include g.myFlexCol($gap: 60px);
-        }
-    }
+  
 
     .card-list {
 
@@ -336,5 +332,8 @@
                 opacity: 1;
             }
         }
+    }
+    .rec-section{
+        margin-top: 40px;
     }
 }
