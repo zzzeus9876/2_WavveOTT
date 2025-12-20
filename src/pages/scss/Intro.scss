@@ -1,5 +1,4 @@
 @use "../../App.scss" as g;
-
 .intro-wrap {
   @include g.myFlexCol($gap: 0);
 
@@ -35,11 +34,15 @@
 
     .btn-box {
       z-index: 2;
+
+      button {
+        width: 272px;
+        background-color: g.$color-primary;
+      }
     }
 
-    button {
-      width: 272px;
-    }
+
+
   }
 
   .intro2 {
@@ -51,7 +54,7 @@
     ul {
       @include g.myFlex($gap: 24px);
 
-      > li {
+      >li {
         @include g.myFlexCol($gap: 20px);
         width: 464px;
         height: 378px;
@@ -63,7 +66,7 @@
         background-position-y: calc(100% - 50px);
         background-repeat: no-repeat;
 
-        > p {
+        >p {
           &:first-child {
             color: g.$color-font-white;
             font-family: "Wave";
@@ -119,13 +122,16 @@
     .img-box {
       @include g.myFlexCol($gap: 30px);
       overflow: hidden;
+
       .img-top,
       .img-bottom {
         display: flex;
         width: 100%;
+
         img {
           height: 320px;
         }
+
         .roll-track {
           display: flex;
           flex-shrink: 0;

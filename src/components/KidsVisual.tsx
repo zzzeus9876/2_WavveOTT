@@ -3,7 +3,7 @@ import styles from "./scss/kidsVisual.module.scss";
 import kidsLeft from "../../public/images/bg-kids-left.svg";
 import kidsRight from "../../public/images/bg-kids-right.svg";
 
-const COLORS = [
+const colos = [
   "#FFD700",
   "#FF69B4",
   "#00FFFF",
@@ -18,7 +18,7 @@ const KidsVisual: React.FC = () => {
   const [confettiStyles] = useState(() =>
     confettiParticles.map((_, i) => ({
       left: `${Math.random() * 100}%`,
-      color: COLORS[i % COLORS.length],
+      color: colos[i % colos.length],
       duration: `${Math.random() * 2 + 2}s`,
       delay: `${Math.random() * 5}s`,
       radius: i % 2 === 0 ? "50%" : "2px",
@@ -52,7 +52,7 @@ const KidsVisual: React.FC = () => {
         className={`${styles.character} ${styles.left}`}
       />
 
-      <div className={styles.title}>
+      <div className={styles.Title}>
         <h2>
           키즈 <span style={{ opacity: 0.6 }}>WAVVE</span>
         </h2>

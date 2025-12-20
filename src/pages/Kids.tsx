@@ -7,6 +7,7 @@ import { kidsNew } from "../data/kidsNew";
 import { kidsEdu } from "../data/kidsEdu";
 import { KidsEng50 } from "../data/kidsEngTop50";
 import { kidsTV } from "../data/kidsTVmanhwa";
+import { kidsSong } from "../data/kidsSongs";
 
 import AniKidsRankingList from "../components/AniKidsRankingList";
 import AniKidsPrimaryList from "../components/AniKidsPrimaryList";
@@ -14,7 +15,6 @@ import AniKidsPrimaryList from "../components/AniKidsPrimaryList";
 import KidsWavveList from "../components/KidsWavveList";
 
 import "./scss/Kids.scss";
-import { kidsSong } from "../data/kidsSongs";
 
 const Kids = () => {
   const { tvVideos, onFetchVariety } = useVarietyStore();
