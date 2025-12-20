@@ -5,6 +5,8 @@
   overflow-x: hidden;
 
   .card-list {
+    position: relative;
+
     .title-wrap {
       @include g.myFlex();
     }
@@ -19,10 +21,44 @@
 
         .swiper-slide {
           overflow: visible;
-          width: 220px;
+          width: auto;
           z-index: 1;
 
           &:hover { z-index: 30; }
+
+          .drama-card {
+            width: 220px; // 카드 폭(원하는 값으로)
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+
+            img {
+              width: 100%;
+              display: block;
+              border-radius: 12px;
+            }
+            .title {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+
+          .hidden {
+            display: none;
+          }
+
+          .prev-wrap,
+          .next-wrap {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+          }
+
+          .prev-wrap { left: 0; }
+          .next-wrap { right: 0; }
+
 
           .poster-wrap {
             position: relative;
@@ -299,5 +335,41 @@
     }
   }
 
-  .rec-section { margin-top: 40px; }
+  .rec-section {
+    max-width: 100%;
+    margin: 0 auto;
+
+    h2 {
+      padding: 0 20px;
+      min-width: 1440px;
+      max-width: 1720px;
+      margin: 0 auto 30px;
+    }
+  .swiper-top,
+  .swiper-bot {
+    width: calc(3 * 33%);
+
+    .marquee-item {
+      min-width: 400px;
+      margin-right: 20px;
+      a {
+        position: relative;
+        overflow: hidden;
+        .R-b-poster {
+          border-radius: 12px;
+        }
+        .R-b-logo {
+          width: 150px;
+          height: auto;
+          object-fit: contain;
+          position: absolute;
+          z-index: 3;
+          left: 10%;
+          bottom: -500%;
+        }
+      }
+    }
+  }
+}
+
 }

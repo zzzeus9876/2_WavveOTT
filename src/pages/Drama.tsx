@@ -23,19 +23,19 @@ const Drama = () => {
     return <div>드라마 불러오는 중</div>;
   }
 
-  const top10 = tvs.slice(0, 10);
-  const top10ForRank = top10.map((tv) => ({
-    id: tv.id,
-    title: tv.name,
-    poster_path: tv.poster_path,
-  }));
+  // const top10 = tvs.slice(0, 10);
+  // const top10ForRank = top10.map((tv) => ({
+  //   id: tv.id,
+  //   title: tv.name,
+  //   poster_path: tv.poster_path,
+  // }));
 
   const spotlight = tvs.slice(5, 15);
   const mustWatch = tvs.slice(8, 18);
   const newArrivals = tvs;
 
-  const poster = (path?: string | null) =>
-    path ? `https://image.tmdb.org/t/p/w500${path}` : "/images/no-poster.png";
+  // const poster = (path?: string | null) =>
+  //   path ? `https://image.tmdb.org/t/p/w500${path}` : "/images/no-poster.png";
 
   return (
     <main className="sub-drama-main">
