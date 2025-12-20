@@ -231,10 +231,9 @@ const MovieVisual: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          left: "100px",
+          left: "0",
           bottom: "-10px",
-          width: "430px",
-          minWidth: "230px",
+          width:'36%',
 
           opacity: 0,
           animation: "slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
@@ -251,7 +250,7 @@ const MovieVisual: React.FC = () => {
           position: "absolute",
           right: "0",
           bottom: "-10px",
-          width: "600px",
+          width:'34%',
           opacity: 0,
           animation: "slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards",
         }}
