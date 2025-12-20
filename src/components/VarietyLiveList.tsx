@@ -82,7 +82,7 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
         <section className="card-list">
             <div className="title-wrap">
                 <h2>{title}</h2>
-                <Link to="/home"></Link>
+                <Link to="/entertainment">더보기</Link>
             </div>
             <Swiper
                 modules={[Navigation]}
