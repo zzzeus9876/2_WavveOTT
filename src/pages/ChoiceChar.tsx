@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../stores/useAuthStore";
 import { getProfileNickname } from "../firebase/firebase";
+import LoadingBar from "../components/LoadingBar";
 import "./scss/ChoiceChar.scss";
 
 interface Character {
@@ -17,48 +18,90 @@ const defaultCharacters: Character[] = [
   { id: 4, nickname: "키즈", imageUrl: "/images/icons/icon-char-4.svg" },
 ];
 
+const MIN_LOADING_TIME = 300;   // 깜빡임 방지
+const MAX_LOADING_TIME = 1200;  // 체감 개선 핵심
+
 const ChoiceChar = () => {
   const navigate = useNavigate();
   const { user, selectChar, selectedCharId } = useAuthStore();
 
-  // DB에서 불러온 실제 캐릭터 리스트를 관리할 상태
   const [displayCharacters, setDisplayCharacters] =
     useState<Character[]>(defaultCharacters);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  // 1. 컴포넌트 로드 시 Firebase에서 각 프로필의 닉네임을 불러옴
   useEffect(() => {
-    const fetchNicknames = async () => {
-      if (!user) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
 
-      const updatedChars = await Promise.all(
-        defaultCharacters.map(async (char) => {
-          // Firebase에서 해당 캐릭터의 저장된 닉네임 조회
-          const savedNickname = await getProfileNickname(user.uid, char.id);
-          return {
-            ...char,
-            nickname: savedNickname || char.nickname, // 저장된 게 있으면 그것 사용, 없으면 기본값
-          };
-        })
-      );
-      setDisplayCharacters(updatedChars);
+    let mounted = true;
+    const startTime = Date.now();
+
+    const fetchNicknames = async () => {
+      try {
+        const updated = await Promise.all(
+          defaultCharacters.map(async (char) => {
+            const nickname = await getProfileNickname(user.uid, char.id);
+            return {
+              ...char,
+              nickname: nickname || char.nickname,
+            };
+          })
+        );
+
+        if (!mounted) return;
+
+        setDisplayCharacters(updated);
+      } catch (e) {
+        console.error("닉네임 조회 에러:", e);
+      } finally {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(
+          MIN_LOADING_TIME - elapsed,
+          0
+        );
+
+        // ⏱ 최소 로딩 시간 보장
+        setTimeout(() => {
+          if (mounted) setIsLoading(false);
+        }, remaining);
+      }
     };
 
     fetchNicknames();
+
+    // ⛔ 최대 로딩 시간 제한 (핵심)
+    const forceEnd = setTimeout(() => {
+      if (mounted) setIsLoading(false);
+    }, MAX_LOADING_TIME);
+
+    return () => {
+      mounted = false;
+      clearTimeout(forceEnd);
+    };
   }, [user]);
 
-  const handleCharSelect = (char: Character) => {
-    // 선택한 캐릭터의 현재 닉네임(DB에서 가져온 값)을 스토어에 저장
-    selectChar(char.id, char.nickname);
+  const handleCharSelect = useCallback(
+    (char: Character) => {
+      if (isNavigating) return;
 
-    if (char.id === 4) {
-      navigate("/kids");
-    } else {
-      navigate("/home");
-    }
-  };
+      setIsNavigating(true);
+      selectChar(char.id, char.nickname);
+
+      const targetPath = char.id === 4 ? "/kids" : "/home";
+      navigate(targetPath);
+    },
+    [isNavigating, navigate, selectChar]
+  );
+
+  if (isLoading) return <LoadingBar />;
 
   return (
     <main className="choice-char-wrap">
+      {isNavigating && <LoadingBar />}
+
       <div className="inner">
         <section className="choice-char">
           <div>
