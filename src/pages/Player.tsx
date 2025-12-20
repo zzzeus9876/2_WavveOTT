@@ -14,7 +14,7 @@ const Player = () => {
         <div className="player-page">
             <button className="btn default primary" onClick={() => navigate(-1)}>
                 <img src="/images/button/btn-close.svg" alt="back" />
-                <span>뒤로가기</span>
+                <span>닫기</span>
             </button>
             <div className="player-container">
                 <iframe

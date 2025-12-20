@@ -21,7 +21,7 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { saveWatchHistory } from '../firebase/firebase';
 // --------------------
 
-import type { Season } from '../types/movie';
+import type { CreditPerson, Season } from '../types/movie';
 
 import './scss/ContentsDetail.scss';
 
@@ -54,6 +54,7 @@ const ContentsDetail = () => {
     const { onTogglePick, pickList, pickAction } = usePickStore();
 
     const [shareOpen, setShareOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const [activeMenu, setActiveMenu] = useState('episode');
     const [showVideo, setShowVideo] = useState(false);
     const [isWatched, setIsWatched] = useState(false);
@@ -103,12 +104,38 @@ const ContentsDetail = () => {
 
     // 시즌 데이터 받아올 변수 추가
     const seasonsForEpisode: Season[] =
-        selectedContent.seasons?.map((s) => ({
-            id: s.season_number, // 기존 id
-            season_number: s.season_number, // 필수 필드 추가
-            name: `시즌 ${s.season_number}`,
-            episode_count: s.episodes?.length ?? 0,
-        })) ?? [];
+        selectedContent.seasons?.map((s) => {
+            const season: Season = {
+                id: s.season_number,
+                season_number: s.season_number,
+                name: `시즌 ${s.season_number}`, // 원래대로 번호만
+                episode_count: 'episode_count' in s ? s.episode_count : undefined,
+                episodes: 'episodes' in s ? s.episodes : undefined,
+            };
+            return season;
+        }) ?? [];
+
+    // ========== 공유 기능 ==========
+    const handleShareClick = async () => {
+        try {
+            // 예: 카카오톡 공유 또는 URL 복사
+            const shareUrl = window.location.href;
+
+            // 클립보드 복사
+            await navigator.clipboard.writeText(shareUrl);
+
+            // 공유 성공 메시지 표시
+            setAlertMessage('복사되었습니다!');
+
+            // 2초 후 메시지 자동 사라지기
+            setTimeout(() => setAlertMessage(''), 2000);
+        } catch (error) {
+            console.error('공유 실패:', error);
+            setAlertMessage('공유 실패!');
+            setTimeout(() => setAlertMessage(''), 2000);
+        }
+    };
+    // ===========================
 
     // ========== 찜 기능 ==========
     const isPicked = pickList.some(
@@ -162,9 +189,8 @@ const ContentsDetail = () => {
                 console.error('시청 기록 저장 실패:', error);
             }
         }
-        //===============/// 버튼 누르면 재생하기 -> 이어보기로 변경 (김초원 추가) ===============
+
         setIsWatched(true);
-        //==============================
         navigate(`/player/${videoKey}`);
     };
     // ============================================================
@@ -241,26 +267,51 @@ const ContentsDetail = () => {
                                 className="detail-share-btn"
                                 onClick={() => setShareOpen(true)}
                             ></button>
-                            <Modal isOpen={shareOpen} onClose={() => setShareOpen(false)}>
+                            <Modal
+                                isOpen={shareOpen}
+                                onClose={() => setShareOpen(false)}
+                                size="small"
+                            >
                                 <div className="share-modal-top">
                                     <h3>공유하기</h3>
-                                    <button onClick={() => setShareOpen(false)}></button>
+                                    <button onClick={() => setShareOpen(false)}>
+                                        <img src="/images/button/btn-close.svg" alt="closeBtn" />
+                                    </button>
                                 </div>
                                 <div className="share-modal-middle">
-                                    <div>
-                                        <img src="" alt="" />
-                                        <p>카카오톡</p>
-                                    </div>
-                                    <div>
-                                        <img src="" alt="" />
-                                        <p>트위터</p>
-                                    </div>
-                                    <div>
-                                        <img src="" alt="" />
-                                        <p>페이스북</p>
-                                    </div>
+                                    <button onClick={handleShareClick}>
+                                        <img
+                                            src="/images/icons/icon-kakao-login.svg"
+                                            alt="kakao-icon"
+                                        />
+                                        <span>카카오톡</span>
+                                    </button>
+                                    <button>
+                                        <img
+                                            src="/images/icons/icon-twitter.svg"
+                                            alt="twitter-icon"
+                                        />
+                                        <span>트위터</span>
+                                    </button>
+                                    <button>
+                                        <img
+                                            src="/images/icons/icon-facebook.svg"
+                                            alt="facebook-icon"
+                                        />
+                                        <span>페이스북</span>
+                                    </button>
                                 </div>
-                                <div className="share-modal-bottom"></div>
+                                <div className="share-modal-bottom">
+                                    <span>https://deep.wavve.com/content/C9901_C99000000170</span>
+                                    <button
+                                        className="btn small primary"
+                                        onClick={handleShareClick}
+                                    >
+                                        공유하기
+                                    </button>
+                                </div>
+                                {/* 알림 메시지 */}
+                                {alertMessage && <div className="share-alert">{alertMessage}</div>}
                             </Modal>
                         </div>
                     </div>
@@ -269,7 +320,11 @@ const ContentsDetail = () => {
                         <div className="detail-content">
                             <div className="detail-content-left">
                                 <h3>줄거리</h3>
-                                <p>{selectedContent.overview}</p>
+                                {selectedContent.overview?.trim() ? (
+                                    <p>{selectedContent.overview}</p>
+                                ) : (
+                                    <p>제공된 줄거리 정보가 없습니다.</p>
+                                )}
                             </div>
                             <div className="detail-content-right">
                                 {/* 수정한 부분: onClick 핸들러 연결  // KEH  왓치리스트를 위해 추가*/}
@@ -282,21 +337,29 @@ const ContentsDetail = () => {
                         <div className="detail-cast">
                             <h3>출연진</h3>
                             <ul className="detail-cast-list">
-                                {selectedContent.creditData?.cast?.slice(0, 7).map((actor) => (
-                                    <li key={actor.id} className="cast-card">
-                                        <p className="cast-card-imgbox">
-                                            <img
-                                                src={
-                                                    actor.profile_path
-                                                        ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
-                                                        : '/images/actor-no-image.svg'
-                                                }
-                                                alt={actor.name}
-                                            />
-                                        </p>
-                                        <p className="actor-name">{actor.name}</p>
+                                {selectedContent.creditData?.cast ? (
+                                    selectedContent.creditData.cast
+                                        .slice(0, 7)
+                                        .map((actor: CreditPerson) => (
+                                            <li key={`a-${actor.id}`} className="cast-card">
+                                                <p className="cast-card-imgbox">
+                                                    <img
+                                                        src={
+                                                            actor.profile_path
+                                                                ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
+                                                                : '/images/actor-no-image.svg'
+                                                        }
+                                                        alt={actor.name}
+                                                    />
+                                                </p>
+                                                <p className="actor-name">{actor.name}</p>
+                                            </li>
+                                        ))
+                                ) : (
+                                    <li className="empty-message">
+                                        제공된 출연진 정보가 없습니다.
                                     </li>
-                                ))}
+                                )}
                             </ul>
                         </div>
                         <div className="detail-crew-list">
