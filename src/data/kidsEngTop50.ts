@@ -1,3 +1,5 @@
+import type { Wavves } from "./wavves";
+
 export const KidsEng50: Wavves[] = [
   {
     index: 1,
