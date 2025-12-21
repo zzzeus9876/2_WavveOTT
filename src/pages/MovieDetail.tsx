@@ -29,6 +29,7 @@ const MovieDetail = () => {
     const { onTogglePick, pickList, pickAction } = usePickStore();
 
     const [shareOpen, setShareOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const [activeMenu, setActiveMenu] = useState('relative');
     const [showVideo, setShowVideo] = useState(false);
     const [isWatched, setIsWatched] = useState(false);
@@ -99,6 +100,28 @@ const MovieDetail = () => {
 
     //모달 닫기 핸들러
     const handleCloseModal = () => setIsModalOpen(false);
+
+    // ========== 공유 기능 ==========
+    const handleShareClick = async () => {
+        try {
+            // 예: 카카오톡 공유 또는 URL 복사
+            const shareUrl = window.location.href;
+
+            // 클립보드 복사
+            await navigator.clipboard.writeText(shareUrl);
+
+            // 공유 성공 메시지 표시
+            setAlertMessage('복사되었습니다!');
+
+            // 2초 후 메시지 자동 사라지기
+            setTimeout(() => setAlertMessage(''), 2000);
+        } catch (error) {
+            console.error('공유 실패:', error);
+            setAlertMessage('공유 실패!');
+            setTimeout(() => setAlertMessage(''), 2000);
+        }
+    };
+    // ===========================
 
     // 등급 데이터 [] 배열일 수도 있고, NR 수도 있어서 한꺼번에 변수 설정
     const certificationValue = Array.isArray(selectedContent.certificationMovie)
@@ -214,11 +237,48 @@ const MovieDetail = () => {
                             <Modal
                                 isOpen={shareOpen}
                                 onClose={() => setShareOpen(false)}
-                                size="default"
+                                size="small"
                             >
-                                <h3>공유하기</h3>
-                                <p>SNS</p>
-                                <button onClick={() => setShareOpen(false)}>닫기</button>
+                                <div className="share-modal-top">
+                                    <h3>공유하기</h3>
+                                    <button onClick={() => setShareOpen(false)}>
+                                        <img src="/images/button/btn-close.svg" alt="closeBtn" />
+                                    </button>
+                                </div>
+                                <div className="share-modal-middle">
+                                    <button onClick={handleShareClick}>
+                                        <img
+                                            src="/images/icons/icon-kakao-login.svg"
+                                            alt="kakao-icon"
+                                        />
+                                        <span>카카오톡</span>
+                                    </button>
+                                    <button>
+                                        <img
+                                            src="/images/icons/icon-twitter.svg"
+                                            alt="twitter-icon"
+                                        />
+                                        <span>트위터</span>
+                                    </button>
+                                    <button>
+                                        <img
+                                            src="/images/icons/icon-facebook.svg"
+                                            alt="facebook-icon"
+                                        />
+                                        <span>페이스북</span>
+                                    </button>
+                                </div>
+                                <div className="share-modal-bottom">
+                                    <span>https://deep.wavve.com/content/C9901_C99000000170</span>
+                                    <button
+                                        className="btn small primary"
+                                        onClick={handleShareClick}
+                                    >
+                                        공유하기
+                                    </button>
+                                </div>
+                                {/* 알림 메시지 */}
+                                {alertMessage && <div className="share-alert">{alertMessage}</div>}
                             </Modal>
                         </div>
                     </div>
@@ -251,23 +311,29 @@ const MovieDetail = () => {
                         <div className="detail-cast">
                             <h3>출연진</h3>
                             <ul className="detail-cast-list">
-                                {selectedContent.creditData.cast
-                                    .slice(0, 7)
-                                    .map((actor: CreditPerson) => (
-                                        <li key={`a-${actor.id}`} className="cast-card">
-                                            <p className="cast-card-imgbox">
-                                                <img
-                                                    src={
-                                                        actor.profile_path
-                                                            ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
-                                                            : '/images/actor-no-image.svg'
-                                                    }
-                                                    alt={actor.name}
-                                                />
-                                            </p>
-                                            <p className="actor-name">{actor.name}</p>
-                                        </li>
-                                    ))}
+                                {selectedContent.creditData?.cast ? (
+                                    selectedContent.creditData.cast
+                                        .slice(0, 7)
+                                        .map((actor: CreditPerson) => (
+                                            <li key={`a-${actor.id}`} className="cast-card">
+                                                <p className="cast-card-imgbox">
+                                                    <img
+                                                        src={
+                                                            actor.profile_path
+                                                                ? `https://image.tmdb.org/t/p/original${actor.profile_path}`
+                                                                : '/images/actor-no-image.svg'
+                                                        }
+                                                        alt={actor.name}
+                                                    />
+                                                </p>
+                                                <p className="actor-name">{actor.name}</p>
+                                            </li>
+                                        ))
+                                ) : (
+                                    <li className="empty-message">
+                                        제공된 출연진 정보가 없습니다.
+                                    </li>
+                                )}
                             </ul>
                         </div>
                         <div className="detail-crew-list">
