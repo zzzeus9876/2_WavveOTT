@@ -1,8 +1,11 @@
 import { useState, useMemo, useEffect } from 'react';
-import type { Episodes, Season } from '../types/movie';
-import CustomSelect from './CustomSelect';
-import './scss/ContentsEpisode.scss';
 import { useNavigate } from 'react-router-dom';
+
+import type { Episodes, Season } from '../types/movie';
+
+import CustomSelect from './CustomSelect';
+
+import './scss/ContentsEpisode.scss';
 
 interface EpisodeProps {
     episodes: Episodes[];
@@ -31,17 +34,26 @@ const ContentsEpisode = ({
 }: EpisodeProps) => {
     const navigate = useNavigate();
 
+    //시즌 0 (스페셜) 제거하고 0개인 시즌도 제외
+    const validSeasons = useMemo(() => {
+        return seasons.filter(
+            (s) =>
+                s.season_number > 0 && // 시즌 0 제외
+                (s.episode_count ?? 0) > 0 // 빈 에피소드 제외
+        );
+    }, [seasons]);
+
     // 첫 시즌 기본값
-    const defaultSeason = seasons?.[0];
+    const defaultSeason = validSeasons?.[0];
     const [selectedSeason, setSelectedSeason] = useState(defaultSeason ? defaultSeason.name : '');
     const [selectedSort, setSelectedSort] = useState('오래된 순');
 
     // 초기 에피소드 데이터
     const initialEpisodes = useMemo(() => {
         if (defaultSeason?.episodes) {
-            return defaultSeason.episodes;
+            return defaultSeason.episodes.filter((e) => (e.season_number ?? 0) > 0);
         }
-        return episodes;
+        return episodes.filter((e) => (e.season_number ?? 0) > 0);
     }, [episodes, defaultSeason]);
 
     const [episodesState, setEpisodes] = useState<Episodes[]>([]);
@@ -52,8 +64,8 @@ const ContentsEpisode = ({
     }, [initialEpisodes]);
 
     // 시즌 옵션
-    const seasonOptions: SelectOption[] = seasons.length
-        ? seasons.map((season) => ({
+    const seasonOptions: SelectOption[] = validSeasons.length
+        ? validSeasons.map((season) => ({
               label: season.name,
               path: season.season_number.toString(),
           }))
@@ -66,12 +78,19 @@ const ContentsEpisode = ({
 
         let filtered: Episodes[] = [];
 
-        if (seasonNumber && selectedPerson) {
-            const res = await fetch(
-                `https://api.themoviedb.org/3/tv/${selectedPerson.id}/season/${seasonNumber}?api_key=${API_KEY}&language=ko-KR`
-            );
-            const data = await res.json();
-            filtered = data.episodes || [];
+        if (seasonNumber && seasonNumber > 0 && selectedPerson) {
+            try {
+                const res = await fetch(
+                    `https://api.themoviedb.org/3/tv/${selectedPerson.id}/season/${seasonNumber}?api_key=${API_KEY}&language=ko-KR`
+                );
+                const data = await res.json();
+                // 추가: 시즌 0 에피소드 필터링
+                filtered = (data.episodes || []).filter(
+                    (e: Episodes) => (e.season_number ?? 0) > 0
+                );
+            } catch (error) {
+                console.error('에피소드 로드 실패:', error);
+            }
         }
 
         // 선택된 정렬 기준 적용
@@ -102,15 +121,27 @@ const ContentsEpisode = ({
         );
     };
 
+    //썸네일 이미지 가져오기
+    const getEpisodeImage = (episode: Episodes, index: number): string => {
+        // 1순위: 에피소드 스틸 이미지
+        if (episode.still_path) {
+            return `https://image.tmdb.org/t/p/original${episode.still_path}`;
+        }
+        // 2순위: episodeImages 배열 (유틸 함수에서 만든 것)
+        if (episodeImages && episodeImages[index]) {
+            return episodeImages[index];
+        }
+        // 3순위: 기본 이미지
+        return '/images/default-thumbnail.png';
+    };
+
     // episodes + 이미지 처리, 정렬 적용
     const filteredEpisodes = episodesState
+        .filter((e) => (e.season_number ?? 0) > 0) // 시즌 0 제거
         .map((e, index) => ({
+            // index 추가!
             ...e,
-            image:
-                episodeImages?.[index] ??
-                (e.still_path
-                    ? `https://image.tmdb.org/t/p/original${e.still_path}`
-                    : '/images/default-thumbnail.png'),
+            image: getEpisodeImage(e, index), // index 전달
         }))
         .sort((a, b) =>
             selectedSort === '오래된 순'

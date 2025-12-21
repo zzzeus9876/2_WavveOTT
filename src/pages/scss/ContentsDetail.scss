@@ -97,6 +97,90 @@
                             background: url('/images/icons/icon-share-hover.svg') no-repeat center;
                         }
                     }
+                    .modal-overlay {
+                        .modal-container {
+                            .share-modal-top {
+                                @include g.myFlex();
+                            }
+                            .share-modal-middle {
+                                @include g.myFlex($jc: space-around, $gap: 30px);
+                                margin: 0 50px;
+                                text-align: center;
+                                button {
+                                    @include g.myFlexCol($gap: 10px);
+                                    color: g.$color-font-white;
+                                    > img {
+                                        width: 60px;
+                                        height: 60px;
+                                    }
+                                    > span {
+                                    }
+                                }
+                            }
+                            .share-modal-bottom {
+                                display: flex;
+                                align-items: center;
+                                padding: 0 10px 0 20px;
+
+                                width: 100%;
+                                height: 52px;
+                                background-color: g.$color-secondary-dark3;
+                                border-radius: 100px;
+                                box-sizing: border-box;
+
+                                > span {
+                                    flex: 1;
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    text-decoration: underline;
+                                    color: g.$color-font-grey3;
+                                    margin-right: 10px;
+                                }
+
+                                > button {
+                                    flex-shrink: 0;
+                                }
+                            }
+                            .share-alert {
+                                position: fixed;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                z-index: 9999;
+
+                                background-color: rgba(0, 0, 0, 0.8);
+                                color: g.$color-font-white;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                font-weight: 500;
+                                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+                                // 부드럽게 나타나는 애니메이션
+                                animation: fadeInOut 2s ease-in-out;
+                            }
+
+                            @keyframes fadeInOut {
+                                0% {
+                                    opacity: 0;
+                                    transform: translate(-50%, -40%);
+                                }
+                                15% {
+                                    opacity: 1;
+                                    transform: translate(-50%, -50%);
+                                }
+                                85% {
+                                    opacity: 1;
+                                    transform: translate(-50%, -50%);
+                                }
+                                100% {
+                                    opacity: 0;
+                                    transform: translate(-50%, -60%);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             .detail-text-box {
