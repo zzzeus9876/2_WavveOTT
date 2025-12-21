@@ -94,7 +94,6 @@ const ContentsDetail = () => {
   // 비디오 키값 받아올 변수 추가
   const videoKey: string | undefined =
     selectedContent?.videos?.[0]?.key ?? undefined;
-  console.log(videoKey);
 
   useEffect(() => {
     if (!videoKey) return;
