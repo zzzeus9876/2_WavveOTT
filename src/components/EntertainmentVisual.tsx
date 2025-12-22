@@ -146,8 +146,6 @@ const EntertainmentVisual: React.FC<Props> = ({
             letterSpacing: "-0.03em",
             margin: 0,
             textShadow: "0 10px 30px rgba(0,0,0,0.5)",
-            opacity: 0,
-            // [수정] 캐릭터가 밀고 들어오는 타이밍에 맞춰 0.3s 뒤에 바로 시작
             animation: "fadeInUp 0.8s ease-out forwards 0.3s",
           }}>
           {title} <span style={{ opacity: 0.6 }}>WAVVE</span>
