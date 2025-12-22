@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
+import './style/common-button.scss';
 
 // 1. 공통 컴포넌트 및 로딩바
 import Header from './components/Header';
