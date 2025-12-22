@@ -29,38 +29,22 @@ const Kids = () => {
         onFetchVariety(v.tmdb_id);
       }
     });
-  }, [onFetchVariety]);
+  }, []);
 
   return (
     <main className="kids-home">
       <KidsVisual />
       <div className="inner">
         <AniKidsRankingList title="키즈 실시간 TOP 20" data={kidsTop20} />
-        <KidsWavveList
-          title="NEW! 새로 올라왔어요"
-          video={tvVideos}
-          data={kidsNew}
-        />
-        <KidsWavveList
-          title="볼수록 유익해 #교육"
-          video={tvVideos}
-          data={kidsEdu}
-        />
+        <KidsWavveList title="NEW! 새로 올라왔어요" video={tvVideos} data={kidsNew} />
+        <KidsWavveList title="볼수록 유익해 #교육" video={tvVideos} data={kidsEdu} />
         {/* <KidsWavveList
           title="Hello #영어로 말해요"
           video={tvVideos}
           data={KidsEng50}
         /> */}
-        <KidsWavveList
-          title="같이 불러요! #동요"
-          video={tvVideos}
-          data={kidsSong}
-        />
-        <AniKidsPrimaryList
-          title="시선 집중! #TV만화"
-          video={tvVideos}
-          data={kidsTV}
-        />
+        <KidsWavveList title="같이 불러요! #동요" video={tvVideos} data={kidsSong} />
+        <AniKidsPrimaryList title="시선 집중! #TV만화" video={tvVideos} data={kidsTV} />
         {/* <section className="card-list">
                     <h2>제목입니다</h2>
                     <div>내용</div>
