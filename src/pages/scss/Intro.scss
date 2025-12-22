@@ -2,8 +2,6 @@
 
 .intro-wrap {
   @include g.myFlexCol($gap: 0);
-
-  // 768px 이하 반응형 적용
   @include g.respond768 {
     width: 100%;
   }
@@ -15,13 +13,10 @@
     position: relative;
     height: 1028px;
     overflow: hidden;
-
-    // 1024px 이하 반응형 적용
     @include g.respond1024 {
       width: 100%;
       height: 600px;
     }
-
 
     &::before {
       content: "";
@@ -43,8 +38,6 @@
 
     .text-intro1 {
       width: 744px;
-
-      // 768px 이하 반응형 적용
       @include g.respond768 {
         width: 80%;
       }
@@ -58,9 +51,6 @@
         background-color: g.$color-primary;
       }
     }
-
-
-
   }
 
   .intro2 {
@@ -76,7 +66,6 @@
 
     .text-intro2 {
 
-      // 768px 이하 반응형 적용
       @include g.respond768 {
         width: 60%;
       }
@@ -85,7 +74,6 @@
     ul {
       @include g.myFlex($gap: 24px);
 
-      // 768px 이하 반응형 적용
       @include g.respond1200 {
         @include g.myFlexCol($gap: 24px);
       }
@@ -157,9 +145,9 @@
     .text-intro3 {
       width: 597px;
       height: 128px;
-      
+
       @include g.respond768 {
-        width: 80%;  
+        width: 80%;
         height: auto;
       }
     }
@@ -210,15 +198,18 @@
     justify-content: center;
     align-items: center;
     height: 444px;
-@include g.respond768 {
-  padding: 40px;
-        height: auto;
-      }
+
+    @include g.respond768 {
+      padding: 40px;
+      height: auto;
+    }
+
     .text-intro4 {
       width: 561px;
       height: 62px;
-       @include g.respond768 {
-        width: 80%;  
+
+      @include g.respond768 {
+        width: 80%;
         height: auto;
       }
     }
