@@ -10,8 +10,10 @@
     border-radius: 34px;
     background-color: g.$color-secondary-dark2;
 
+
     >li {
       flex: 1;
+
 
       >a {
         display: block;
@@ -24,6 +26,8 @@
         &.active {
           background-color: g.$color-primary;
           border-radius: 34px;
+          
+          
         }
       }
     }
@@ -39,7 +43,9 @@
       cursor: pointer;
 
       .img-box {
-        width: 342px;
+        width: 40%;
+        max-width: 342px;
+        aspect-ratio: 16 / 9;
 
         img {
           border-radius: 12px;
