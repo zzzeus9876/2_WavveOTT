@@ -41,7 +41,6 @@ const EntNewList = ({ title, video }: VarietyLiveList) => {
   const nextBtn = useRef<HTMLDivElement>(null);
 
   const videoKey = hoverId ? video?.[hoverId]?.tvsVideo?.key : undefined;
-  console.log("호버 id값? : ", hoverId);
   const episodes = hoverId ? video?.[hoverId]?.episodes : null;
 
   const navigate = useNavigate();
@@ -73,8 +72,6 @@ const EntNewList = ({ title, video }: VarietyLiveList) => {
   };
 
   const handleCloseModal = () => setIsModalOpen(false);
-
-  console.log("예능 에피소드 : ", varietyTop50);
 
   const handleHeart = async (item: Pick) => {
     const pickItem: Pick = {

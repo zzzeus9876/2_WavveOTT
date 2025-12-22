@@ -1,61 +1,61 @@
-import { useEffect } from 'react';
-import { useVarietyStore } from '../stores/useVarietyStore';
+import { useEffect } from "react";
+import { useVarietyStore } from "../stores/useVarietyStore";
 
-import DramaVisual from '../components/DramaVisual';
-import AniKidsRankingList from '../components/AniKidsRankingList';
-import AniKidsHotList from '../components/AniKidsHotList';
-import AniKidsPrimaryList from '../components/AniKidsPrimaryList';
-import AniKidsNewList from '../components/AniKidsNewList';
-import DramaEditorRecommendList from '../components/DramaEditorRecommendList';
+import DramaVisual from "../components/DramaVisual";
+import AniKidsRankingList from "../components/AniKidsRankingList";
+import AniKidsHotList from "../components/AniKidsHotList";
+import AniKidsPrimaryList from "../components/AniKidsPrimaryList";
+import AniKidsNewList from "../components/AniKidsNewList";
+import DramaEditorRecommendList from "../components/DramaEditorRecommendList";
 
-import { dramaHot } from '../data/dramaHot';
-import { dramaPrimary } from '../data/dramaPrimary';
-import { dramaNew } from '../data/dramaNew';
-import { dramaTop10 } from '../data/dramaTop10';
+import { dramaHot } from "../data/dramaHot";
+import { dramaPrimary } from "../data/dramaPrimary";
+import { dramaNew } from "../data/dramaNew";
+import { dramaTop10 } from "../data/dramaTop10";
 
-import './scss/Animation.scss';
+import "./scss/Animation.scss";
 
 const Drama = () => {
-    const { tvVideos, onFetchVariety } = useVarietyStore();
+  const { tvVideos, onFetchVariety } = useVarietyStore();
 
-    useEffect(() => {
-        dramaTop10.forEach((v) => {
-            if (v.tmdb_id) {
-                onFetchVariety(v.tmdb_id);
-            }
-        });
-        dramaPrimary.forEach((v) => {
-            if (v.tmdb_id) {
-                onFetchVariety(v.tmdb_id);
-            }
-        });
-        dramaHot.forEach((v) => {
-            if (v.tmdb_id) {
-                onFetchVariety(v.tmdb_id);
-            }
-        });
-        dramaPrimary.forEach((v) => {
-            if (v.tmdb_id) {
-                onFetchVariety(v.tmdb_id);
-            }
-        });
-    }, [onFetchVariety]);
+  useEffect(() => {
+    dramaTop10.forEach((v) => {
+      if (v.tmdb_id) {
+        onFetchVariety(v.tmdb_id);
+      }
+    });
+    dramaPrimary.forEach((v) => {
+      if (v.tmdb_id) {
+        onFetchVariety(v.tmdb_id);
+      }
+    });
+    dramaHot.forEach((v) => {
+      if (v.tmdb_id) {
+        onFetchVariety(v.tmdb_id);
+      }
+    });
+    dramaPrimary.forEach((v) => {
+      if (v.tmdb_id) {
+        onFetchVariety(v.tmdb_id);
+      }
+    });
+  }, []);
 
-    return (
-        <main className="ani-home">
-            {/* 분리된 비주얼 컴포넌트 */}
-            <DramaVisual />
+  return (
+    <main className="ani-home">
+      {/* 분리된 비주얼 컴포넌트 */}
+      <DramaVisual />
 
-            <div className="inner">
-                <AniKidsRankingList title="드라마 실시간 TOP10" data={dramaTop10} />
-                <AniKidsNewList title="지금 주목받는 드라마" video={tvVideos} data={dramaHot} />
-                <AniKidsPrimaryList title="이건 꼭 봐야해!" video={tvVideos} data={dramaPrimary} />
-                <AniKidsHotList title="NEW! 새로 올라왔어요" video={tvVideos} data={dramaNew} />
-            </div>
+      <div className="inner">
+        <AniKidsRankingList title="드라마 실시간 TOP10" data={dramaTop10} />
+        <AniKidsNewList title="지금 주목받는 드라마" video={tvVideos} data={dramaHot} />
+        <AniKidsPrimaryList title="이건 꼭 봐야해!" video={tvVideos} data={dramaPrimary} />
+        <AniKidsHotList title="NEW! 새로 올라왔어요" video={tvVideos} data={dramaNew} />
+      </div>
 
-            <DramaEditorRecommendList title="웨이브 드라마 추천작" />
-        </main>
-    );
+      <DramaEditorRecommendList title="웨이브 드라마 추천작" />
+    </main>
+  );
 };
 
 export default Drama;

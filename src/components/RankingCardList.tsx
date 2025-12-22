@@ -18,9 +18,9 @@ const RankingCardList = ({ title, RankingData, limit }: RankingCardListProps) =>
     <section className="card-list">
       <h2>{title}</h2>
       <div className={style.RankWrap}>
-        <Swiper slidesPerView={6} spaceBetween={60} className="mySwiper">
+        <Swiper slidesPerView="auto" spaceBetween={24} className="mySwiper">
           {displayData.map((t, idx) => (
-            <SwiperSlide key={t.id}>
+            <SwiperSlide key={idx}>
               <p className={style.RankNum}>{idx + 1}</p>
               <RankingCard poster={t.poster_path ?? ""} id={t.id} />
             </SwiperSlide>
