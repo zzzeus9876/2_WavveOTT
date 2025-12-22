@@ -4,7 +4,7 @@
   min-width: 320px;
   padding-top: 90px;
 
-  @include g.respond1024 {
+  @include g.respond1024(1024px) {
     padding-top: 40px;
   }
 
@@ -33,7 +33,7 @@
       @include g.myFlex($jc: center, $gap: 80px);
       height: 300px;
 
-      @include g.respond1024 {
+      @include g.respond1024(1024px) {
         flex-wrap: wrap;
         height: auto;
         gap: 40px, 80px;
@@ -48,10 +48,10 @@
           transform-origin: center center;
           transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-          @include g.respond1024 {
+          @include g.respond1024(1024px) {
             width: 120px;
           }
-          @include g.respond768 {
+          @include g.respond768(768px) {
             width: 80%;
           }
         }
