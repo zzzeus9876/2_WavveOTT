@@ -8,7 +8,7 @@
   .my-box {
     @include g.myFlex($gap: 24px, $jc: flex-start);
 
-    @include g.respond768 {
+    @include g.respond768(1024px) {
       @include g.myFlexCol($gap: 24px);
     }
 
@@ -54,7 +54,7 @@
         font-family: "wave";
         font-size: 22px;
 
-        >p {
+        > p {
           @include g.myFlex($gap: 8px, $jc: flex-start);
 
           &.nickname-modify {

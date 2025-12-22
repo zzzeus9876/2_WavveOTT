@@ -19,7 +19,7 @@
     width: 952px;
     margin: auto;
 
-    @include g.respond1024 {
+    @include g.respond1024(1200px) {
       width: 100%;
     }
   }
@@ -44,20 +44,20 @@
     div.payment-top {
       @include g.myFlex();
 
-      @include g.respond768 {
-        @include g.myFlexCol($gap: 20px, );
+      @include g.respond768(1024px) {
+        @include g.myFlexCol($gap: 20px);
         justify-content: flex-start;
         align-items: flex-start;
       }
 
-      >h4 {
+      > h4 {
         color: g.$color-secondary-white;
         font-family: "wave";
         font-size: 22px;
         line-height: 140%;
       }
 
-      >p {
+      > p {
         @include g.myFlex($gap: 4px, $jc: flex-end);
 
         .text-price {
@@ -88,8 +88,8 @@
     div.payment-bottom {
       @include g.myFlex($gap: null, $ai: flex-end);
 
-      @include g.respond768 {
-        @include g.myFlexCol($gap: 20px, );
+      @include g.respond768(1024px) {
+        @include g.myFlexCol($gap: 20px);
         justify-content: flex-start;
         align-items: flex-start;
       }
@@ -98,7 +98,7 @@
         @include g.myFlexCol($gap: 8px);
         font-size: 0.875rem;
 
-        >ul {
+        > ul {
           @include g.myFlex($jc: flex-start, $gap: 20px);
 
           li {
@@ -126,7 +126,7 @@
           }
         }
 
-        >p {
+        > p {
           @include g.myFlex($gap: 20px);
 
           .period-date {
@@ -153,7 +153,7 @@
         ul {
           @include g.myFlex($jc: flex-start, $gap: 20px);
 
-          >li {
+          > li {
             color: g.$color-font-grey2;
             line-height: 140%;
             letter-spacing: -0.2px;
@@ -226,7 +226,7 @@
       .card-wrap {
         @include g.myFlex($gap: 60px, $jc: center);
 
-        @include g.respond768 {
+        @include g.respond768(1024px) {
           gap: 20px;
         }
 
@@ -238,11 +238,15 @@
           height: 200px;
           border-radius: 12px;
           border: 1px solid g.$color-secondary-dark3;
+          cursor: pointer;
 
-          @include g.respond768 {
-
+          @include g.respond768(1024px) {
             width: 240px;
             min-width: 100px;
+          }
+
+          li {
+            cursor: pointer;
           }
 
           span {
@@ -255,7 +259,7 @@
             background-repeat: no-repeat;
             border-radius: 50%;
             overflow: hidden;
-            cursor: no-drop;
+            // cursor: no-drop;
 
             img {
               width: 24px;
@@ -268,7 +272,8 @@
           img {
             width: 34px;
             height: 34px;
-            cursor: no-drop;
+            // cursor: no-drop;
+            cursor: pointer;
           }
         }
       }
@@ -278,11 +283,11 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 24px;
 
-        @include g.respond768 {
+        @include g.respond768(1024px) {
           grid-template-columns: repeat(2, 1fr);
         }
 
-        @include g.respond480 {
+        @include g.respond480(768px) {
           grid-template-columns: repeat(1, 1fr);
         }
 
@@ -321,6 +326,7 @@
             border-radius: 12px;
             background-color: g.$color-primary;
             border: g.$color-primary;
+            z-index: 2;
 
             &:nth-child(1) {
               background-image: url(/images/button/btn-credit-hover.png);
@@ -355,7 +361,7 @@
         line-height: 150%;
         letter-spacing: -0.2px;
 
-        @include g.respond768 {
+        @include g.respond768(1024px) {
           padding: 0 20px;
         }
 
@@ -401,7 +407,7 @@
     ul {
       @include g.myFlexCol($gap: 8px);
 
-      >li {
+      > li {
         list-style: disc;
         color: g.$color-font-grey2;
         font-size: 0.875rem;

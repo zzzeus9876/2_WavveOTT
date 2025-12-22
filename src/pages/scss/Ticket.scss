@@ -14,7 +14,7 @@
         background-repeat: no-repeat;
         background-position: left center;
 
-        @include g.respond768 {
+        @include g.respond768(1024px) {
           padding-left: 200px;
           background-size: 180px;
         }
@@ -28,18 +28,18 @@
     overflow-x: hidden;
     padding-bottom: 20px;
 
-    @include g.respond1024 {
+    @include g.respond1024(1200px) {
       flex-wrap: wrap;
       gap: unset;
       justify-content: space-between;
       row-gap: 40px;
     }
 
-    @include g.respond768 {
+    @include g.respond768(1024px) {
       @include g.myFlexCol($gap: 30px);
     }
 
-    >.list {
+    > .list {
       position: relative;
       width: 464px;
       height: 480px;
@@ -47,16 +47,16 @@
       transform-style: preserve-3d;
       transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 
-      @include g.respond1024 {
+      @include g.respond1024(1200px) {
         flex-wrap: wrap;
         width: 48%;
       }
 
-      @include g.respond768 {
+      @include g.respond768(1024px) {
         width: 100%;
       }
 
-      >div {
+      > div {
         position: absolute;
         top: 0;
         left: 0;
@@ -69,14 +69,14 @@
         display: block;
         border-radius: 12px;
 
-        @include g.respond1024 {
+        @include g.respond1024(1200px) {
           padding: 16px;
         }
 
-        @include g.respond768 {
+        @include g.respond768(1024px) {
           padding: 30px 50px;
         }
-        @include g.respond480 {
+        @include g.respond480(768px) {
           padding: 30px 20px;
         }
       }
@@ -84,7 +84,7 @@
       // ===================================
       // 1. 앞면 (.card-front) 스타일
       // ===================================
-      >.card-front {
+      > .card-front {
         @include g.myFlexCol($gap: 30px);
         background-color: g.$color-secondary-dark1;
         border: 1px solid g.$color-secondary-dark2;
@@ -140,7 +140,7 @@
             font-family: "wave";
             font-size: 1.75rem;
 
-            @include g.respond768 {
+            @include g.respond768(1024px) {
               font-size: 1.6rem;
             }
           }
@@ -161,7 +161,7 @@
             border-radius: 16px;
             background: #11141d;
 
-            @include g.respond1024 {
+            @include g.respond1024(1200px) {
               width: 100%;
             }
 
@@ -287,7 +287,7 @@
       // ===================================
       // 2. 뒷면 (.card-back) 스타일
       // ===================================
-      >.card-back {
+      > .card-back {
         padding: 40px;
         border-radius: 12px;
         border: 1px solid #1d2131;
@@ -299,7 +299,7 @@
         ul {
           @include g.myFlexCol($gap: 20px);
 
-          >li {
+          > li {
             @include g.myFlex($gap: 0, $ai: flex-start);
             line-height: 140%;
 
@@ -316,14 +316,13 @@
       }
 
       &.flipped {
-
         // 앞면을 뒤로 180도 회전하여 숨김
-        >.card-front {
+        > .card-front {
           transform: rotateY(-180deg);
         }
 
         // 뒷면을 정면 (0도)으로 회전하여 보이게 함
-        >.card-back {
+        > .card-back {
           transform: rotateY(0deg);
         }
       }
