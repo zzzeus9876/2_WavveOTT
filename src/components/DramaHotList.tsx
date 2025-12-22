@@ -126,22 +126,23 @@ const DramaHotList = ({ title, video, data }: VarietyLiveList) => {
                                         ) : (
                                             <img
                                                 className="hover image"
-                                                src={`https://${t.season_horizontal_logoN_image}`}
+                                                src={`${
+                                                    t.season_horizontal_logoN_image?.trim()
+                                                        ? `https://${t.season_horizontal_logoN_image}`
+                                                        : `https://${t.season_horizontal_logoY_image}`
+                                                }`}
                                                 alt={t.series_title}
                                             />
                                         )}
 
                                         <div className="logo-box">
                                             <p className="content-logo">
-                                                <img
-                                                    src={`https://${t.seasontitlelogoimage}`}
-                                                    // logoImage(t.index) ||
-                                                    // (t.seasontitlelogoimage?
-                                                    // `https://image.tmdb.org/t/p/original${t.seasontitlelogoimage}`
-                                                    // : undefined)
-
-                                                    alt="content-logo"
-                                                />
+                                                {t.seasontitlelogoimage && (
+                                                    <img
+                                                        src={`https://${t.seasontitlelogoimage}`}
+                                                        alt="content-logo"
+                                                    />
+                                                )}
                                             </p>
                                             {hoverId === t.index && (
                                                 <img

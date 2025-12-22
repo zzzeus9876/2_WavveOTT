@@ -38,6 +38,7 @@ const AniKidsHotList = ({ title, video, data }: VarietyLiveList) => {
     const prevBtn = useRef<HTMLDivElement>(null);
     const nextBtn = useRef<HTMLDivElement>(null);
 
+    //비디오랑 에피소드 저장할 변수
     const videoKey = hoverId ? video[hoverId]?.tvsVideo?.key : undefined;
     const episodes = hoverId ? video[hoverId]?.episodes : null;
 
@@ -100,7 +101,7 @@ const AniKidsHotList = ({ title, video, data }: VarietyLiveList) => {
                     <SwiperSlide key={id}>
                         <div
                             className="poster-wrap badge-new"
-                            onMouseEnter={() => setHoverId(Number(t.tmdb_id))}
+                            onMouseEnter={() => setHoverId(t.tmdb_id)}
                         >
                             <img
                                 className="main"
@@ -122,17 +123,23 @@ const AniKidsHotList = ({ title, video, data }: VarietyLiveList) => {
                                         ) : (
                                             <img
                                                 className="hover image"
-                                                src={`https://${t.season_horizontal_logoN_image}`}
+                                                src={`${
+                                                    t.season_horizontal_logoN_image?.trim()
+                                                        ? `https://${t.season_horizontal_logoN_image}`
+                                                        : `https://${t.season_horizontal_logoY_image}`
+                                                }`}
                                                 alt={t.series_title}
                                             />
                                         )}
 
                                         <div className="logo-box">
                                             <p className="content-logo">
-                                                <img
-                                                    src={`https://${t.seasontitlelogoimage}`}
-                                                    alt="content-logo"
-                                                />
+                                                {t.seasontitlelogoimage && (
+                                                    <img
+                                                        src={`https://${t.seasontitlelogoimage}`}
+                                                        alt="content-logo"
+                                                    />
+                                                )}
                                             </p>
                                             {hoverId === t.index && (
                                                 <img

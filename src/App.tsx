@@ -27,6 +27,11 @@ const OverseasSeries = lazy(() => import("./pages/OverseasSeries"));
 const CurrentAffairs = lazy(() => import("./pages/CurrentAffairs"));
 const Animation = lazy(() => import("./pages/Animation"));
 const Kids = lazy(() => import("./pages/Kids"));
+const Recap = lazy(() => import("./pages/Recap"));
+const Mbc = lazy(() => import("./pages/Mbc"));
+const Kbs = lazy(() => import("./pages/Kbs"));
+const CJenm = lazy(() => import("./pages/Cjenm"));
+const JTBC = lazy(() => import("./pages/Jtbc"));
 const Welcome = lazy(() => import("./pages/Welcome"));
 const ContentsDetail = lazy(() => import("./pages/ContentsDetail"));
 const MovieDetail = lazy(() => import("./pages/MovieDetail"));
@@ -39,7 +44,6 @@ const ServiceCenter = lazy(() => import("./pages/ServiceCenter"));
 const Event = lazy(() => import("./pages/Event"));
 const EventDetail = lazy(() => import("./pages/EventDetail"));
 const EventGroup = lazy(() => import("./pages/EventGroup"));
-const EventWinner = lazy(() => import("./pages/EventWinner"));
 const UserQna = lazy(() => import("./pages/UserQna"));
 const Agreement = lazy(() => import("./pages/Agreement"));
 const NoticeA = lazy(() => import("./pages/NoticeA"));
@@ -94,6 +98,11 @@ function App() {
           <Route path="/currentAffairs" element={<CurrentAffairs />} />
           <Route path="/animation" element={<Animation />} />
           <Route path="/kids" element={<Kids />} />
+          <Route path="/recap" element={<Recap />} />
+          <Route path="/mbc" element={<Mbc />} />
+          <Route path="/kbs" element={<Kbs />} />
+          <Route path="/cjenm" element={<CJenm />}></Route>
+          <Route path="/jtbc" element={<JTBC />}></Route>
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/cjenm" element={<CJenm />}></Route>
@@ -127,7 +136,6 @@ function App() {
             <Route index element={<Event />} />
             <Route path="event" element={<Event />} />
             <Route path="event/:eventId" element={<EventDetail />} />
-            <Route path="event-winner" element={<EventWinner />} />
           </Route>
 
           <Route path="/common" element={<Common />} />
