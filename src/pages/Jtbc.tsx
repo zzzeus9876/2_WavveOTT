@@ -37,17 +37,13 @@ const JTBC = () => {
         onFetchVariety(v.tmdb_id);
       }
     });
-  }, [onFetchVariety]);
+  }, []);
 
   return (
     <main className="kids-home">
       <JTBCVisual />
       <div className="inner">
-        <KidsWavveList
-          title="JTBC 방영 중인 프로그램"
-          video={tvVideos}
-          data={JTBCing}
-        />
+        <KidsWavveList title="JTBC 방영 중인 프로그램" video={tvVideos} data={JTBCing} />
         <KidsWavveList title="JTBC 드라마" video={tvVideos} data={JTBCDrama} />
         <KidsWavveList title="JTBC 예능" video={tvVideos} data={JTBCVariety} />
         <KidsWavveList title="JTBC 시사" video={tvVideos} data={JTBCNews} />

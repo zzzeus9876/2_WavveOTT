@@ -1,0 +1,42 @@
+@use '../../App.scss' as g;
+
+.BottomMenu {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #000;
+    padding: 10px 20px;
+    z-index: 1000;
+    @include g.respond1024 {
+        display: block;
+    }
+
+    ul {
+        display: flex;
+        justify-content: space-between;
+        li {
+            a {
+                display: block;
+                text-align: center;
+
+                .hoverimg {
+                    display: none;
+                }
+
+                &:hover {
+                    .defaultimg {
+                        display: none;
+                    }
+                    .hoverimg {
+                        display: block;
+                    }
+                }
+                // span {
+                //     display: block;
+                // }
+            }
+        }
+    }
+}
