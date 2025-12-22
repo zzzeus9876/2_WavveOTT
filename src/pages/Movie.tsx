@@ -8,7 +8,7 @@ import LoadingBar from "../components/LoadingBar";
 
 import type { UnifiedData } from "../types/movieTypes";
 import "./scss/Movie.scss";
-
+import "../style/common-button.scss";
 // API 호출 설정
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
