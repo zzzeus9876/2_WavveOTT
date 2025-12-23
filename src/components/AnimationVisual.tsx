@@ -97,6 +97,7 @@ const AnimationVisual: React.FC = () => {
                 }}
             >
                 <div
+                    className="actor-left"
                     style={{
                         height: '92%',
                         position: 'relative',
@@ -114,6 +115,7 @@ const AnimationVisual: React.FC = () => {
                 </div>
 
                 <div
+                    className="actor-right"
                     style={{
                         height: '92%',
                         position: 'relative',
@@ -132,6 +134,7 @@ const AnimationVisual: React.FC = () => {
 
             {/* 중앙 텍스트 */}
             <div
+                className="text-content"
                 style={{
                     position: 'relative',
                     zIndex: 3,
@@ -170,28 +173,63 @@ const AnimationVisual: React.FC = () => {
             </div>
 
             <style>{`
-        @keyframes slideInLeft {
-          from { opacity: 0; transform: translateX(-100%); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInRight {
-          from { opacity: 0; transform: translateX(100%); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes idleSway {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-        @keyframes fadeInUp {
-          from { 
-            opacity: 0; 
-            transform: translateY(50px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0); 
-          }
-        }
+ /* 기본 높이 설정 */
+                .visual-wrapper {
+                    height: 680px;
+                }
+
+                /* 반응형 미디어 쿼리 */
+                @media (max-width: 1200px) {
+                    .visual-wrapper {
+                        height: 600px!important;
+                    }
+                    .actor-left, .actor-right {
+                        height: 80% !important; /* 이미지 비율 조정 */
+                    }
+                }
+                
+                @media (max-width: 1024px) {
+                    .visual-wrapper {
+                        height: 500px!important;;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .visual-wrapper {
+                        height: 400px!important;;
+                    }
+                    .actor-left, .actor-right {
+                        display: none !important; /* 모바일에서 캐릭터 숨김 */
+                    }
+                    .text-content {
+                        width: 90% !important;
+                    }
+                }
+
+                /* 키프레임 애니메이션 */
+                @keyframes slideInLeft {
+                    from { opacity: 0; transform: translateX(-100%); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes slideInRight {
+                    from { opacity: 0; transform: translateX(100%); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes idleSway {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-20px); }
+                }
+                @keyframes fadeInUp {
+                    from { 
+                        opacity: 0; 
+                        transform: translateY(50px); 
+                    }
+                    to { 
+                        opacity: 1; 
+                        transform: translateY(0); 
+                    }
+                }
+          
       `}</style>
         </div>
     );
