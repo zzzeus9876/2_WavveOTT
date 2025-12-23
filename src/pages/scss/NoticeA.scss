@@ -1,11 +1,23 @@
 @use '../../App.scss' as g;
 
+// colgroup 고정 너비 무력화 (반응형 시 레이아웃 깨짐 방지)
+colgroup {
+    @include g.respond1024(1024px) {
+        display: none !important;
+    }
+}
+
 .notice-list {
     color: g.$color-font-grey3;
 
     tr {
-        >th {
+        > th {
             background-color: g.$color-secondary-dark1;
+            
+            // 반응형: 헤더 숨김 (카드형 변환 시)
+            @include g.respond1024(1024px) {
+                display: none;
+            }
         }
 
         td {
@@ -18,13 +30,29 @@
             &:nth-of-type(2) {
                 text-align: left;
             }
+
+            // 반응형: 세로 나열
+            @include g.respond1024(1024px) {
+                display: block;
+                width: 100% !important;
+                padding: 10px 20px;
+                text-align: left !important;
+                border: none;
+                line-height: 1.4;
+            }
+        }
+
+        @include g.respond1024(1024px) {
+            display: block;
+            border-bottom: 1px solid g.$color-secondary-dark3;
+            padding: 10px 0;
         }
     }
 
     tr:hover {
         td {
             &:not(&:nth-of-type(1)) {
-                color: g.$color-font-white ;
+                color: g.$color-font-white;
             }
 
             cursor: pointer;
@@ -39,20 +67,39 @@
     border-bottom: 1px solid g.$color-secondary-dark3;
     overflow: hidden;
     color: g.$color-font-grey3;
+
+    // 반응형: 여백 및 줄간격 조정
+    @include g.respond1024(1024px) {
+        padding: 40px 20px;
+        line-height: 1.6;
+        font-size: 15px;
+    }
 }
 
 .list-button {
     @include g.myFlex($gap: 20px, $jc: center);
     padding-top: 60px;
+
+    @include g.respond1024(1024px) {
+        padding-top: 40px;
+        
+        a, button {
+            width: 100%;
+            max-width: 280px;
+        }
+    }
 }
 
 .notice-detail {
     color: g.$color-font-grey3;
 
     tr {
-
         th {
             background-color: g.$color-secondary-dark1;
+            
+            @include g.respond1024(1024px) {
+                display: none; // 상단 헤더 숨김
+            }
         }
 
         td {
@@ -65,10 +112,27 @@
             &:nth-of-type(2) {
                 text-align: left;
             }
+
+            // 반응형: 상세 정보를 카드처럼 위아래 배치
+            @include g.respond1024(1024px) {
+                display: block;
+                width: 100% !important;
+                padding: 10px 20px;
+                text-align: left !important;
+                border: none;
+                line-height: 1.4;
+
+                &:nth-of-type(1) { padding-top: 20px; font-size: 13px; }
+                &:nth-of-type(2) { font-size: 17px; font-weight: bold; }
+                &:nth-of-type(3) { padding-bottom: 20px; font-size: 13px; opacity: 0.7; }
+            }
         }
 
+        @include g.respond1024(1024px) {
+            display: block;
+            border-bottom: 1px solid g.$color-secondary-dark3;
+        }
     }
-
 }
 
 .other-page {
@@ -78,17 +142,40 @@
         color: g.$color-font-primary;
         padding: 0 30px;
         font-family: 'Wave';
+        word-break: keep-all;
 
-        +td {
+        // 반응형: th 높이 최소화 및 라벨화
+        @include g.respond1024(1024px) {
+            display: block;
+            width: 100% !important;
+            padding: 10px 20px 0; // 높이를 줄이기 위해 패딩 조절
+            line-height: 1;      // 높이 최소화
+            height: auto;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        + td {
             text-align: left;
             padding-right: 30px;
+            @include g.respond1024(1024px) {
+                display: block;
+                width: 100% !important;
+                padding: 5px 20px 10px;
+                line-height: 1.4;
+            }
 
-            >span {
+            > span {
                 width: 440px;
                 display: block;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+
+                @include g.respond1024(1024px) {
+                    width: 100%;
+                    white-space: normal; // 모바일에서 제목 길면 줄바꿈
+                }
             }
         }
     }
@@ -96,12 +183,33 @@
     th,
     td {
         border-bottom: 1px solid g.$color-secondary-dark3;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+        @include g.respond1024(1024px) {
+            border: none;
+        }
+    }
+
+    // 모바일에서 날짜 열 숨김 (공간 확보)
+    td:nth-of-type(2), td:nth-of-type(4) {
+        @include g.respond1024(1024px) {
+            display: none;
+        }
+    }
+
+    tr {
+        @include g.respond1024(1024px) {
+            display: block;
+            border-bottom: 1px solid g.$color-secondary-dark3;
+            padding: 5px 0;
+        }
     }
 
     a {
+        cursor: pointer;
         &:hover {
             color: g.$color-font-white;
         }
     }
-
 }
