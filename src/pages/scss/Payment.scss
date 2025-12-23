@@ -96,7 +96,7 @@
 
       .text-left {
         @include g.myFlexCol($gap: 8px);
-        font-size: 0.875rem;
+        // font-size: 0.875rem;
 
         > ul {
           @include g.myFlex($jc: flex-start, $gap: 20px);
