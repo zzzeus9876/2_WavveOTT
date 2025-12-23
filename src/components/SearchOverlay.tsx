@@ -388,7 +388,7 @@ const SearchOverlay = ({ onClose }: Props) => {
             />
           )}
 
-          <div className="search-footer">
+          {/* <div className="search-footer">
             <button
               type="button"
               onClick={() => {
@@ -400,7 +400,7 @@ const SearchOverlay = ({ onClose }: Props) => {
             >
               검색 초기화
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

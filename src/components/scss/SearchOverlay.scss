@@ -1,71 +1,517 @@
-@use '../../App.scss' as g;
+@use "../../App.scss" as g;
 
 .search-popup {
-    position: fixed;
-    inset: 0;
-    height: calc(100vh);
-    z-index: 900;
+  position: fixed;
+  inset: 0;
+  height: calc(100vh);
+  z-index: 900;
+  background-color: rgba(0, 0, 0, 1);
+
+  .search-inner-wrap {
+    position: relative;
+    margin: 150px auto;
+    max-width: 1200px;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 1);
 
-    .search-inner-wrap {
-        position: relative;
-        margin: 150px auto;
-        max-width: 1200px;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 1);
+    @include g.respond480(768px) {
+      padding: 20px;
 
-        @include g.respond480(768px) {
-            padding: 20px;
-
-            margin-top: 20px;
-        }
-
-        .close-bg {
-            // position: absolute;
-            inset: 0;
-            background: transparent;
-            z-index: 0;
-            // display: flex;
-            // align-items: flex-start;
-            // justify-content: flex-end;
-            // padding: 0 240px;
-
-            button {
-                position: absolute;
-                right: 0px;
-                width: 40px;
-                height: 40px;
-                top: -50px;
-                @include g.respond480(768px) {
-                    top: 80px;
-                    right: 15px;
-                }
-            }
-        }
-
-        .search-inner {
-            position: relative;
-            z-index: 10;
-            max-width: 1440px;
-            margin: 100px auto 0;
-
-            .search-body {
-                margin-top: 50px;
-            }
-        }
+      margin-top: 20px;
     }
+
+    .close-bg {
+      // position: absolute;
+      inset: 0;
+      background: transparent;
+      z-index: 0;
+      // display: flex;
+      // align-items: flex-start;
+      // justify-content: flex-end;
+      // padding: 0 240px;
+
+      button {
+        position: absolute;
+        right: 0px;
+        width: 40px;
+        height: 40px;
+        top: -50px;
+        @include g.respond480(768px) {
+          top: 80px;
+          right: 15px;
+        }
+      }
+    }
+
+    .search-inner {
+      position: relative;
+      z-index: 10;
+      max-width: 1440px;
+      margin: 100px auto 0;
+
+      .search-body {
+        margin-top: 50px;
+      }
+    }
+  }
 }
 
 /* Idle */
 li.is-active button .word {
-    color: white;
+  color: white;
 }
 
 /* Typing */
 li.is-active button .txt {
-    .hit,
-    .rest {
-        color: white;
+  .hit,
+  .rest {
+    color: white;
+  }
+}
+
+@media (max-width: 1270px) {
+  .search-popup {
+    .search-inner-wrap {
+      .search-inner {
+        padding: 0 140px;
+
+        .search-bottom {
+          gap: 30px;
+          margin-top: 30px;
+          .bottom-search-box {
+            .todo-zeo {
+              .searches-title {
+                margin-bottom: 20px;
+              }
+            }
+            .todo-it {
+              .searches-title {
+                margin-bottom: 20px;
+              }
+              .latest-searches-list {
+                gap: 16px;
+
+                > li {
+                  gap: 8px;
+                }
+              }
+            }
+          }
+          .popular-searches-box {
+            .searches-title {
+              margin-bottom: 20px;
+            }
+            .popular-searches-list {
+              margin-top: 0;
+              gap: 16px;
+
+              > li {
+                button {
+                  gap: 10px;
+                }
+              }
+            }
+          }
+        }
+        .typing-panel {
+          gap: 30px;
+          margin-top: 30px;
+
+          .tmdb-result {
+            .result-list {
+              gap: 16px;
+            }
+          }
+          .recommend-box {
+            width: 100%;
+
+            .chips {
+              gap: 16px;
+            }
+          }
+        }
+      }
     }
+  }
+}
+
+@media (max-width: 1024px) {
+  .search-popup {
+    .search-inner-wrap {
+      margin: 110px auto;
+
+      .close-bg {
+        button {
+          right: 50px;
+          top: 0;
+        }
+      }
+      .search-inner {
+        padding: 60px 100px 0;
+
+        .keyboard-top {
+          .keyboard-input {
+            font-size: 20px;
+          }
+        }
+
+        .search-bottom {
+          margin-top: 28px;
+          .bottom-search-box {
+            .todo-zeo {
+              .searches-title {
+                margin-bottom: 18px;
+                .title-left {
+                  font-size: 18px;
+                }
+              }
+              .empty-text {
+                font-size: 16px;
+              }
+            }
+            .todo-it {
+              .searches-title {
+                margin-bottom: 18px;
+
+                .title-left {
+                  font-size: 18px;
+                }
+              }
+              .latest-searches-list {
+                gap: 14px;
+
+                > li {
+                  gap: 8px;
+
+                  .latest-text {
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+          .popular-searches-box {
+            .searches-title {
+              margin-bottom: 18px;
+              height: 36px;
+
+              .title-left {
+                font-size: 18px;
+              }
+              .date-box {
+                > p {
+                  font-size: 12px;
+                }
+              }
+            }
+            .popular-searches-list {
+              margin-top: 0;
+              gap: 16px;
+
+              > li {
+                button {
+                  gap: 10px;
+
+                  .rank {
+                    font-size: 16px;
+                  }
+                  .word {
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .typing-panel {
+          gap: 24px;
+          margin-top: 28px;
+
+          .tmdb-result {
+            .hint {
+              font-size: 16px;
+            }
+            .result-list {
+              gap: 14px;
+
+              > li {
+                .preview-item {
+                  .txt .hit,
+                  .txt .rest {
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+          .recommend-box {
+            .recommend-title {
+              font-size: 18px;
+              margin-bottom: 16px;
+            }
+
+            .chips {
+              gap: 14px;
+
+              > li {
+                .chip {
+                  padding: 14px 18px;
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .search-popup {
+    .search-inner-wrap {
+      margin: 90px auto;
+
+      .search-inner {
+        padding: 0;
+
+        .keyboard-top {
+          padding-bottom: 20px;
+          .keyboard-input {
+            font-size: 18px;
+          }
+          .img-box {
+            width: 30px;
+            width: 30px;
+          }
+        }
+
+        .search-bottom {
+          margin-top: 24px;
+          .bottom-search-box {
+            .todo-zeo {
+              .searches-title {
+                margin-bottom: 16px;
+                .title-left {
+                  font-size: 16px;
+                }
+              }
+              .empty-text {
+                font-size: 14px;
+              }
+            }
+            .todo-it {
+              .searches-title {
+                margin-bottom: 16px;
+
+                .title-left {
+                  font-size: 16px;
+                }
+                button {
+                  padding: 6px 10px;
+                  font-size: 12px;
+
+                  &::after {
+                    width: 16px;
+                    height: 16px;
+                  }
+                }
+              }
+              .latest-searches-list {
+                gap: 12px;
+
+                > li {
+                  gap: 8px;
+
+                  .latest-text {
+                    font-size: 14px;
+                  }
+                }
+              }
+            }
+          }
+          .popular-searches-box {
+            .searches-title {
+              margin-bottom: 16px;
+              height: 28px;
+
+              .title-left {
+                font-size: 16px;
+              }
+              .date-box {
+                display: none;
+              }
+            }
+            .popular-searches-list {
+              gap: 14px;
+
+              > li {
+                button {
+                  gap: 8px;
+
+                  .rank {
+                    font-size: 14px;
+                  }
+                  .word {
+                    font-size: 14px;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .typing-panel {
+          gap: 20px;
+          margin-top: 26px;
+
+          .tmdb-result {
+            .hint {
+              font-size: 14px;
+            }
+            .result-list {
+              gap: 10px;
+
+              > li {
+                .preview-item {
+                  .txt .hit,
+                  .txt .rest {
+                    font-size: 14px;
+                  }
+                }
+              }
+            }
+          }
+          .recommend-box {
+            .recommend-title {
+              font-size: 16px;
+              margin-bottom: 14px;
+            }
+
+            .chips {
+              gap: 12px;
+
+              > li {
+                .chip {
+                  padding: 14px 18px;
+                  font-size: 12px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .search-popup {
+    .search-inner-wrap {
+      margin: 40px auto;
+
+      .close-bg {
+        button {
+          right: 10px;
+          top: 60px;
+        }
+      }
+
+      .search-inner {
+        .keyboard-top {
+          padding: 0 10px 8px;
+
+          .keyboard-input {
+            font-size: 20px;
+          }
+          .img-box {
+            width: 24px;
+            width: 24px;
+          }
+        }
+
+        .search-bottom {
+          display: block;
+          margin-top: 20px;
+
+          .bottom-search-box {
+            .todo-zeo {
+              .searches-title {
+                margin-bottom: 14px;
+                .title-left {
+                  font-size: 18px;
+                }
+              }
+              .empty-text {
+                font-size: 16px;
+                padding: 0 10px;
+              }
+            }
+            .todo-it {
+              .searches-title {
+                margin-bottom: 16px;
+
+                .title-left {
+                  font-size: 18px;
+                }
+                button {
+                  padding: 6px 10px;
+                  font-size: 16px;
+
+                  &::after {
+                    width: 18px;
+                    height: 18px;
+                  }
+                }
+              }
+              .latest-searches-list {
+                gap: 12px;
+
+                > li {
+                  gap: 8px;
+                  padding: 0 10px;
+
+                  .latest-text {
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+          .popular-searches-box {
+            display: none;
+          }
+        }
+        .typing-panel {
+          display: block;
+          margin-top: 20px;
+
+          .tmdb-result {
+            width: 100%;
+
+            .hint {
+              font-size: 16px;
+            }
+            .result-list {
+              gap: 12px;
+
+              > li {
+                padding: 0 10px;
+
+                .preview-item {
+                  .txt .hit,
+                  .txt .rest {
+                    font-size: 16px;
+                  }
+                }
+              }
+            }
+          }
+          .recommend-box {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 }
