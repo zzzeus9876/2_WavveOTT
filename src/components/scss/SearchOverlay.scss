@@ -1,71 +1,137 @@
-@use '../../App.scss' as g;
+@use "../../App.scss" as g;
 
 .search-popup {
-    position: fixed;
-    inset: 0;
-    height: calc(100vh);
-    z-index: 900;
+  position: fixed;
+  inset: 0;
+  height: calc(100vh);
+  z-index: 900;
+  background-color: rgba(0, 0, 0, 1);
+
+  .search-inner-wrap {
+    position: relative;
+    margin: 150px auto;
+    max-width: 1200px;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 1);
 
-    .search-inner-wrap {
-        position: relative;
-        margin: 150px auto;
-        max-width: 1200px;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 1);
+    @include g.respond480(768px) {
+      padding: 20px;
 
-        @include g.respond480(768px) {
-            padding: 20px;
-
-            margin-top: 20px;
-        }
-
-        .close-bg {
-            // position: absolute;
-            inset: 0;
-            background: transparent;
-            z-index: 0;
-            // display: flex;
-            // align-items: flex-start;
-            // justify-content: flex-end;
-            // padding: 0 240px;
-
-            button {
-                position: absolute;
-                right: 0px;
-                width: 40px;
-                height: 40px;
-                top: -50px;
-                @include g.respond480(768px) {
-                    top: 80px;
-                    right: 15px;
-                }
-            }
-        }
-
-        .search-inner {
-            position: relative;
-            z-index: 10;
-            max-width: 1440px;
-            margin: 100px auto 0;
-
-            .search-body {
-                margin-top: 50px;
-            }
-        }
+      margin-top: 20px;
     }
+
+    .close-bg {
+      // position: absolute;
+      inset: 0;
+      background: transparent;
+      z-index: 0;
+      // display: flex;
+      // align-items: flex-start;
+      // justify-content: flex-end;
+      // padding: 0 240px;
+
+      button {
+        position: absolute;
+        right: 0px;
+        width: 40px;
+        height: 40px;
+        top: -50px;
+        @include g.respond480(768px) {
+          top: 80px;
+          right: 15px;
+        }
+      }
+    }
+
+    .search-inner {
+      position: relative;
+      z-index: 10;
+      max-width: 1440px;
+      margin: 100px auto 0;
+
+      .search-body {
+        margin-top: 50px;
+      }
+    }
+  }
 }
 
 /* Idle */
 li.is-active button .word {
-    color: white;
+  color: white;
 }
 
 /* Typing */
 li.is-active button .txt {
-    .hit,
-    .rest {
-        color: white;
+  .hit,
+  .rest {
+    color: white;
+  }
+}
+
+@media (max-width: 1270px) {
+  .search-popup {
+    .search-inner-wrap {
+      .search-inner {
+        padding: 0 100px;
+
+        .search-bottom {
+          gap: 30px;
+          margin-top: 30px;
+          .bottom-search-box {
+            .todo-zeo {
+              .searches-title {
+                margin-bottom: 20px;
+              }
+            }
+            .todo-it {
+              .searches-title {
+                margin-bottom: 20px;
+              }
+              .latest-searches-list {
+                gap: 16px;
+
+                > li {
+                  gap: 8px;
+                }
+              }
+            }
+          }
+          .popular-searches-box {
+            .searches-title {
+              margin-bottom: 20px;
+            }
+            .popular-searches-list {
+              margin-top: 0;
+              gap: 16px;
+
+              > li {
+                button {
+                  gap: 10px;
+                }
+              }
+            }
+          }
+        }
+        .typing-panel {
+          gap: 30px;
+          margin-top: 30px;
+
+          .tmdb-result {
+            .result-list {
+              gap: 16px;
+            }
+          }
+          .recommend-box {
+            width: 100%;
+
+            .chips {
+              gap: 16px;
+            }
+          }
+        }
+      }
     }
+  }
 }
