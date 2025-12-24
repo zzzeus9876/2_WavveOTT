@@ -24,7 +24,8 @@
 
         @include g.respond1200(1200px) {
             flex-shrink: 0;
-            width: 173px;
+            width: 140px;
+            height: 80px;
         }
 
         > a {
