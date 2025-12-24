@@ -7,7 +7,7 @@ import { Navigation } from 'swiper/modules';
 import { usePeopleStore } from '../stores/usePeopleStore';
 import { usePickStore } from '../stores/usePickStore';
 
-import type { People } from '../types/movie';
+import type { People, PersonCast } from '../types/movie';
 
 import { logoImage } from '../utils/getListData';
 import { getGenres, getGrades } from '../utils/mapping';
@@ -75,10 +75,18 @@ const PeopleList = ({ title, people }: PeopleListProps) => {
         setIsModalOpen(true);
     };
 
+    // ========== 재생 함수 ==========
+    const handlePlayClick = (e: React.MouseEvent, m: PersonCast) => {
+        e.stopPropagation(); // 부모의 onClick 방지
+        if (!m.videos?.length) return;
+        navigate(`/player/${m.id}`);
+    };
+    // ===================================================
+
     // ========== 모바일을 위한 클릭 버튼 ==========
     const handleOpenDetailPage = (id: number) => {
         if (window.innerWidth <= 1200) {
-            navigate(`/contentsdetail/wavve/${id}`);
+            navigate(`/contentsdetail/tv/${id}`);
         }
     };
     // ===================================================
@@ -196,7 +204,10 @@ const PeopleList = ({ title, people }: PeopleListProps) => {
                                         </div>
                                         <div className="preview-badge-bottom">
                                             <div className="preview-btn-wrap">
-                                                <button className="preview-play-btn"></button>
+                                                <button
+                                                    className="preview-play-btn"
+                                                    onClick={(e) => handlePlayClick(e, m)}
+                                                ></button>
                                                 <button
                                                     className={`preview-heart-btn ${
                                                         pickList.some(

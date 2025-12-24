@@ -73,16 +73,26 @@ const AniHotList = ({ title, video }: VarietyLiveList) => {
 
     const handleCloseModal = () => setIsModalOpen(false);
 
-    const handleHeart = async (item: Pick) => {
+    const handleHeart = async (e: React.MouseEvent, item: Pick) => {
+        e.stopPropagation(); // 부모의 onClick 방지
         await onTogglePick(item);
         setModalSize('small');
         setIsModalOpen(true);
     };
 
     // ========== 재생 함수 ==========
-    const handlePlayClick = () => {
+    const handlePlayClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); // 부모의 onClick 방지
         if (!videoKey) return;
         navigate(`/player/${videoKey}`);
+    };
+    // ===================================================
+
+    // ========== 모바일을 위한 클릭 버튼 ==========
+    const handleOpenDetailPage = (id: number | null) => {
+        if (window.innerWidth <= 1200) {
+            navigate(`/contentsdetail/tv/${id}`);
+        }
     };
     // ===================================================
 
@@ -112,6 +122,7 @@ const AniHotList = ({ title, video }: VarietyLiveList) => {
                             // onMouseEnter={() => setHoverId(t.tmdb_id)}
                             // onMouseLeave={() => setHoverId(null)}
                             onMouseEnter={() => setHoverId(t.tmdb_id)}
+                            onClick={() => handleOpenDetailPage(t.tmdb_id)}
                         >
                             <img
                                 className="main"
@@ -175,7 +186,7 @@ const AniHotList = ({ title, video }: VarietyLiveList) => {
                                         <div className="preview-btn-wrap">
                                             <button
                                                 className="preview-play-btn"
-                                                onClick={handlePlayClick}
+                                                onClick={(e) => handlePlayClick(e)}
                                             ></button>
                                             <button
                                                 className={`preview-heart-btn ${
@@ -183,7 +194,7 @@ const AniHotList = ({ title, video }: VarietyLiveList) => {
                                                         ? 'active'
                                                         : ''
                                                 }`}
-                                                onClick={() => handleHeart(t)}
+                                                onClick={(e) => handleHeart(e, t)}
                                             ></button>
                                         </div>
                                         <Link to={`/contentsdetail/tv/${t.tmdb_id}`}></Link>

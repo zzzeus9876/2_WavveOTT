@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { Swiper, SwiperSlide, type SwiperClass } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -11,7 +11,7 @@ import { getGrades } from '../utils/mapping';
 
 import { varietyTop50 } from '../data/2025_varietyTop50_tmdb';
 
-import type { Episodes, Video } from '../types/movie';
+import type { Episodes, Variety, Video } from '../types/movie';
 
 import Modal from './Modal';
 import type { Pick } from '../types/pick';
@@ -22,8 +22,9 @@ interface VarietyLiveList {
 }
 
 const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
-    const { id } = useParams();
+    // const { id } = useParams();
     const { onTogglePick, pickList, pickAction } = usePickStore();
+    const { tvVideos, onFetchVariety } = useVarietyStore();
 
     //어떤거가 호버됐는지 체크
     const [hoverId, setHoverId] = useState<number | null>(null); //숫자로 받기
@@ -31,10 +32,14 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
     const [modalSize, setModalSize] = useState<'xsmall' | 'small' | 'default' | 'large'>('default');
 
     useEffect(() => {
-        if (id) {
-            useVarietyStore.getState().fetchVarietyDetail(Number(id));
-        }
-    }, [id]);
+        // varietyTop50 데이터를 돌면서 비디오 정보가 없는 것만 요청하도록 수정
+        varietyTop50.forEach((t) => {
+            // 이미 tvVideos 객체에 해당 id의 데이터가 있다면 다시 호출하지 않음
+            if (t.tmdb_id && !tvVideos[t.tmdb_id]) {
+                onFetchVariety(t.tmdb_id);
+            }
+        });
+    }, [onFetchVariety, tvVideos]);
 
     //스와이퍼 슬라이드 첫번째,마지막 슬라이더 버튼 숨기기
     const prevBtn = useRef<HTMLDivElement>(null);
@@ -73,18 +78,40 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
 
     const handleCloseModal = () => setIsModalOpen(false);
 
-    const handleHeart = async (item: Pick) => {
+    const handleHeart = async (e: React.MouseEvent, item: Pick) => {
+        e.stopPropagation(); // 부모의 onClick 방지
         await onTogglePick(item);
         setModalSize('small');
         setIsModalOpen(true);
     };
 
     // ========== 재생 함수 ==========
-    const handlePlayClick = () => {
-        if (!videoKey) return;
-        navigate(`/player/${videoKey}`);
+
+    const handlePlayClick = (e: React.MouseEvent, t: Variety) => {
+        e.stopPropagation(); // 부모의 onClick(상세페이지 이동)이 실행되지 않게 막음
+        console.log('클릭한 아이템:', t);
+        console.log('전체 비디오 객체:', video);
+        console.log('찾은 키:', video[t.tmdb_id!]?.tvsVideo?.key);
+        const targetId = t.tmdb_id;
+        if (!targetId) return;
+
+        const currentVideoKey = video[targetId]?.tvsVideo?.key || t.videos?.[0]?.key;
+
+        if (!currentVideoKey) {
+            console.log('재생할 비디오 키를 찾을 수 없습니다.');
+            return;
+        }
+        navigate(`/player/${currentVideoKey}`);
     };
 
+    // ===================================================
+
+    // ========== 모바일을 위한 클릭 버튼 ==========
+    const handleOpenDetailPage = (id: number | null) => {
+        if (window.innerWidth <= 1200) {
+            navigate(`/contentsdetail/tv/${id}`);
+        }
+    };
     // ===================================================
 
     return (
@@ -113,6 +140,7 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
                             // onMouseEnter={() => setHoverId(t.tmdb_id)}
                             // onMouseLeave={() => setHoverId(null)}
                             onMouseEnter={() => setHoverId(t.tmdb_id)}
+                            onClick={() => handleOpenDetailPage(t.tmdb_id)}
                         >
                             <img
                                 className="main"
@@ -175,7 +203,7 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
                                         <div className="preview-btn-wrap">
                                             <button
                                                 className="preview-play-btn"
-                                                onClick={handlePlayClick}
+                                                onClick={(e) => handlePlayClick(e, t)}
                                             />
                                             <button
                                                 className={`preview-heart-btn ${
@@ -186,7 +214,7 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
                                                         ? 'active'
                                                         : ''
                                                 }`}
-                                                onClick={() => handleHeart(t)}
+                                                onClick={(e) => handleHeart(e, t)}
                                             ></button>
                                         </div>
                                         <Link to={`/contentsdetail/tv/${t.tmdb_id}`}></Link>

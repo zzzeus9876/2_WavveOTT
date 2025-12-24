@@ -35,7 +35,19 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
 
     const navigate = useNavigate();
 
-    const getUid = (item: any) => Number(item.tmdb_id ?? item.contentId ?? item.id);
+    const getUid = (item: OnlyWavve | Pick) => {
+        // 1. tmdb_id 확인
+        if (item.tmdb_id) return Number(item.tmdb_id);
+
+        // 2. contentId 확인 (any 대신 '속성 체크' 방식 사용)
+        // item 객체 안에 contentId가 있는지 확인하고 있으면 그 값을 사용합니다.
+        if ('contentId' in item && item.contentId) {
+            return Number(item.contentId);
+        }
+
+        // 3. 기본 id 확인
+        return Number(item.id);
+    };
 
     const handleSwiperBtns = (swiper: SwiperClass) => {
         const isFirst = swiper.activeIndex === 0;

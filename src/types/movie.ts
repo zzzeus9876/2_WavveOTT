@@ -247,12 +247,21 @@ export interface PrimaryItem {
 
 //Variety
 export interface Variety {
-    id: number;
-    name: string;
+    // 1. 기존 Tv 공통 속성들을 선택적으로 변경 (Wavves 데이터에는 id/name이 없으므로)
+    id?: number;
+    name?: string;
+
+    // 2. Wavves 데이터 속성 추가
+    tmdb_id: number | null; // Wavves 데이터의 핵심 키
+    series_title: string; // Wavves 데이터의 제목
+    seasonposterimage: string; // Wavves 데이터의 이미지
+
+    // 3. 기존의 나머지 속성들 유지
     poster_path?: string | null;
     backdrop_path?: string | null;
     overview?: string;
     videos?: Video[];
+    tvsVideo?: Video | null; // 재생 기능을 위해 추가한 것 유지
     episodes?: Episodes[];
     seasons?: Season[];
     genre_ids?: number[];
