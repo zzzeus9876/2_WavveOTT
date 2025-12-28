@@ -1,25 +1,32 @@
-@use "../../App.scss" as g;
+@use '../../App.scss' as g;
 
 .relative-wrap {
-  @include g.myFlexCol($gap: 40px);
-  padding: 0 60px;
-  width: 644px;
+    @include g.myFlexCol($gap: 40px);
+    padding: 0 60px;
+    max-width: 644px;
+    width: 100%;
+    margin: 0 auto;
 
-  .relative-list {
-    @include g.myFlexCol($gap: 20px);
+    .relative-list {
+        @include g.myFlexCol($gap: 20px);
 
-    li {
-      width: 100%;
-      .relative-card {
-        width: 100%;
-        min-width: 482.75px;
-        > iframe {
-          width: 100%;
-          aspect-ratio: 16 / 9;
-          border: none;
+        @include g.respond768(768px) {
+            width: 100%;
+            margin: 0 auto;
         }
-      }
+
+        li {
+            width: 100%;
+            .relative-card {
+                width: 100%;
+                min-width: 482.75px;
+                > iframe {
+                    width: 100%;
+                    aspect-ratio: 16 / 9;
+                    border: none;
+                }
+            }
+        }
+        align-items: center;
     }
-    align-items: center;
-  }
 }

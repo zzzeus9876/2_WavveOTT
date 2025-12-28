@@ -159,7 +159,7 @@ const ContentsEpisode = ({
                             selectedValue={selectedSeason}
                             onSelect={handleSeasonSelect}
                             label={selectedSeason}
-                            width="256"
+                            width="100%"
                         />
                     </div>
                 )}
@@ -170,7 +170,7 @@ const ContentsEpisode = ({
                         selectedValue={selectedSort}
                         onSelect={handleSortSelect}
                         label="정렬"
-                        width="256"
+                        width="100%"
                     />
                 </div>
             </div>
