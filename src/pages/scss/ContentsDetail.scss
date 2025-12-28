@@ -6,6 +6,10 @@
     h3,
     .actor-name {
         font-family: 'Wave', sans-serif;
+
+        @include g.respond480(480px) {
+            font-size: 14px;
+        }
     }
 
     .inner {
@@ -73,9 +77,24 @@
             }
             .detail-title-box {
                 @include g.myFlex($gap: 0);
+                flex-wrap: wrap;
+
+                @include g.respond480(480px) {
+                }
 
                 .detail-title-left {
                     @include g.myFlex($jc: unset, $gap: 12px);
+
+                    @include g.respond480(480px) {
+                        font-size: 12px;
+                        gap: 8px;
+                    }
+                    .title-certification {
+                        @include g.respond480(480px) {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
                     .title-star {
                         width: 16px;
                         height: 16px;
@@ -84,9 +103,17 @@
                     }
                     .title-vote {
                         @include g.myFlex($jc: unset, $gap: 4px);
+
+                        @include g.respond480(480px) {
+                            gap: 0px;
+                        }
                     }
                     .title-genre {
                         @include g.myFlex($jc: unset, $gap: 4px);
+
+                        @include g.respond480(480px) {
+                            gap: 0px;
+                        }
                     }
                     .seperate::after {
                         content: '';
@@ -101,11 +128,27 @@
                 .detail-title-right {
                     @include g.myFlex($jc: unset, $gap: 20px);
 
+                    @include g.respond768(768px) {
+                        gap: 10px;
+                    }
+                    @include g.respond480(480px) {
+                        gap: 4px;
+                    }
+
                     .detail-heart-btn {
                         width: 68px;
                         height: 68px;
                         background: url('/images/icons/icon-heart-default.svg') no-repeat center;
                         background-size: contain;
+
+                        @include g.respond768(768px) {
+                            width: 48px;
+                            height: 48px;
+                        }
+                        @include g.respond480(480px) {
+                            width: 32px;
+                            height: 32pxx;
+                        }
 
                         &:hover {
                             background: url('/images/icons/icon-heart-hover.svg') no-repeat center;
@@ -120,6 +163,15 @@
                         height: 68px;
                         background: url('/images/icons/icon-share-default.svg') no-repeat center;
                         background-size: contain;
+
+                        @include g.respond768(768px) {
+                            width: 48px;
+                            height: 48px;
+                        }
+                        @include g.respond480(480px) {
+                            width: 32px;
+                            height: 32pxx;
+                        }
 
                         &:hover {
                             background: url('/images/icons/icon-share-hover.svg') no-repeat center;
@@ -185,7 +237,6 @@
                                 font-weight: 500;
                                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
-                                // 부드럽게 나타나는 애니메이션
                                 animation: fadeInOut 2s ease-in-out;
                             }
 
@@ -217,6 +268,14 @@
                 .detail-content {
                     @include g.myFlex($ai: start, $gap: 120px);
 
+                    @include g.respond768(768px) {
+                        gap: 80px;
+                    }
+
+                    @include g.respond480(480px) {
+                        gap: 60px;
+                    }
+
                     .detail-content-left {
                         @include g.myFlexCol();
                         > p {
@@ -226,6 +285,10 @@
                             -webkit-line-clamp: 3;
                             -webkit-box-orient: vertical;
                             overflow: hidden;
+
+                            @include g.respond480(480px) {
+                                font-size: 12px;
+                            }
                         }
                     }
                     .detail-content-right {
@@ -254,13 +317,12 @@
                         white-space: nowrap;
                         -webkit-overflow-scrolling: touch;
 
-                        // Chrome, Safari, Opera용 (Webkit)
                         &::-webkit-scrollbar {
-                            width: 6px; // 스크롤바 너비
+                            width: 6px;
                         }
 
                         &::-webkit-scrollbar-thumb {
-                            background-color: rgba(0, 0, 0, 0.1); // 아주 연한 색상
+                            background-color: rgba(0, 0, 0, 0.1);
                             border-radius: 10px;
                         }
 
@@ -323,6 +385,12 @@
 
                         .director-list {
                             @include g.myFlex($jc: unset, $gap: 6px);
+
+                            > li {
+                                @include g.respond480(480px) {
+                                    font-size: 12px;
+                                }
+                            }
                         }
                     }
 
@@ -331,6 +399,11 @@
 
                         .writer-list {
                             @include g.myFlex($jc: unset, $gap: 6px);
+                            > li {
+                                @include g.respond480(480px) {
+                                    font-size: 12px;
+                                }
+                            }
                         }
                     }
 
@@ -339,6 +412,11 @@
 
                         .script-list {
                             @include g.myFlex($jc: unset, $gap: 6px);
+                            > li {
+                                @include g.respond480(480px) {
+                                    font-size: 12px;
+                                }
+                            }
                         }
                     }
                 }

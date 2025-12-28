@@ -23,6 +23,14 @@
         .episode-select {
             flex: 1;
             min-width: 126px;
+            @include g.respond480(480px) {
+                min-width: 100px;
+            }
+            // .ui-select {
+            //     > p {
+            //         font-size: 12px;
+            //     }
+            // }
         }
     }
     .episode-list {
