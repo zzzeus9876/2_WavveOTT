@@ -9,6 +9,7 @@
 
         @include g.respond480(480px) {
             font-size: 14px;
+            min-width: 26px;
         }
     }
 
@@ -385,6 +386,7 @@
 
                         .director-list {
                             @include g.myFlex($jc: unset, $gap: 6px);
+                            flex-wrap: wrap;
 
                             > li {
                                 @include g.respond480(480px) {
@@ -399,6 +401,8 @@
 
                         .writer-list {
                             @include g.myFlex($jc: unset, $gap: 6px);
+                            flex-wrap: wrap;
+
                             > li {
                                 @include g.respond480(480px) {
                                     font-size: 12px;
