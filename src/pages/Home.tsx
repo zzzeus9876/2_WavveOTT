@@ -104,6 +104,44 @@ const Home = () => {
             .slice(0, 20);
     }, [wavves, tvs]);
 
+    // 모든 데이터가 로드되었는지 확인하는 변수(스켈레톤 UI를 위한 변수)
+    const isAllLoaded = wavves.length > 0 && popularMovies.length > 0 && tvs.length > 0;
+
+    // 1. 데이터가 아직 로딩 중일 때 보여줄 전체 스켈레톤 레이아웃
+    if (!isAllLoaded) {
+        return (
+            <main className="main-home">
+                {/* 상단 슬라이더 스켈레톤 */}
+                <div className="skeleton-item" style={{ width: '100%', height: '500px' }} />
+
+                <div className="inner" style={{ marginTop: '40px' }}>
+                    {/* 반복되는 리스트 구조를 스켈레톤으로 재현 */}
+                    {[1, 2, 3].map((section) => (
+                        <section
+                            key={section}
+                            className="card-list"
+                            style={{ marginBottom: '50px' }}
+                        >
+                            <div
+                                className="skeleton-item"
+                                style={{ width: '200px', height: '30px', marginBottom: '20px' }}
+                            />
+                            <div style={{ display: 'flex', gap: '24px', overflow: 'hidden' }}>
+                                {[1, 2, 3, 4, 5, 6].map((i) => (
+                                    <div
+                                        key={i}
+                                        className="skeleton-item"
+                                        style={{ width: '215px', height: '310px', flexShrink: 0 }}
+                                    />
+                                ))}
+                            </div>
+                        </section>
+                    ))}
+                </div>
+            </main>
+        );
+    }
+
     return (
         <main className="main-home">
             <div className="" style={{ minHeight: '200px' }}>
