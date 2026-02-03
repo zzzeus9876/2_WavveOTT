@@ -39,7 +39,7 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
                 onFetchVariety(t.tmdb_id);
             }
         });
-    }, [onFetchVariety, tvVideos]);
+    }, []);
 
     //스와이퍼 슬라이드 첫번째,마지막 슬라이더 버튼 숨기기
     const prevBtn = useRef<HTMLDivElement>(null);
@@ -209,7 +209,7 @@ const VarietyLiveList = ({ title, video }: VarietyLiveList) => {
                                                 className={`preview-heart-btn ${
                                                     typeof t.tmdb_id === 'number' &&
                                                     pickList.some(
-                                                        (p) => (p.tmdb_id ?? p.id) === t.tmdb_id
+                                                        (p) => (p.tmdb_id ?? p.id) === t.tmdb_id,
                                                     )
                                                         ? 'active'
                                                         : ''
