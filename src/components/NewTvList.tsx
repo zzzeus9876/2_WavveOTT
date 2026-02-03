@@ -83,6 +83,36 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
     };
     // ===================================================
 
+    // 데이터가 없을 때 (로딩 중일 때) 스켈레톤 표시
+    if (!tvs || tvs.length === 0) {
+        return (
+            <section className="card-list">
+                <h2>{title}</h2> {/* 제목은 미리 보여주는 게 사용자 경험에 좋습니다 */}
+                <div
+                    style={{ display: 'flex', gap: '24px', overflow: 'hidden', padding: '10px 0' }}
+                >
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <div
+                            key={i}
+                            style={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}
+                        >
+                            {/* 순위 숫자 자리 스켈레톤 (선택 사항) */}
+                            <div
+                                className="skeleton-item"
+                                style={{ width: '40px', height: '80px' }}
+                            />
+                            {/* 카드 이미지 스켈레톤 */}
+                            <div
+                                className="skeleton-item"
+                                style={{ width: '215px', height: '310px', flexShrink: 0 }}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section className="card-list">
             <div className="title-wrap">
@@ -184,7 +214,7 @@ const NewTvList = ({ title, tvs }: NewTvListProps) => {
                                             <button
                                                 className={`preview-heart-btn ${
                                                     pickList.some(
-                                                        (p) => (p.tmdb_id ?? p.id) === t.id
+                                                        (p) => (p.tmdb_id ?? p.id) === t.id,
                                                     )
                                                         ? 'active'
                                                         : ''
