@@ -100,6 +100,28 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
     };
     // ===================================================
 
+    if (!wavves || wavves.length === 0) {
+        return (
+            <section className="card-list">
+                <div className="title-wrap">
+                    <div className="skeleton-item" style={{ width: '150px', height: '28px' }} />
+                </div>
+                <div
+                    style={{ display: 'flex', gap: '24px', overflow: 'hidden', padding: '10px 0' }}
+                >
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <div key={i} style={{ flexShrink: 0 }}>
+                            {/* 실제 카드와 비슷한 크기로 설정 */}
+                            <div
+                                className="skeleton-item"
+                                style={{ width: '215px', height: '310px' }}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </section>
+        );
+    }
     return (
         <section className="card-list">
             <div className="title-wrap">
