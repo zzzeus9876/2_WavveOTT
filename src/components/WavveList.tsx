@@ -100,6 +100,7 @@ const WavveList = ({ title, wavves }: WavveListProps) => {
     };
     // ===================================================
 
+    // 데이터가 없을 때 (로딩 중일 때) 스켈레톤 표시
     if (!wavves || wavves.length === 0) {
         return (
             <section className="card-list">
